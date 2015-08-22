@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=CONFIGURATION.c main.c SYSTEM.c EXCEPTIONS.c INTERRUPTS.c USER.c
+SOURCEFILES_QUOTED_IF_SPACED=CONFIGURATION.c main.c SYSTEM.c EXCEPTIONS.c INTERRUPTS.c USER.c MISC.c DMA.c UART.c ADC.c TIMERS.c PWM.c SUPERCAP.c FLASH.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/CONFIGURATION.o ${OBJECTDIR}/main.o ${OBJECTDIR}/SYSTEM.o ${OBJECTDIR}/EXCEPTIONS.o ${OBJECTDIR}/INTERRUPTS.o ${OBJECTDIR}/USER.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/CONFIGURATION.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/SYSTEM.o.d ${OBJECTDIR}/EXCEPTIONS.o.d ${OBJECTDIR}/INTERRUPTS.o.d ${OBJECTDIR}/USER.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/CONFIGURATION.o ${OBJECTDIR}/main.o ${OBJECTDIR}/SYSTEM.o ${OBJECTDIR}/EXCEPTIONS.o ${OBJECTDIR}/INTERRUPTS.o ${OBJECTDIR}/USER.o ${OBJECTDIR}/MISC.o ${OBJECTDIR}/DMA.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/ADC.o ${OBJECTDIR}/TIMERS.o ${OBJECTDIR}/PWM.o ${OBJECTDIR}/SUPERCAP.o ${OBJECTDIR}/FLASH.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/CONFIGURATION.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/SYSTEM.o.d ${OBJECTDIR}/EXCEPTIONS.o.d ${OBJECTDIR}/INTERRUPTS.o.d ${OBJECTDIR}/USER.o.d ${OBJECTDIR}/MISC.o.d ${OBJECTDIR}/DMA.o.d ${OBJECTDIR}/UART.o.d ${OBJECTDIR}/ADC.o.d ${OBJECTDIR}/TIMERS.o.d ${OBJECTDIR}/PWM.o.d ${OBJECTDIR}/SUPERCAP.o.d ${OBJECTDIR}/FLASH.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/CONFIGURATION.o ${OBJECTDIR}/main.o ${OBJECTDIR}/SYSTEM.o ${OBJECTDIR}/EXCEPTIONS.o ${OBJECTDIR}/INTERRUPTS.o ${OBJECTDIR}/USER.o
+OBJECTFILES=${OBJECTDIR}/CONFIGURATION.o ${OBJECTDIR}/main.o ${OBJECTDIR}/SYSTEM.o ${OBJECTDIR}/EXCEPTIONS.o ${OBJECTDIR}/INTERRUPTS.o ${OBJECTDIR}/USER.o ${OBJECTDIR}/MISC.o ${OBJECTDIR}/DMA.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/ADC.o ${OBJECTDIR}/TIMERS.o ${OBJECTDIR}/PWM.o ${OBJECTDIR}/SUPERCAP.o ${OBJECTDIR}/FLASH.o
 
 # Source Files
-SOURCEFILES=CONFIGURATION.c main.c SYSTEM.c EXCEPTIONS.c INTERRUPTS.c USER.c
+SOURCEFILES=CONFIGURATION.c main.c SYSTEM.c EXCEPTIONS.c INTERRUPTS.c USER.c MISC.c DMA.c UART.c ADC.c TIMERS.c PWM.c SUPERCAP.c FLASH.c
 
 
 CFLAGS=
@@ -130,6 +130,54 @@ ${OBJECTDIR}/USER.o: USER.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/USER.o 
 	@${FIXDEPS} "${OBJECTDIR}/USER.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/USER.o.d" -o ${OBJECTDIR}/USER.o USER.c   
 	
+${OBJECTDIR}/MISC.o: MISC.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/MISC.o.d 
+	@${RM} ${OBJECTDIR}/MISC.o 
+	@${FIXDEPS} "${OBJECTDIR}/MISC.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/MISC.o.d" -o ${OBJECTDIR}/MISC.o MISC.c   
+	
+${OBJECTDIR}/DMA.o: DMA.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/DMA.o.d 
+	@${RM} ${OBJECTDIR}/DMA.o 
+	@${FIXDEPS} "${OBJECTDIR}/DMA.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/DMA.o.d" -o ${OBJECTDIR}/DMA.o DMA.c   
+	
+${OBJECTDIR}/UART.o: UART.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/UART.o.d 
+	@${RM} ${OBJECTDIR}/UART.o 
+	@${FIXDEPS} "${OBJECTDIR}/UART.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/UART.o.d" -o ${OBJECTDIR}/UART.o UART.c   
+	
+${OBJECTDIR}/ADC.o: ADC.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/ADC.o.d 
+	@${RM} ${OBJECTDIR}/ADC.o 
+	@${FIXDEPS} "${OBJECTDIR}/ADC.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/ADC.o.d" -o ${OBJECTDIR}/ADC.o ADC.c   
+	
+${OBJECTDIR}/TIMERS.o: TIMERS.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/TIMERS.o.d 
+	@${RM} ${OBJECTDIR}/TIMERS.o 
+	@${FIXDEPS} "${OBJECTDIR}/TIMERS.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/TIMERS.o.d" -o ${OBJECTDIR}/TIMERS.o TIMERS.c   
+	
+${OBJECTDIR}/PWM.o: PWM.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/PWM.o.d 
+	@${RM} ${OBJECTDIR}/PWM.o 
+	@${FIXDEPS} "${OBJECTDIR}/PWM.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/PWM.o.d" -o ${OBJECTDIR}/PWM.o PWM.c   
+	
+${OBJECTDIR}/SUPERCAP.o: SUPERCAP.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/SUPERCAP.o.d 
+	@${RM} ${OBJECTDIR}/SUPERCAP.o 
+	@${FIXDEPS} "${OBJECTDIR}/SUPERCAP.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/SUPERCAP.o.d" -o ${OBJECTDIR}/SUPERCAP.o SUPERCAP.c   
+	
+${OBJECTDIR}/FLASH.o: FLASH.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/FLASH.o.d 
+	@${RM} ${OBJECTDIR}/FLASH.o 
+	@${FIXDEPS} "${OBJECTDIR}/FLASH.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/FLASH.o.d" -o ${OBJECTDIR}/FLASH.o FLASH.c   
+	
 else
 ${OBJECTDIR}/CONFIGURATION.o: CONFIGURATION.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -166,6 +214,54 @@ ${OBJECTDIR}/USER.o: USER.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/USER.o.d 
 	@${RM} ${OBJECTDIR}/USER.o 
 	@${FIXDEPS} "${OBJECTDIR}/USER.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/USER.o.d" -o ${OBJECTDIR}/USER.o USER.c   
+	
+${OBJECTDIR}/MISC.o: MISC.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/MISC.o.d 
+	@${RM} ${OBJECTDIR}/MISC.o 
+	@${FIXDEPS} "${OBJECTDIR}/MISC.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/MISC.o.d" -o ${OBJECTDIR}/MISC.o MISC.c   
+	
+${OBJECTDIR}/DMA.o: DMA.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/DMA.o.d 
+	@${RM} ${OBJECTDIR}/DMA.o 
+	@${FIXDEPS} "${OBJECTDIR}/DMA.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/DMA.o.d" -o ${OBJECTDIR}/DMA.o DMA.c   
+	
+${OBJECTDIR}/UART.o: UART.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/UART.o.d 
+	@${RM} ${OBJECTDIR}/UART.o 
+	@${FIXDEPS} "${OBJECTDIR}/UART.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/UART.o.d" -o ${OBJECTDIR}/UART.o UART.c   
+	
+${OBJECTDIR}/ADC.o: ADC.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/ADC.o.d 
+	@${RM} ${OBJECTDIR}/ADC.o 
+	@${FIXDEPS} "${OBJECTDIR}/ADC.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/ADC.o.d" -o ${OBJECTDIR}/ADC.o ADC.c   
+	
+${OBJECTDIR}/TIMERS.o: TIMERS.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/TIMERS.o.d 
+	@${RM} ${OBJECTDIR}/TIMERS.o 
+	@${FIXDEPS} "${OBJECTDIR}/TIMERS.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/TIMERS.o.d" -o ${OBJECTDIR}/TIMERS.o TIMERS.c   
+	
+${OBJECTDIR}/PWM.o: PWM.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/PWM.o.d 
+	@${RM} ${OBJECTDIR}/PWM.o 
+	@${FIXDEPS} "${OBJECTDIR}/PWM.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/PWM.o.d" -o ${OBJECTDIR}/PWM.o PWM.c   
+	
+${OBJECTDIR}/SUPERCAP.o: SUPERCAP.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/SUPERCAP.o.d 
+	@${RM} ${OBJECTDIR}/SUPERCAP.o 
+	@${FIXDEPS} "${OBJECTDIR}/SUPERCAP.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/SUPERCAP.o.d" -o ${OBJECTDIR}/SUPERCAP.o SUPERCAP.c   
+	
+${OBJECTDIR}/FLASH.o: FLASH.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/FLASH.o.d 
+	@${RM} ${OBJECTDIR}/FLASH.o 
+	@${FIXDEPS} "${OBJECTDIR}/FLASH.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/FLASH.o.d" -o ${OBJECTDIR}/FLASH.o FLASH.c   
 	
 endif
 

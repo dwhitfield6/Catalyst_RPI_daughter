@@ -31,13 +31,49 @@
 /******************************************************************************/
 /* SYS_ConfigureOscillator
  *
- * The function waits for the high frequency occilator to be working and stable.
+ * The function waits for the high frequency oscillator to be working and stable.
 /******************************************************************************/
 void SYS_ConfigureOscillator(void)
 {
-    Nop();
+    unsigned long temp;
+    
+    /* Clock configuration is done in configuration bits in Configuration.c */
+    
+    /* wait for PLL to be stable if it is used */
+    if(OSCCONbits.COSC = 0b011)
+    {
+        /* Primary Oscillator with PLL module (XTPLL, HSPLL or ECPLL) */
+        while(!OSCCONbits.SLOCK);        
+        /* PLL module is in lock or PLL module start-up timer is satisfied */
+    }
+    
+    /* Configure the peripheral clock bus */
+    while(!OSCCONbits.PBDIVRDY);
 }
 
+/******************************************************************************/
+/* MSC_SystemUnlock
+ *
+ * The system will be unlocked so that sensitive registers can be modified like
+ *  OSCCON.
+/******************************************************************************/
+void SYS_SystemUnlock(void)
+{
+    SYSKEY = 0;
+    SYSKEY = 0xAA996655;
+    SYSKEY = 0x556699AA;
+}
+
+/******************************************************************************/
+/* MSC_SystemLock
+ *
+ * The system will be locked so that sensitive registers can't be modified like
+ *  OSCCON.
+/******************************************************************************/
+void SYS_SystemLock(void)
+{
+    SYSKEY = 0x33333333;
+}
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

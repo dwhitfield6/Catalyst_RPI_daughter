@@ -7,41 +7,31 @@
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
  * 08/21/15     1.0_DW0a    Initial project make.
- *                          Derived from project 'PIC_PS2_to_UART'.
+/******************************************************************************/
+
+/******************************************************************************/
+/* Contains functions for Analog to Digital converter.
+ *
 /******************************************************************************/
 
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
-#ifndef SYSTEM_H
-#define	SYSTEM_H
-
 #include <xc.h>         /* XC8 General Include File */
 
-#include <stdint.h>         /* For uint8_t definition */
-#include <stdbool.h>        /* For true/false definition */
+#include <stdint.h>        /* For uint8_t definition */
+#include <stdbool.h>       /* For true/false definition */
 
 #include "USER.h"
 
 /******************************************************************************/
-/* System frequency
- *
- * This is the CPU clock frequency.
- *
- * For this system the clock is 64MHz and the internal PLL is used.
- *
+/* User Global Variable Declaration                                           */
 /******************************************************************************/
-#define FOSC        96000000L
-/******************************************************************************/
-/* Defines                                                                    */
-/******************************************************************************/
-#define FCY             (FOSC/2)
-#define SYS_FREQ        FCY
 
 /******************************************************************************/
-/* Function prototypes                                                        */
+/* Functions
 /******************************************************************************/
-void SYS_ConfigureOscillator(void);
-void SYS_SystemUnlock(void);
-void SYS_SystemLock(void);
-#endif	/* SYSTEM_H */
+
+/*-----------------------------------------------------------------------------/
+ End of File
+/-----------------------------------------------------------------------------*/

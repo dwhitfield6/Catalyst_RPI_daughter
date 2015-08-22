@@ -7,14 +7,13 @@
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
  * 08/21/15     1.0_DW0a    Initial project make.
- *                          Derived from project 'PIC_PS2_to_UART'.
 /******************************************************************************/
 
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
-#ifndef SYSTEM_H
-#define	SYSTEM_H
+#ifndef PWM_H
+#define	PWM_H
 
 #include <xc.h>         /* XC8 General Include File */
 
@@ -24,24 +23,42 @@
 #include "USER.h"
 
 /******************************************************************************/
-/* System frequency
+/* COLORS
  *
- * This is the CPU clock frequency.
- *
- * For this system the clock is 64MHz and the internal PLL is used.
- *
+ * This is the available Colors to set the LED.
 /******************************************************************************/
-#define FOSC        96000000L
+#define NONE        0
+#define RED         1
+#define YELLOW      2
+#define GREEN       3
+#define BLUE        4
+#define PURPLE      5
+#define WHITE       6
+#define TURQUOISE   7
+
+/******************************************************************************/
+/* User Global Variable Declaration                                           */
+/******************************************************************************/
+extern unsigned int Red_Duty;
+extern unsigned int Green_Duty;
+extern unsigned int Blue_Duty;
+
 /******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
-#define FCY             (FOSC/2)
-#define SYS_FREQ        FCY
+
+/******************************************************************************/
+/* Macro Functions                                                            */
+/******************************************************************************/
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-void SYS_ConfigureOscillator(void);
-void SYS_SystemUnlock(void);
-void SYS_SystemLock(void);
-#endif	/* SYSTEM_H */
+void InitPWM(void);
+inline void PWM_SetRed(unsigned int Value);
+inline void PWM_SetGreen(unsigned int Value);
+inline void PWM_SetBlue(unsigned int Value);
+inline void PWM_SetRGB(unsigned int Red, unsigned int Green, unsigned int Blue);
+void PWM_SetColor(unsigned int Color);
+
+#endif	/* PWM_H */

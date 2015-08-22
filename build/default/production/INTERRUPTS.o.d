@@ -1,2 +1,4 @@
 build/default/production/INTERRUPTS.o:  \
-INTERRUPTS.c 
+INTERRUPTS.c  \
+PWM.h  \
+USER.h 

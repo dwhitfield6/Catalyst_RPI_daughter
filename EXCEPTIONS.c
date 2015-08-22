@@ -33,11 +33,11 @@ static unsigned int _excep_addr;
 /******************************************************************************/
 
 /******************************************************************************/
-/* EXC_General_Exeption_Handler
+/* EXC_General_Exception_Handler
  *
  * This function overrides the normal _weak_ generic handler.
 /******************************************************************************/
-void EXC_General_Exeption_Handler(void)
+void EXC_General_Exception_Handler(void)
 {
     asm volatile("mfc0 %0,$13" : "=r" (_excep_code));
     asm volatile("mfc0 %0,$14" : "=r" (_excep_addr));

@@ -7,6 +7,14 @@
       <itemPath>USER.h</itemPath>
       <itemPath>SYSTEM.h</itemPath>
       <itemPath>EXCEPTIONS.h</itemPath>
+      <itemPath>MISC.h</itemPath>
+      <itemPath>PWM.h</itemPath>
+      <itemPath>TIMERS.h</itemPath>
+      <itemPath>ADC.h</itemPath>
+      <itemPath>UART.h</itemPath>
+      <itemPath>DMA.h</itemPath>
+      <itemPath>SUPERCAP.h</itemPath>
+      <itemPath>FLASH.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -21,6 +29,14 @@
       <itemPath>EXCEPTIONS.c</itemPath>
       <itemPath>INTERRUPTS.c</itemPath>
       <itemPath>USER.c</itemPath>
+      <itemPath>MISC.c</itemPath>
+      <itemPath>DMA.c</itemPath>
+      <itemPath>UART.c</itemPath>
+      <itemPath>ADC.c</itemPath>
+      <itemPath>TIMERS.c</itemPath>
+      <itemPath>PWM.c</itemPath>
+      <itemPath>SUPERCAP.c</itemPath>
+      <itemPath>FLASH.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -154,6 +170,9 @@
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
+      <PICkit3PlatformTool>
+        <property key="firmware.download.all" value="false"/>
+      </PICkit3PlatformTool>
     </conf>
   </confs>
 </configurationDescriptor>

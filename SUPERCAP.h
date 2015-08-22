@@ -6,14 +6,14 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 07/28/15     1.0_DW0a    Initial project make.
+ * 08/21/15     1.0_DW0a    Initial project make.
 /******************************************************************************/
 
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
-#ifndef EXCEPTIONS_H
-#define	EXCEPTIONS_H
+#ifndef SUPERCAP_H
+#define	SUPERCAP_H
 
 #include <xc.h>         /* XC8 General Include File */
 
@@ -23,32 +23,31 @@
 #include "USER.h"
 
 /******************************************************************************/
-/* Enumeration                                                               */
+/* Structures                                                                 */
 /******************************************************************************/
-static enum {
-	EXCEP_IRQ = 0,			// interrupt
-	EXCEP_AdEL = 4,			// address error exception (load or ifetch)
-	EXCEP_AdES,				// address error exception (store)
-	EXCEP_IBE,				// bus error (ifetch)
-	EXCEP_DBE,				// bus error (load/store)
-	EXCEP_Sys,				// syscall
-	EXCEP_Bp,				// breakpoint
-	EXCEP_RI,				// reserved instruction
-	EXCEP_CpU,				// coprocessor unusable
-	EXCEP_Overflow,			// arithmetic overflow
-	EXCEP_Trap,				// trap (possible divide by zero)
-	EXCEP_IS1 = 16,			// implementation specfic 1
-	EXCEP_CEU,				// CorExtend Unuseable
-	EXCEP_C2E				// coprocessor 2
-} _excep_code;
+typedef struct rails
+{
+    double VCAP;                    // Voltage of rail VCAP
+    double Volt5;                   // Voltage of 5 volt rail
+    double Volt3_3;                 // Voltage of 3.3 volt rail
+    double Volt4_1;                 // Voltage of 4.1 volt rail
+    double VIN;                     // Voltage of 4.1 volt rail
+    unsigned char Warn4_4;          // Warning VCAP is under 4.4 volts
+    unsigned char Warn4_1;          // Warning VCAP is under 4.1 volts
+    unsigned char WarnPOT;          // Warning VCAP is under the potentiometer voltage
+    unsigned char WarnVIN;          // Warning VIN is under 9 volts
+    unsigned char Supercap_state;   // Status of charging or dicharging cap
+    unsigned char DCDC_state;       // Status of DCDC converter for 5 volt rail
+    unsigned char Rasp_state;       // Status of the raspberry pie voltage rail
+}Rails;
 
 /******************************************************************************/
-/* Defines                                                                    */
+/* User Global Variable Declaration                                           */
 /******************************************************************************/
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-void EXC_General_Exception_Handler(void);
+inline void SCP_Charge(unsigned char action);
 
-#endif	/* EXCEPTIONS_H */
+#endif	/* SUPERCAP_H */

@@ -27,6 +27,7 @@
 
 #include "SYSTEM.h"
 #include "USER.h"
+#include "MISC.h"
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -42,14 +43,25 @@
 
 int main (void)
 {
+    unsigned long i;
+    
     /* Initialize */
     SYS_ConfigureOscillator();
     Init_App();
     Init_System();
 
+    /* Flash LEDs */
+    for (i=0;i<24;i++)
+    {
+        MSC_RedLEDTOGGLE();
+        MSC_DelayUS(100000);
+        PWM_SetColor(i/3);
+    }
+    MSC_RedLEDOFF();
+        
     while(1)
     {
-        
+
     }
 }
 /*-----------------------------------------------------------------------------/

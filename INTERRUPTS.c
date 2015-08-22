@@ -78,6 +78,9 @@
 
 #include <stdint.h>        /* For uint8_t definition */
 #include <stdbool.h>       /* For true/false definition */
+#include <sys/attribs.h>     /* For __ISR definition */
+
+#include "PWM.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -86,12 +89,21 @@
 /******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
-#define _ISR_PSV __attribute__((interrupt, __auto_psv))
-#define _ISR_NOPSV __attribute__((interrupt, no_auto_psv))
 
 /******************************************************************************/
 /* Interrupt Routines                                                         */
 /******************************************************************************/
+
+/******************************************************************************/
+/* PWM RED interrupt
+/******************************************************************************/
+void __ISR(_TIMER_2_VECTOR , IPL7) TMR2_IntHandler (void)
+{
+    OC1RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
+    OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
+    OC3RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
+    IFS0bits.T2IF = 0; // Clear Timer 2 interrupt flag
+}
 
 /******************************************************************************/
 /* DAC interrupt

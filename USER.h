@@ -21,20 +21,12 @@
 #include <stdbool.h>        /* For true/false definition */
 
 /******************************************************************************/
-/* Info
- *
- * 1. Built-in functions here:
- *
-/******************************************************************************/
-
-/******************************************************************************/
 /* PCB board
  *
  * This code is used with boards:
  * 1. Catalyst_PCB_revA             (use configuration "PCB_A__pic32MX350F128L")
 /******************************************************************************/
-//#define SitCom_Generator_PROTOBOARD
-#define SitCom_Generator_PCB_REVA
+#define Catalyst_PCB_revA
 
 /******************************************************************************/
 /* Version
@@ -61,12 +53,35 @@
 /* Pin Defines                                                                */
 /******************************************************************************/
 
-/************* OScillator *************/
-/* Connected to the secondary oscillator  */
+/************* Oscillator *************/
+/* Connected to the secondary oscillator */
 #define SOSCOTris	TRISBbits.TRISB4
 
-/* Connected to the secondary oscillator  */
+/* Connected to the secondary oscillator */
 #define SOSCITris	TRISAbits.TRISA4
+
+/************* Red LED *************/
+/* Connected to the red LED indicator */
+#define RedLEDTris	TRISDbits.TRISD3
+#define RedLED 0x00000008 //RD3
+
+/************* RGB LED *************/
+/* Connected to the RGB red LED indicator */
+#define RGB_RedLEDTris	TRISDbits.TRISD2
+#define RGB_RedLED 0x00000004 //RD2 used as OC3
+
+/* Connected to the RGB Green LED indicator */
+#define RGB_GreenLEDTris	TRISBbits.TRISB6
+#define RGB_GreenLED 0x00000040 //RB6 used as OC2
+
+/* Connected to the RGB Blue LED indicator */
+#define RGB_BlueLEDTris	TRISDbits.TRISD1
+#define RGB_BlueLED 0x00000002 //RD1 used as OC1
+
+/************* Super Cap *************/
+/* Connected to the power switch that charges the super capacitor */
+#define ChargeCapTris	TRISDbits.TRISD9
+#define ChargeCap 0x00000200 //RD9
 
 /******************************************************************************/
 /* Macro Functions                                                            */
