@@ -48,6 +48,7 @@
 #define FAIL 0
 #define YES 1
 #define NO 0
+#define k 1000.0
 
 /******************************************************************************/
 /* Pin Defines                                                                */
@@ -82,6 +83,57 @@
 /* Connected to the power switch that charges the super capacitor */
 #define ChargeCapTris	TRISDbits.TRISD9
 #define ChargeCap 0x00000200 //RD9
+
+/************* DCDC *************/
+/* Connected to the DC to DC converters inhibit pin */
+#define InhibitTris	TRISDbits.TRISD0
+#define Inhibit 0x00000001 //RD0
+
+/************* Raspberry pi *************/
+/* Connected to the power switch that controls the raspberry pi */
+#define RASP_ONTris	TRISAbits.TRISA5
+#define RASP_ON 0x00000020 //RA5
+
+#define RASP_ON2Tris	TRISAbits.TRISA14
+#define RASP_ON2 0x00004000 //RA14
+
+/* Connected to a pull up pin to detect if a raspberry pi is mounted */
+#define RASP_ConnectedTris	TRISGbits.TRISG7
+#define RASP_Connected 0x00000080 //RG7
+
+/************* Voltage rails for ADC read *************/
+/* Connected to the voltage divider to read the 5 volt rail */
+#define ADC_Volt5Tris	TRISBbits.TRISB5
+#define ADC_Volt5 0x00000020    //RB5 used as AN5
+#define ADC_Volt5_AN 5          //AN5
+
+/* Connected to the voltage divider to read the VIN rail */
+#define ADC_VINTris	TRISBbits.TRISB4
+#define ADC_VIN 0x00000010    //RB4 used as AN4
+#define ADC_VIN_AN 4          //AN4
+
+/* Connected to the voltage divider to read the 3.3 volt rail */
+#define ADC_Volt3_3Tris	TRISBbits.TRISB3
+#define ADC_Volt3_3 0x00000008    //RB3 used as AN3
+#define ADC_Volt3_3_AN 3          //AN3
+
+/* Connected to the voltage divider to read the 4.1 volt rail */
+#define ADC_Volt4_1Tris	TRISBbits.TRISB2
+#define ADC_Volt4_1 0x00000004    //RB2 used as AN2
+#define ADC_Volt4_1_AN 2          //AN2
+
+/* Connected to the voltage divider to read the VCAP rail */
+#define ADC_VCAPTris	TRISBbits.TRISB7
+#define ADC_VCAP 0x00000080    //RB7 used as AN7
+#define ADC_VCAP_AN 7          //AN7
+
+/* Connected to the positive reference voltage */
+#define ADC_VREF_posTris	TRISAbits.TRISA10
+#define ADC_VREF_pos 0x00000400    //RA10 used as VREF+
+
+/* Connected to the negative reference voltage */
+#define ADC_VREF_negTris	TRISAbits.TRISA9
+#define ADC_VREF_neg 0x00000200    //RA9 used as VREF-
 
 /******************************************************************************/
 /* Macro Functions                                                            */

@@ -4,4 +4,5 @@ USER.h  \
 MISC.h  \
 SYSTEM.h  \
 PWM.h  \
- TIMERS.h 
+ TIMERS.h  \
+SUPERCAP.h 

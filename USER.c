@@ -27,6 +27,7 @@
 #include "MISC.h"
 #include "PWM.h"
 #include "TIMERS.h"
+#include "SUPERCAP.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -55,8 +56,19 @@ void Init_App(void)
     LATF = 0;
     LATG = 0;
     
+    /* Set all pins as digital */
+    ANSELA = 0;
+    ANSELB = 0;
+    ANSELC = 0;
+    ANSELD = 0;
+    ANSELE = 0;
+    ANSELF = 0;
+    ANSELG = 0;
+    
+    /*~~~~~~~~~~~~~ Red LED ~~~~~~~~~~~~~~~~~*/
     RedLEDTris          = OUTPUT;
     
+    /*~~~~~~~~~~~~~ RGB LED ~~~~~~~~~~~~~~~~~*/
     MSC_RGBRedLEDOFF();
     MSC_RGBGreenLEDOFF();
     MSC_RGBBlueLEDOFF();
@@ -64,9 +76,36 @@ void Init_App(void)
     RGB_GreenLEDTris    = OUTPUT;
     RGB_BlueLEDTris     = OUTPUT;
     
-    /* SuperCap */
-    ChargeCapTris       = OUTPUT;
+    /*~~~~~~~~~~~~~ SuperCap ~~~~~~~~~~~~~~~~~*/
     SCP_Charge(TRUE);   // charge the capacitor
+    ChargeCapTris       = OUTPUT;
+    
+    /*~~~~~~~~~~~~~ DCDC ~~~~~~~~~~~~~~~~~*/
+    SCP_Volts5(ON);
+    InhibitTris         = OUTPUT;
+    
+    /*~~~~~~~~~~~~~ Raspberry pi ~~~~~~~~~~~~~~~~~*/
+    /* Raspberry pi rail */
+    SCP_RASP_ON(OFF);
+    RASP_ONTris         = OUTPUT;
+    RASP_ON2Tris        = INPUT;
+    
+    /* Raspberry pi connected detector */
+    RASP_ConnectedTris  = INPUT;
+    SCP_RASP_Connected();
+    
+    /*~~~~~~~~~~~~~ Voltages rails for ADC ~~~~~~~~~~~~~~~~~*/
+    ADC_Volt5Tris       = INPUT;
+    ADC_Volt3_3Tris     = INPUT;
+    ADC_Volt4_1Tris     = INPUT;
+    ADC_VINTris         = INPUT;
+    ADC_VCAPTris        = INPUT;
+    ADC_VREF_posTris    = INPUT;
+    ADC_VREF_negTris    = INPUT;
+    
+    /* select the ADC channels and references as analog */
+    ANSELB              |= (ADC_Volt5 + ADC_Volt3_3 + ADC_Volt4_1 + ADC_VIN + ADC_VCAP);
+    ANSELA              |= ADC_VREF_pos;
 }
 
 /******************************************************************************/
@@ -80,6 +119,7 @@ void Init_System(void)
     __builtin_enable_interrupts();
     InitTIMERS();
     InitPWM();
+    InitADC();
     
 }
 

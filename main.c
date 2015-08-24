@@ -6,8 +6,9 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 07/28/15     1.0_DW0a    Initial project make.
+ * 08/24/15     1.0_DW0a    Initial project make.
  *                          Added RGB LED functionality.
+ *                          Added internal ADC read functionality.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -29,6 +30,7 @@
 #include "SYSTEM.h"
 #include "USER.h"
 #include "MISC.h"
+#include "ADC.h"
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -50,6 +52,7 @@ int main (void)
     SYS_ConfigureOscillator();
     Init_App();
     Init_System();
+    SCP_StatusUpdate();
 
     /* Flash LEDs */
     for (i=0;i<24;i++)

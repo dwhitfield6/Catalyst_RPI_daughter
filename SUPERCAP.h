@@ -36,18 +36,27 @@ typedef struct rails
     unsigned char Warn4_1;          // Warning VCAP is under 4.1 volts
     unsigned char WarnPOT;          // Warning VCAP is under the potentiometer voltage
     unsigned char WarnVIN;          // Warning VIN is under 9 volts
-    unsigned char Supercap_state;   // Status of charging or dicharging cap
+    unsigned char Supercap_state;   // Status of charging or discharging cap
     unsigned char DCDC_state;       // Status of DCDC converter for 5 volt rail
-    unsigned char Rasp_state;       // Status of the raspberry pie voltage rail
+    unsigned char Rasp_state;       // Status of the raspberry pi voltage rail
+    unsigned char Rasp_connected;   // Raspberry pi present detector
 }Rails;
+
+/******************************************************************************/
+/* Defines                                                                    */
+/******************************************************************************/
+#define CHARGING        1
+#define DISCHARGING     0
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+Rails RailStatus;
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
 inline void SCP_Charge(unsigned char action);
+void SCP_StatusUpdate(void);
 
 #endif	/* SUPERCAP_H */

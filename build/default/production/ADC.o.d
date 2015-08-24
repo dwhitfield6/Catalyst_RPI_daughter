@@ -1,3 +1,5 @@
 build/default/production/ADC.o:  \
 ADC.c  \
-USER.h 
+USER.h  \
+ADC.h  \
+SUPERCAP.h 
