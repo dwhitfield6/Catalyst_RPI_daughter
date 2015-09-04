@@ -13,8 +13,8 @@ ifeq "${IGNORE_LOCAL}" "TRUE"
 else
 include Makefile
 # Include makefile containing local settings
-ifeq "$(wildcard nbproject/Makefile-local-default.mk)" "nbproject/Makefile-local-default.mk"
-include nbproject/Makefile-local-default.mk
+ifeq "$(wildcard nbproject/Makefile-local-Catalyst_revA_PIC32MX350f128L.mk)" "nbproject/Makefile-local-Catalyst_revA_PIC32MX350f128L.mk"
+include nbproject/Makefile-local-Catalyst_revA_PIC32MX350f128L.mk
 endif
 endif
 
@@ -25,7 +25,7 @@ MV=mv
 CP=cp 
 
 # Macros
-CND_CONF=default
+CND_CONF=Catalyst_revA_PIC32MX350f128L
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
 IMAGE_TYPE=debug
 OUTPUT_SUFFIX=elf
@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=CONFIGURATION.c main.c SYSTEM.c EXCEPTIONS.c INTERRUPTS.c USER.c MISC.c DMA.c UART.c ADC.c TIMERS.c PWM.c SUPERCAP.c FLASH.c
+SOURCEFILES_QUOTED_IF_SPACED=CONFIGURATION.c main.c SYSTEM.c EXCEPTIONS.c INTERRUPTS.c USER.c MISC.c DMA.c UART.c ADC.c TIMERS.c PWM.c FLASH.c POWER.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/CONFIGURATION.o ${OBJECTDIR}/main.o ${OBJECTDIR}/SYSTEM.o ${OBJECTDIR}/EXCEPTIONS.o ${OBJECTDIR}/INTERRUPTS.o ${OBJECTDIR}/USER.o ${OBJECTDIR}/MISC.o ${OBJECTDIR}/DMA.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/ADC.o ${OBJECTDIR}/TIMERS.o ${OBJECTDIR}/PWM.o ${OBJECTDIR}/SUPERCAP.o ${OBJECTDIR}/FLASH.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/CONFIGURATION.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/SYSTEM.o.d ${OBJECTDIR}/EXCEPTIONS.o.d ${OBJECTDIR}/INTERRUPTS.o.d ${OBJECTDIR}/USER.o.d ${OBJECTDIR}/MISC.o.d ${OBJECTDIR}/DMA.o.d ${OBJECTDIR}/UART.o.d ${OBJECTDIR}/ADC.o.d ${OBJECTDIR}/TIMERS.o.d ${OBJECTDIR}/PWM.o.d ${OBJECTDIR}/SUPERCAP.o.d ${OBJECTDIR}/FLASH.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/CONFIGURATION.o ${OBJECTDIR}/main.o ${OBJECTDIR}/SYSTEM.o ${OBJECTDIR}/EXCEPTIONS.o ${OBJECTDIR}/INTERRUPTS.o ${OBJECTDIR}/USER.o ${OBJECTDIR}/MISC.o ${OBJECTDIR}/DMA.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/ADC.o ${OBJECTDIR}/TIMERS.o ${OBJECTDIR}/PWM.o ${OBJECTDIR}/FLASH.o ${OBJECTDIR}/POWER.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/CONFIGURATION.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/SYSTEM.o.d ${OBJECTDIR}/EXCEPTIONS.o.d ${OBJECTDIR}/INTERRUPTS.o.d ${OBJECTDIR}/USER.o.d ${OBJECTDIR}/MISC.o.d ${OBJECTDIR}/DMA.o.d ${OBJECTDIR}/UART.o.d ${OBJECTDIR}/ADC.o.d ${OBJECTDIR}/TIMERS.o.d ${OBJECTDIR}/PWM.o.d ${OBJECTDIR}/FLASH.o.d ${OBJECTDIR}/POWER.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/CONFIGURATION.o ${OBJECTDIR}/main.o ${OBJECTDIR}/SYSTEM.o ${OBJECTDIR}/EXCEPTIONS.o ${OBJECTDIR}/INTERRUPTS.o ${OBJECTDIR}/USER.o ${OBJECTDIR}/MISC.o ${OBJECTDIR}/DMA.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/ADC.o ${OBJECTDIR}/TIMERS.o ${OBJECTDIR}/PWM.o ${OBJECTDIR}/SUPERCAP.o ${OBJECTDIR}/FLASH.o
+OBJECTFILES=${OBJECTDIR}/CONFIGURATION.o ${OBJECTDIR}/main.o ${OBJECTDIR}/SYSTEM.o ${OBJECTDIR}/EXCEPTIONS.o ${OBJECTDIR}/INTERRUPTS.o ${OBJECTDIR}/USER.o ${OBJECTDIR}/MISC.o ${OBJECTDIR}/DMA.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/ADC.o ${OBJECTDIR}/TIMERS.o ${OBJECTDIR}/PWM.o ${OBJECTDIR}/FLASH.o ${OBJECTDIR}/POWER.o
 
 # Source Files
-SOURCEFILES=CONFIGURATION.c main.c SYSTEM.c EXCEPTIONS.c INTERRUPTS.c USER.c MISC.c DMA.c UART.c ADC.c TIMERS.c PWM.c SUPERCAP.c FLASH.c
+SOURCEFILES=CONFIGURATION.c main.c SYSTEM.c EXCEPTIONS.c INTERRUPTS.c USER.c MISC.c DMA.c UART.c ADC.c TIMERS.c PWM.c FLASH.c POWER.c
 
 
 CFLAGS=
@@ -75,7 +75,7 @@ FIXDEPS=fixDeps
 ifneq ($(INFORMATION_MESSAGE), )
 	@echo $(INFORMATION_MESSAGE)
 endif
-	${MAKE}  -f nbproject/Makefile-default.mk dist/${CND_CONF}/${IMAGE_TYPE}/Catalyst_RPI_daughter.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+	${MAKE}  -f nbproject/Makefile-Catalyst_revA_PIC32MX350f128L.mk dist/${CND_CONF}/${IMAGE_TYPE}/Catalyst_RPI_daughter.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
 
 MP_PROCESSOR_OPTION=32MX350F128L
 MP_LINKER_FILE_OPTION=
@@ -166,17 +166,17 @@ ${OBJECTDIR}/PWM.o: PWM.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/PWM.o 
 	@${FIXDEPS} "${OBJECTDIR}/PWM.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/PWM.o.d" -o ${OBJECTDIR}/PWM.o PWM.c   
 	
-${OBJECTDIR}/SUPERCAP.o: SUPERCAP.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/SUPERCAP.o.d 
-	@${RM} ${OBJECTDIR}/SUPERCAP.o 
-	@${FIXDEPS} "${OBJECTDIR}/SUPERCAP.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/SUPERCAP.o.d" -o ${OBJECTDIR}/SUPERCAP.o SUPERCAP.c   
-	
 ${OBJECTDIR}/FLASH.o: FLASH.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/FLASH.o.d 
 	@${RM} ${OBJECTDIR}/FLASH.o 
 	@${FIXDEPS} "${OBJECTDIR}/FLASH.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/FLASH.o.d" -o ${OBJECTDIR}/FLASH.o FLASH.c   
+	
+${OBJECTDIR}/POWER.o: POWER.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/POWER.o.d 
+	@${RM} ${OBJECTDIR}/POWER.o 
+	@${FIXDEPS} "${OBJECTDIR}/POWER.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/POWER.o.d" -o ${OBJECTDIR}/POWER.o POWER.c   
 	
 else
 ${OBJECTDIR}/CONFIGURATION.o: CONFIGURATION.c  nbproject/Makefile-${CND_CONF}.mk
@@ -251,17 +251,17 @@ ${OBJECTDIR}/PWM.o: PWM.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/PWM.o 
 	@${FIXDEPS} "${OBJECTDIR}/PWM.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/PWM.o.d" -o ${OBJECTDIR}/PWM.o PWM.c   
 	
-${OBJECTDIR}/SUPERCAP.o: SUPERCAP.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/SUPERCAP.o.d 
-	@${RM} ${OBJECTDIR}/SUPERCAP.o 
-	@${FIXDEPS} "${OBJECTDIR}/SUPERCAP.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/SUPERCAP.o.d" -o ${OBJECTDIR}/SUPERCAP.o SUPERCAP.c   
-	
 ${OBJECTDIR}/FLASH.o: FLASH.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/FLASH.o.d 
 	@${RM} ${OBJECTDIR}/FLASH.o 
 	@${FIXDEPS} "${OBJECTDIR}/FLASH.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/FLASH.o.d" -o ${OBJECTDIR}/FLASH.o FLASH.c   
+	
+${OBJECTDIR}/POWER.o: POWER.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/POWER.o.d 
+	@${RM} ${OBJECTDIR}/POWER.o 
+	@${FIXDEPS} "${OBJECTDIR}/POWER.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/POWER.o.d" -o ${OBJECTDIR}/POWER.o POWER.c   
 	
 endif
 
@@ -276,12 +276,12 @@ endif
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
 dist/${CND_CONF}/${IMAGE_TYPE}/Catalyst_RPI_daughter.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk    
 	@${MKDIR} dist/${CND_CONF}/${IMAGE_TYPE} 
-	${MP_CC} $(MP_EXTRA_LD_PRE)  -mdebugger -D__MPLAB_DEBUGGER_PK3=1 -mprocessor=$(MP_PROCESSOR_OPTION)  -o dist/${CND_CONF}/${IMAGE_TYPE}/Catalyst_RPI_daughter.${IMAGE_TYPE}.${OUTPUT_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}           -mreserve=data@0x0:0x1FC -mreserve=boot@0x1FC02000:0x1FC02FEF -mreserve=boot@0x1FC02000:0x1FC0275F  -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_PK3=1,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"
+	${MP_CC} $(MP_EXTRA_LD_PRE)  -mdebugger -D__MPLAB_DEBUGGER_PK3=1 -mprocessor=$(MP_PROCESSOR_OPTION)  -o dist/${CND_CONF}/${IMAGE_TYPE}/Catalyst_RPI_daughter.${IMAGE_TYPE}.${OUTPUT_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}           -mreserve=data@0x0:0x1FC -mreserve=boot@0x1FC02000:0x1FC02FEF -mreserve=boot@0x1FC02000:0x1FC0275F  -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_PK3=1,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map",--memorysummary,dist/${CND_CONF}/${IMAGE_TYPE}/memoryfile.xml
 	
 else
 dist/${CND_CONF}/${IMAGE_TYPE}/Catalyst_RPI_daughter.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk   
 	@${MKDIR} dist/${CND_CONF}/${IMAGE_TYPE} 
-	${MP_CC} $(MP_EXTRA_LD_PRE)  -mprocessor=$(MP_PROCESSOR_OPTION)  -o dist/${CND_CONF}/${IMAGE_TYPE}/Catalyst_RPI_daughter.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"
+	${MP_CC} $(MP_EXTRA_LD_PRE)  -mprocessor=$(MP_PROCESSOR_OPTION)  -o dist/${CND_CONF}/${IMAGE_TYPE}/Catalyst_RPI_daughter.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map",--memorysummary,dist/${CND_CONF}/${IMAGE_TYPE}/memoryfile.xml
 	${MP_CC_DIR}\\xc32-bin2hex dist/${CND_CONF}/${IMAGE_TYPE}/Catalyst_RPI_daughter.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} 
 endif
 
@@ -295,8 +295,8 @@ endif
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
-	${RM} -r build/default
-	${RM} -r dist/default
+	${RM} -r build/Catalyst_revA_PIC32MX350f128L
+	${RM} -r dist/Catalyst_revA_PIC32MX350f128L
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

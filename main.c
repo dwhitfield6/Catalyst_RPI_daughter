@@ -6,9 +6,10 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 08/24/15     1.0_DW0a    Initial project make.
+ * 09/04/15     1.0_DW0a    Initial project make.
  *                          Added RGB LED functionality.
  *                          Added internal ADC read functionality.
+ *                          Added UART functionality.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -52,7 +53,11 @@ int main (void)
     SYS_ConfigureOscillator();
     Init_App();
     Init_System();
-    SCP_StatusUpdate();
+    PWR_StatusUpdate();
+    while(1)
+    {
+        UART_PrintBanner();
+    }
 
     /* Flash LEDs */
     for (i=0;i<24;i++)

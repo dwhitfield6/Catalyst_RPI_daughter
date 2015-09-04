@@ -27,7 +27,15 @@
 #include "MISC.h"
 #include "PWM.h"
 #include "TIMERS.h"
-#include "SUPERCAP.h"
+#include "POWER.h"
+
+/******************************************************************************/
+/* Version variables                                                          */
+/******************************************************************************/
+const unsigned char Version[]        = CPU_VERSION;
+const unsigned char Revision[]       = CPU_REVISION;
+const unsigned char Alpha[]          = CPU_ALPHA;
+const unsigned char Branch_Version[] = CPU_BRANCH;
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -77,25 +85,30 @@ void Init_App(void)
     RGB_BlueLEDTris     = OUTPUT;
     
     /*~~~~~~~~~~~~~ SuperCap ~~~~~~~~~~~~~~~~~*/
-    SCP_Charge(TRUE);   // charge the capacitor
+    PWR_Charge(TRUE);   // charge the capacitor
     ChargeCapTris       = OUTPUT;
     
     /*~~~~~~~~~~~~~ DCDC ~~~~~~~~~~~~~~~~~*/
-    SCP_Volts5(ON);
+    PWR_Volts5(ON);
     InhibitTris         = OUTPUT;
     
     /*~~~~~~~~~~~~~ Raspberry pi ~~~~~~~~~~~~~~~~~*/
     /* Raspberry pi rail */
-    SCP_RASP_ON(OFF);
+    PWR_RASP(OFF);
     RASP_ONTris         = OUTPUT;
     RASP_ON2Tris        = INPUT;
     
     /* Raspberry pi connected detector */
     RASP_ConnectedTris  = INPUT;
-    SCP_RASP_Connected();
+    PWR_RASP_Connected();
     
+    /* Raspberry pi UART */
+    RASP_UART_RXTris    = INPUT;
+    RASP_UART_TX2Tris   = INPUT;
+    RASP_UART_TXTris    = OUTPUT;
+            
     /*~~~~~~~~~~~~~ Voltages rails for ADC ~~~~~~~~~~~~~~~~~*/
-    ADC_Volt5Tris       = INPUT;
+    ADC_Volt5_0Tris     = INPUT;
     ADC_Volt3_3Tris     = INPUT;
     ADC_Volt4_1Tris     = INPUT;
     ADC_VINTris         = INPUT;
@@ -104,8 +117,28 @@ void Init_App(void)
     ADC_VREF_negTris    = INPUT;
     
     /* select the ADC channels and references as analog */
-    ANSELB              |= (ADC_Volt5 + ADC_Volt3_3 + ADC_Volt4_1 + ADC_VIN + ADC_VCAP);
-    ANSELA              |= ADC_VREF_pos;
+    ANSELB              |= (ADC_Volt5_0 + ADC_Volt3_3 + ADC_Volt4_1 + ADC_VIN + ADC_VCAP);
+    ANSELA              |= (ADC_VREF_pos + ADC_VREF_neg);
+    
+    /*~~~~~~~~~~~~~ R-232 DB9 male and female ~~~~~~~~~~~~~~~~~*/
+    /* RS-232 male */
+    RS232_MALE_TXTris       = OUTPUT;
+    RS232_MALE_RXTris       = INPUT;
+    RS232_MALE_RTSTris      = OUTPUT;
+    RS232_MALE_CTSTris      = INPUT;
+    
+    /* RS-232 female */
+    RS232_FEMALE_TXTris     = OUTPUT;
+    RS232_FEMALE_TX2Tris    = INPUT;
+    RS232_FEMALE_RXTris     = INPUT;
+    RS232_FEMALE_RTSTris    = OUTPUT;
+    RS232_FEMALE_CTSTris    = INPUT;
+    RS232_FEMALE_CTS2Tris   = INPUT;
+    
+    RS232_MALE_SHUTDOWNTris     = OUTPUT;
+    RS232_FEMALE_SHUTDOWNTris   = OUTPUT;
+    RS232_MALE_ENABLETris       = OUTPUT;
+    RS232_FEMALE_ENABLETris     = OUTPUT;
 }
 
 /******************************************************************************/
@@ -116,11 +149,11 @@ void Init_App(void)
 void Init_System(void)
 {
     INTCONbits.MVEC = TRUE; // Multi-vectored interrupts
-    __builtin_enable_interrupts();
     InitTIMERS();
     InitPWM();
     InitADC();
-    
+    InitUART();
+    SYS_Interrupts(ON);
 }
 
 /*-----------------------------------------------------------------------------/

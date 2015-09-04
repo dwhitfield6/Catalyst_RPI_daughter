@@ -34,7 +34,23 @@
  *
  * This is the reference voltage for the a measurements.
 /******************************************************************************/
-#define VREF 2.5
+#define VREF 3.3
+
+/******************************************************************************/
+/* R26
+ *
+ * This is the resistance of R26 which is used as a voltage divider to read
+ *  the 5.0 volt rail.
+/******************************************************************************/
+#define R26 200000.0
+
+/******************************************************************************/
+/* R27
+ *
+ * This is the resistance of R27 which is used as a voltage divider to read
+ *  the 5.0 volt rail.
+/******************************************************************************/
+#define R27 100000.0
 
 /******************************************************************************/
 /* R28
@@ -69,6 +85,38 @@
 #define R31 100000.0
 
 /******************************************************************************/
+/* R32
+ *
+ * This is the resistance of R32 which is used as a voltage divider to read
+ *  the 4.1 volt rail.
+/******************************************************************************/
+#define R32 200000.0
+
+/******************************************************************************/
+/* R33
+ *
+ * This is the resistance of R33 which is used as a voltage divider to read
+ *  the 4.1 volt rail.
+/******************************************************************************/
+#define R33 100000.0
+
+/******************************************************************************/
+/* R34
+ *
+ * This is the resistance of R34 which is used as a voltage divider to read
+ *  the VCAP volt rail.
+/******************************************************************************/
+#define R34 200000.0
+
+/******************************************************************************/
+/* R35
+ *
+ * This is the resistance of R35 which is used as a voltage divider to read
+ *  the VCAP volt rail.
+/******************************************************************************/
+#define R35 100000.0
+
+/******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
 
@@ -85,7 +133,11 @@
 /******************************************************************************/
 void InitADC(void);
 void ADC_ReadVIN(void);
+void ADC_ReadVCAP(void);
 void ADC_ReadRails(void);
 void ADC_ReadVolt3_3(void);
+void ADC_ReadVolt4_1(void);
+void ADC_ReadVolt5_0(void);
+double ADC_ReadChannel(unsigned char channel);
 
 #endif	/* ADC_H */

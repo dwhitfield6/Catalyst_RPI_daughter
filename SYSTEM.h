@@ -32,11 +32,12 @@
  *
 /******************************************************************************/
 #define FOSC        96000000L
+
 /******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
-#define FCY             (FOSC/2)
-#define SYS_FREQ        FCY
+#define SYSCLK      FOSC
+#define PBCLK       SYSCLK/2
 
 /******************************************************************************/
 /* Function prototypes                                                        */
@@ -44,4 +45,6 @@
 void SYS_ConfigureOscillator(void);
 void SYS_SystemUnlock(void);
 void SYS_SystemLock(void);
+void SYS_Interrupts(unsigned char state);
+
 #endif	/* SYSTEM_H */

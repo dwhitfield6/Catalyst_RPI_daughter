@@ -10,8 +10,7 @@
 /******************************************************************************/
 
 /******************************************************************************/
-/* Contains functions for the Supercap including reading the voltage comparator
- * and voltages from the ADC.
+/* Contains functions for the power scheme including the supercap.
  *
 /******************************************************************************/
 
@@ -24,7 +23,7 @@
 #include <stdbool.h>       /* For true/false definition */
 
 #include "USER.h"
-#include "SUPERCAP.h"
+#include "POWER.h"
 #include "ADC.h"
 
 /******************************************************************************/
@@ -36,11 +35,11 @@
 /******************************************************************************/
 
 /******************************************************************************/
-/* SCP_Charge
+/* PWR_Charge
  *
  * Controls the charging of the SuperCap.
 /******************************************************************************/
-inline void SCP_Charge(unsigned char action)
+inline void PWR_Charge(unsigned char action)
 {
     if (action)
     {
@@ -55,11 +54,11 @@ inline void SCP_Charge(unsigned char action)
 }
 
 /******************************************************************************/
-/* SCP_Volts5
+/* PWR_Volts5
  *
  * Controls the 5 volt DCDC converter.
 /******************************************************************************/
-inline void SCP_Volts5(unsigned char action)
+inline void PWR_Volts5(unsigned char action)
 {
     if (action)
     {       
@@ -74,11 +73,11 @@ inline void SCP_Volts5(unsigned char action)
 }
 
 /******************************************************************************/
-/* SCP_RASP_ON
+/* PWR_RASP
  *
  * Controls the 5 volt rail to the raspberry pi.
 /******************************************************************************/
-inline void SCP_RASP_ON(unsigned char action)
+inline void PWR_RASP(unsigned char action)
 {
     if (action)
     {       
@@ -93,11 +92,11 @@ inline void SCP_RASP_ON(unsigned char action)
 }
 
 /******************************************************************************/
-/* SCP_RASP_Read
+/* PWR_RASP_Read
  *
  * Reads the state of the raspberry pi voltage rail.
 /******************************************************************************/
-inline unsigned char SCP_RASP_Read(void)
+inline unsigned char PWR_RASP_Read(void)
 {
     if (PORTA & RASP_ON2)
     {       
@@ -109,11 +108,11 @@ inline unsigned char SCP_RASP_Read(void)
 }
 
 /******************************************************************************/
-/* SCP_RASP_Connected
+/* PWR_RASP_Connected
  *
  * Detects if a raspberry pi is present or not.
 /******************************************************************************/
-inline unsigned char SCP_RASP_Connected(void)
+inline unsigned char PWR_RASP_Connected(void)
 {
     if (PORTG & RASP_Connected)
     {       
@@ -129,14 +128,14 @@ inline unsigned char SCP_RASP_Connected(void)
 /******************************************************************************/
 
 /******************************************************************************/
-/* SCP_StatusUpdate
+/* PWR_StatusUpdate
  *
  * The function reads the voltage rails and rail states.
 /******************************************************************************/
-void SCP_StatusUpdate(void)
+void PWR_StatusUpdate(void)
 {
-    SCP_RASP_Read();
-    SCP_RASP_Connected();
+    PWR_RASP_Read();
+    PWR_RASP_Connected();
     ADC_ReadRails();
 }
 /*-----------------------------------------------------------------------------/

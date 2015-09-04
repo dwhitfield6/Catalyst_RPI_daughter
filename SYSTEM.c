@@ -49,6 +49,7 @@ void SYS_ConfigureOscillator(void)
     
     /* Configure the peripheral clock bus */
     while(!OSCCONbits.PBDIVRDY);
+    OSCCONbits.PBDIV = 0b01; // PBCLK is SYSCLK divided by 2
 }
 
 /******************************************************************************/
@@ -73,6 +74,23 @@ void SYS_SystemUnlock(void)
 void SYS_SystemLock(void)
 {
     SYSKEY = 0x33333333;
+}
+
+/******************************************************************************/
+/* SYS_Interrupts
+ *
+ * The function controls the interrupts.
+/******************************************************************************/
+void SYS_Interrupts(unsigned char state)
+{
+    if(state)
+    {
+        __builtin_enable_interrupts();
+    }
+    else
+    {
+        __builtin_disable_interrupts();
+    }
 }
 /*-----------------------------------------------------------------------------/
  End of File

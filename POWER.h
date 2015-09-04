@@ -12,8 +12,8 @@
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
-#ifndef SUPERCAP_H
-#define	SUPERCAP_H
+#ifndef POWER_H
+#define	POWER_H
 
 #include <xc.h>         /* XC8 General Include File */
 
@@ -28,7 +28,7 @@
 typedef struct rails
 {
     double VCAP;                    // Voltage of rail VCAP
-    double Volt5;                   // Voltage of 5 volt rail
+    double Volt5_0;                   // Voltage of 5 volt rail
     double Volt3_3;                 // Voltage of 3.3 volt rail
     double Volt4_1;                 // Voltage of 4.1 volt rail
     double VIN;                     // Voltage of 4.1 volt rail
@@ -56,7 +56,7 @@ Rails RailStatus;
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-inline void SCP_Charge(unsigned char action);
-void SCP_StatusUpdate(void);
+inline void PWR_Charge(unsigned char action);
+void PWR_StatusUpdate(void);
 
-#endif	/* SUPERCAP_H */
+#endif	/* POWER_H */
