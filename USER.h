@@ -160,7 +160,7 @@
 
 /* Connected to the rs232 driver shutdown for the female DB9 */
 #define RS232_FEMALE_SHUTDOWNTris	TRISDbits.TRISD13
-#define RS232_FEMALE_SHUTDOWN 0x00000080  // RD13
+#define RS232_FEMALE_SHUTDOWN 0x00002000  // RD13
 
 /* Connected to the rs232 driver enable for the female DB9 */
 #define RS232_FEMALE_ENABLETris	TRISDbits.TRISD6

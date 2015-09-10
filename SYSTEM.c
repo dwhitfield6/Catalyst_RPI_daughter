@@ -46,10 +46,6 @@ void SYS_ConfigureOscillator(void)
         while(!OSCCONbits.SLOCK);        
         /* PLL module is in lock or PLL module start-up timer is satisfied */
     }
-    
-    /* Configure the peripheral clock bus */
-    while(!OSCCONbits.PBDIVRDY);
-    OSCCONbits.PBDIV = 0b01; // PBCLK is SYSCLK divided by 2
 }
 
 /******************************************************************************/

@@ -70,6 +70,7 @@ void UART_RS232_FemaleSendConstStringCRLN(unsigned char* data);
 void UART_Rasp(unsigned char module, unsigned char transmit, unsigned char receive);
 void UART_RS232_Male(unsigned char module, unsigned char transmit, unsigned char receive);
 void UART_RS232_MaleParameters(unsigned long Baud,unsigned char Parity, unsigned char Stop);
+void UART_RS232_FemaleParameters(unsigned long Baud,unsigned char Parity, unsigned char Stop);
 void UART_RS232_Female(unsigned char module, unsigned char transmit, unsigned char receive);
 void UART_SetParameters1(unsigned long Baud,unsigned char Parity, unsigned char Stop);
 void UART_SetParameters2(unsigned long Baud,unsigned char Parity, unsigned char Stop);

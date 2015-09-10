@@ -28,7 +28,7 @@
  *
  * This is the CPU clock frequency.
  *
- * For this system the clock is 64MHz and the internal PLL is used.
+ * For this system the clock is 96MHz and the internal PLL is used.
  *
 /******************************************************************************/
 #define FOSC        96000000L

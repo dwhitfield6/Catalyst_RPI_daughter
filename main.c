@@ -6,10 +6,11 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 09/04/15     1.0_DW0a    Initial project make.
+ * 09/10/15     1.0_DW0a    Initial project make.
  *                          Added RGB LED functionality.
  *                          Added internal ADC read functionality.
  *                          Added UART functionality.
+ *                          Fixed UART bugs.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -23,9 +24,9 @@
 /******************************************************************************/
 #include <xc.h>         /* XC8 General Include File */
 
-#include <stdint.h>        /* For uint8_t definition */
-#include <stdbool.h>       /* For true/false definition */
-#include <stdio.h>       /* For true/false definition */
+#include <stdint.h>        
+#include <stdbool.h>       
+#include <stdio.h>         
 #include <string.h>
 
 #include "SYSTEM.h"
@@ -54,10 +55,7 @@ int main (void)
     Init_App();
     Init_System();
     PWR_StatusUpdate();
-    while(1)
-    {
-        UART_PrintBanner();
-    }
+    UART_PrintBanner();        
 
     /* Flash LEDs */
     for (i=0;i<24;i++)

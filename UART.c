@@ -6,7 +6,7 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 08/21/15     1.0_DW0a    Initial project make.
+ * 08/21/15     1.0_DW0a    Initial project make.                          
 /******************************************************************************/
 
 /******************************************************************************/
@@ -257,22 +257,27 @@ void InitUART(void)
     U4STA  = 0;
     U5STA  = 0;
     
-    /* Set remappable output */
+    /* Set remappable outputs */
     RPC4R = RASP_UART_TX_Module;        // U1TX
     RPF5R = RS232_MALE_TX_Module;       // U2TX
     RPF5R = RS232_MALE_RTS_Module;      // U3TX
     RPF12R = RS232_FEMALE_TX_Module;    // U4TX
     RPF8R = RS232_FEMALE_RTS_Module;    // U5TX
     
-    /* Set remappable input */
+    /* Set remappable inputs */
     U1RXR = RASP_UART_RX_Pin;           // U1RX
     U2RXR = RS232_MALE_RX_Pin;          // U2RX
     U3RXR = RS232_MALE_CTS_Pin;         // U3RX
     U4RXR = RS232_FEMALE_RX_Pin;        // U4RX
     U5RXR = RS232_FEMALE_CTS_Pin;       // U5RX
     
+    /* Set up the Male RS232 port */
     UART_RS232_MaleParameters(115200, NO, 1);
     UART_RS232_Male(ON, ON, ON);
+    
+    /* Set up the Female RS232 port */
+    UART_RS232_FemaleParameters(115200, NO, 1);
+    UART_RS232_Female(ON, ON, ON);
 
 }
 
@@ -283,7 +288,7 @@ void InitUART(void)
 /******************************************************************************/
 void UART_PrintBanner(void)
 {
-    UART_RS232_FemaleSendStringCRLN("\r\nCatalys PIC Board");
+    UART_RS232_FemaleSendStringCRLN("\r\nCatalyst PIC Board");
     UART_RS232_FemaleSendStringCRLN("RD Instruments (c) 2015");
     UART_RS232_FemaleSendStringCRLN("All rights reserved.");
     UART_RS232_FemaleSendString("Version: ");
@@ -314,11 +319,10 @@ void UART_PrintBanner(void)
 /******************************************************************************/
 void UART_RS232_FemaleSendChar(unsigned char data)
 {
-    while(U3STAbits.UTXBF)
-    {
-        /* transmit buffer has room */
-        UART_SendCharacter3(data);
-    }
+    while(U4STAbits.UTXBF);
+    
+    /* transmit buffer has room */
+    UART_SendCharacter4(data);
 }
 
 /******************************************************************************/
@@ -328,11 +332,10 @@ void UART_RS232_FemaleSendChar(unsigned char data)
 /******************************************************************************/
 void UART_RS232_MaleSendChar(unsigned char data)
 {
-    while(U1STAbits.UTXBF)
-    {
-        /* transmit buffer has room */
-        UART_SendCharacter1(data);
-    }
+    while(U2STAbits.UTXBF);
+    
+    /* transmit buffer has room */
+    UART_SendCharacter2(data);
 }
 
 /******************************************************************************/
@@ -342,11 +345,11 @@ void UART_RS232_MaleSendChar(unsigned char data)
 /******************************************************************************/
 void UART_RS232_FemaleSendConstChar(const unsigned char data)
 {
-    while(U3STAbits.UTXBF)
-    {
-        /* transmit buffer has room */
-        UART_SendCharacter3((unsigned char)data);
-    }
+    while(U4STAbits.UTXBF);
+
+    /* transmit buffer has room */
+    UART_SendCharacter4((unsigned char)data);
+
 }
 
 /******************************************************************************/
@@ -356,11 +359,10 @@ void UART_RS232_FemaleSendConstChar(const unsigned char data)
 /******************************************************************************/
 void UART_RS232_MaleSendConstChar(const unsigned char data)
 {
-    while(U1STAbits.UTXBF)
-    {
-        /* transmit buffer has room */
-        UART_SendCharacter1((unsigned char)data);
-    }
+    while(U2STAbits.UTXBF);
+
+    /* transmit buffer has room */
+    UART_SendCharacter2((unsigned char)data);
 }
 
 /******************************************************************************/
@@ -513,22 +515,34 @@ void UART_RS232_Male(unsigned char module, unsigned char transmit, unsigned char
  *
  * The function controls the UART port connected to the raspberry pi.
 /******************************************************************************/
-void UART_RS232_MaleParameters(unsigned long Baud,unsigned char Parity, unsigned char Stop)
-{
-    UART_SetParameters2(Baud, Parity, Stop);
-}
-
-/******************************************************************************/
-/* UART_Rasp_Comm
- *
- * The function controls the UART port connected to the raspberry pi.
-/******************************************************************************/
 void UART_RS232_Female(unsigned char module, unsigned char transmit, unsigned char receive)
 {
     UART_RS232_FemaleDriver(module);
     UART_Module4(module);
     UART_Receiver4(receive);
     UART_Transmitter4(transmit);
+}
+
+/******************************************************************************/
+/* UART_RS232_MaleParameters
+ *
+ * The function sets the baud, parity, and stop bits number for the male RS232
+ *  port.
+/******************************************************************************/
+void UART_RS232_MaleParameters(unsigned long Baud,unsigned char Parity, unsigned char Stop)
+{
+    UART_SetParameters2(Baud, Parity, Stop);
+}
+
+/******************************************************************************/
+/* UART_RS232_FemaleParameters
+ *
+ * The function sets the baud, parity, and stop bits number for the female
+ *  RS232 port.
+/******************************************************************************/
+void UART_RS232_FemaleParameters(unsigned long Baud,unsigned char Parity, unsigned char Stop)
+{
+    UART_SetParameters4(Baud, Parity, Stop);
 }
 
 /******************************************************************************/
@@ -568,7 +582,7 @@ void UART_SetParameters1(unsigned long Baud,unsigned char Parity, unsigned char 
     }
     
     /* Set Baud clock */
-    U1MODEbits.BRGH = 0; // High speed mode
+    U1MODEbits.BRGH = 1; // High speed mode
     U1BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(4.0* (double)Baud)) - 1.0);
 }
 
@@ -609,7 +623,7 @@ void UART_SetParameters2(unsigned long Baud,unsigned char Parity, unsigned char 
     }
     
     /* Set Baud clock */
-    U2MODEbits.BRGH = 0; // High speed mode
+    U2MODEbits.BRGH = 1; // High speed mode
     U2BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
 }
 
@@ -650,7 +664,7 @@ void UART_SetParameters3(unsigned long Baud,unsigned char Parity, unsigned char 
     }
     
     /* Set Baud clock */
-    U3MODEbits.BRGH = 0; // High speed mode
+    U3MODEbits.BRGH = 1; // High speed mode
     U3BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
 }
 
@@ -691,7 +705,7 @@ void UART_SetParameters4(unsigned long Baud,unsigned char Parity, unsigned char 
     }
     
     /* Set Baud clock */
-    U4MODEbits.BRGH = 0; // High speed mode
+    U4MODEbits.BRGH = 1; // High speed mode
     U4BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
 }
 
@@ -732,7 +746,7 @@ void UART_SetParameters5(unsigned long Baud,unsigned char Parity, unsigned char 
     }
     
     /* Set Baud clock */
-    U5MODEbits.BRGH = 0; // High speed mode
+    U5MODEbits.BRGH = 1; // High speed mode
     U5BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
 }
 
