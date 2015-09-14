@@ -81,6 +81,7 @@
 #include <sys/attribs.h>     /* For __ISR definition */
 
 #include "PWM.h"
+#include "UART.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -97,7 +98,7 @@
 /******************************************************************************/
 /* PWM RED interrupt
 /******************************************************************************/
-void __ISR(_TIMER_2_VECTOR , IPL7) TMR2_IntHandler (void)
+void __ISR(_TIMER_2_VECTOR , IPL7AUTO) TMR2_IntHandler (void)
 {
     OC1RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
     OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
@@ -106,8 +107,64 @@ void __ISR(_TIMER_2_VECTOR , IPL7) TMR2_IntHandler (void)
 }
 
 /******************************************************************************/
-/* DAC interrupt
+/* UART 2 Interrupt (Male rs232 DB9 connector)
 /******************************************************************************/
+void __ISR(_UART_2_VECTOR , IPL7AUTO) UART2_IntHandler (void)
+{
+    unsigned char data;
+    
+    data = U2RXREG;
+    IFS1bits.U2RXIF = 0; // clear interrupt
+}
+
+/******************************************************************************/
+/* UART 4 Interrupt (Female rs232 DB9 connector)
+/******************************************************************************/
+void __ISR(_UART_4_VECTOR , IPL7AUTO) UART4_IntHandler (void)
+{
+    unsigned char data;
+    
+    if(IFS2bits.U4RXIF)
+    {
+        /* receive interrupt */        
+        if(U4STAbits.FERR)
+        {
+            while(U4STAbits.URXDA)
+            {
+                /* 
+                 * Receive error. This could be from a break or incorrect
+                 *  baud rate 
+                 */
+                data = U4RXREG;
+                if(!data)
+                {
+                    /* There was a break */
+                    Nop();
+                }
+            }
+        }
+        else
+        {
+            while(U4STAbits.URXDA)
+            {
+                /* receive buffer has data */
+                data = U4RXREG;
+                UART_RS232_MaleSendChar(data);
+                if(RX4_Buffer_Place < UART4_RECEIVE_SIZE)
+                {
+                    RX4_Buffer[RX4_Buffer_Place] = data;
+                    RX4_Buffer_Place++;
+                }
+                else
+                {
+                    /* Overflow */
+                    UART_CleanReceive4();
+                }
+            }
+        }
+    }
+    IFS2bits.U4RXIF = 0; // clear interrupt
+}
 
 /*-----------------------------------------------------------------------------/
  End of File

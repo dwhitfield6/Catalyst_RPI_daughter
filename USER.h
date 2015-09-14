@@ -213,6 +213,15 @@
 #define RS232_FEMALE_CTS2Tris	TRISCbits.TRISC1
 #define RS232_FEMALE_CTS2 0x00000002        // RC1
 
+/************* Relay *************/
+/* Connected to the MOSFET that controls the relay */
+#define RelayTris	TRISAbits.TRISA1
+#define Relay 0x00000002  // RA2
+
+/* Connected to the MOSFET that controls the relay */
+#define Relay2Tris	TRISFbits.TRISF13
+#define Relay2 0x00000002  // RF13
+
 /******************************************************************************/
 /* Version variables                                                          */
 /******************************************************************************/

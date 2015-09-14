@@ -28,6 +28,8 @@
 #include "PWM.h"
 #include "TIMERS.h"
 #include "POWER.h"
+#include "SPI.h"
+#include "RDI.h"
 
 /******************************************************************************/
 /* Version variables                                                          */
@@ -139,6 +141,10 @@ void Init_App(void)
     RS232_FEMALE_SHUTDOWNTris   = OUTPUT;
     RS232_MALE_ENABLETris       = OUTPUT;
     RS232_FEMALE_ENABLETris     = OUTPUT;
+    
+    /*~~~~~~~~~~~~~ Relay ~~~~~~~~~~~~~~~~~*/
+    RelayTris           = OUTPUT;
+    Relay2Tris          = INPUT;
 }
 
 /******************************************************************************/
@@ -149,10 +155,12 @@ void Init_App(void)
 void Init_System(void)
 {
     INTCONbits.MVEC = TRUE; // Multi-vectored interrupts
+    InitADC();
     InitTIMERS();
     InitPWM();
-    InitADC();
     InitUART();
+    InitSPI();
+    InitRDI();
     SYS_Interrupts(ON);
 }
 

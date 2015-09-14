@@ -6,75 +6,43 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 09/10/15     1.0_DW0a    Initial project make.
- *                          Added RGB LED functionality.
- *                          Added internal ADC read functionality.
- *                          Added UART functionality.
- *                          Fixed UART bugs.
+ * 09/12/15     1.0_DW0a    Initial project make.
 /******************************************************************************/
 
 /******************************************************************************/
-/* Contains main function.
+/* Contains all of the Teledyne RD Instruments specific functions.
  *
 /******************************************************************************/
-
 
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
 #include <xc.h>         /* XC8 General Include File */
 
-#include <stdint.h>        
-#include <stdbool.h>       
-#include <stdio.h>         
-#include <string.h>
+#include <stdint.h>        /* For uint8_t definition */
+#include <stdbool.h>       /* For true/false definition */
 
-#include "SYSTEM.h"
 #include "USER.h"
-#include "MISC.h"
-#include "ADC.h"
-
-/******************************************************************************/
-/* Defines                                                                    */
-/******************************************************************************/
+#include "RDI.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
 
 /******************************************************************************/
-/* Main Program                                                               */
+/* Functions
 /******************************************************************************/
 
-int main (void)
+/******************************************************************************/
+/* InitRDI
+ *
+ * The function initializes the RDI specific functions.
+/******************************************************************************/
+void InitRDI(void)
 {
-    unsigned long i;
     
-    /* Initialize */
-    SYS_ConfigureOscillator();
-    Init_App();
-    Init_System();
-    PWR_StatusUpdate();
-    UART_PrintBanner();        
-
-    MSC_Relay(ON);
-    
-    /* Flash LEDs */
-    for (i=0;i<24;i++)
-    {
-        MSC_RedLEDTOGGLE();
-        MSC_DelayUS(100000);
-        PWM_SetColor(i/3);
-    }
-    MSC_RedLEDOFF();
-    
-    MSC_Relay(OFF);
-    
-    while(1)
-    {
-
-    }
 }
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

@@ -15,6 +15,8 @@
       <itemPath>DMA.h</itemPath>
       <itemPath>FLASH.h</itemPath>
       <itemPath>POWER.h</itemPath>
+      <itemPath>SPI.h</itemPath>
+      <itemPath>RDI.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -37,6 +39,8 @@
       <itemPath>PWM.c</itemPath>
       <itemPath>FLASH.c</itemPath>
       <itemPath>POWER.c</itemPath>
+      <itemPath>SPI.c</itemPath>
+      <itemPath>RDI.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -208,6 +212,7 @@
         <property key="UART3" value="true"/>
         <property key="UART4" value="true"/>
         <property key="UART5" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>

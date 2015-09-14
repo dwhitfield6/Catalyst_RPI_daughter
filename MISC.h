@@ -128,6 +128,7 @@
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
+inline void MSC_Relay(unsigned char state);
 void MSC_DelayUS(long US);
 unsigned char MSC_IsCharacter(unsigned char data);
 void MSC_CleanBuffer(unsigned char* data, unsigned int count);

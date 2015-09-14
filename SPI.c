@@ -6,11 +6,11 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 08/21/15     1.0_DW0a    Initial project make.
+ * 09/12/15     1.0_DW0a    Initial project make.
 /******************************************************************************/
 
 /******************************************************************************/
-/* Contains functions for timers.
+/* Contains functions for the SPI controller.
  *
 /******************************************************************************/
 
@@ -23,72 +23,45 @@
 #include <stdbool.h>       /* For true/false definition */
 
 #include "USER.h"
-#include "TIMERS.h"
+#include "SPI.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
 
 /******************************************************************************/
-/* Inline Functions                                                           */
+/* Inline Functions
 /******************************************************************************/
 
 /******************************************************************************/
-/* TMR_EnableTimer2
+/* SPI_Module
  *
- * Controls the Timer2 module.
+ * The function controls the SPI module 2.
 /******************************************************************************/
-inline void TMR_EnableTimer2(unsigned char action)
+inline void SPI_Module(unsigned char state)
 {
+
 #ifdef ON
     #undef ON
-    if (action)
+    if(state)
     {
-        T2CONbits.ON = 1; // Enable Timer
+        SPI2CONbits.ON = 1; // Turn on the SPI module
     }
     else
     {
-        T2CONbits.ON = 0; // Disable Timer
+        SPI2CONbits.ON = 0; // Turn off the SPI module
     }
     #define ON 1
 #else
-    if (action)
+    if(state)
     {
-        T2CONbits.ON = 1; // Enable Timer
+        SPI2CONbits.ON = 1; // Turn on the SPI module
     }
     else
     {
-        T2CONbits.ON = 0; // Disable Timer
+        SPI2CONbits.ON = 0; // Turn off the SPI module
     }
-#endif
-
-}
-
-/******************************************************************************/
-/* TMR_InterruptTimer2
- *
- * Controls the Timer2 interrupt.
-/******************************************************************************/
-inline void TMR_InterruptTimer2(unsigned char action)
-{
-    if (action)
-    {
-        IEC0bits.T2IE = 1; // Enable Timer 2 interrupt
-    }
-    else
-    {
-        IEC0bits.T2IE = 0; // disenable Timer 2 interrupt
-    }
-}
-
-/******************************************************************************/
-/* TMR_ResetTimer2
- *
- * Restarts Timer 2.
-/******************************************************************************/
-inline void TMR_ResetTimer2(void)
-{
-    TMR2 = 0;
+#endif    
 }
 
 /******************************************************************************/
@@ -96,33 +69,66 @@ inline void TMR_ResetTimer2(void)
 /******************************************************************************/
 
 /******************************************************************************/
-/* InitTIMERS
+/* InitSPI
  *
- * The function initializes the timers.
+ * The function initializes the SPI module.
 /******************************************************************************/
-void InitTIMERS(void)
+void InitSPI(void)
 {
-    InitTIMER2();
+    SPI2CONbits.DISSDO = 0; // SDO pin is controlled by the module
+    SPI2CONbits.DISSDI = 0; // SDI pin is controlled by the module
+    SPI_Mode(MASTER, BITS8, 0);
 }
 
 /******************************************************************************/
-/* InitTIMER2
+/* SPI_Mode
  *
- * The function initializes timer 2 which is used for the PWM module.
+ * The function configures the SPI module.
 /******************************************************************************/
-void InitTIMER2(void)
+void SPI_Mode(unsigned char master_slave, unsigned char bits, unsigned char mode)
 {
-    TMR_EnableTimer2(OFF);
-    TMR_InterruptTimer2(OFF);
-    IPC2bits.T2IP = 1; // interrupt priority is 1
-    IPC2bits.T2IS = 1; // interrupt sub-priority is 1
-    T2CONbits.TCS = 0; // Select internal instruction cycle clock
-    T2CONbits.TGATE = 0; // Disable Gated Timer mode
-    T2CONbits.TCKPS = 0b110; // Select 1:64 Prescaler
-    TMR2 = 0x00; // Clear timer register
-    PR2 = 1000; // Load the period value
-    IFS0bits.T2IF = 0; // Clear Timer 2 Interrupt Flag
-    TMR_EnableTimer2(ON);
+    if(master_slave == MASTER)
+    {
+        SPI2CONbits.MSTEN = 1; // master mode
+    }
+    else
+    {
+        SPI2CONbits.MSTEN = 0; // slave mode   
+    }
+    
+    if(bits == 8)
+    {
+        SPI2CONbits.MODE16 = 0;
+        SPI2CONbits.MODE32 = 0;
+    }
+    else if(bits == 16)
+    {
+        SPI2CONbits.MODE16 = 1;
+        SPI2CONbits.MODE32 = 0;
+    }
+    else
+    {
+        SPI2CONbits.MODE16 = 1;
+        SPI2CONbits.MODE32 = 1;
+    }
+    
+    if(mode == 0)
+    {
+        
+    }
+    else if(mode == 1)
+    {
+        
+    }
+    else if(mode == 2)
+    {
+        
+    }
+    else
+    {
+        
+    }
+    
 }
 
 /*-----------------------------------------------------------------------------/

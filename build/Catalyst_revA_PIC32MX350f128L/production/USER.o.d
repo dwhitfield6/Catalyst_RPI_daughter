@@ -5,4 +5,6 @@ USER.h  \
 SYSTEM.h  \
 PWM.h  \
 TIMERS.h  \
-POWER.h 
+POWER.h  \
+SPI.h  \
+RDI.h 

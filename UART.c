@@ -30,6 +30,16 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+unsigned int RX1_Buffer_Place = 0;
+unsigned int RX2_Buffer_Place = 0;
+unsigned int RX3_Buffer_Place = 0;
+unsigned int RX4_Buffer_Place = 0;
+unsigned int RX5_Buffer_Place = 0;
+unsigned char RX1_Buffer[UART1_RECEIVE_SIZE];
+unsigned char RX2_Buffer[UART2_RECEIVE_SIZE];
+unsigned char RX3_Buffer[UART3_RECEIVE_SIZE];
+unsigned char RX4_Buffer[UART4_RECEIVE_SIZE];
+unsigned char RX5_Buffer[UART5_RECEIVE_SIZE];
 
 /******************************************************************************/
 /* Inline Functions
@@ -271,14 +281,28 @@ void InitUART(void)
     U4RXR = RS232_FEMALE_RX_Pin;        // U4RX
     U5RXR = RS232_FEMALE_CTS_Pin;       // U5RX
     
+    /* Clean receive buffers */
+    MSC_CleanBuffer(RX1_Buffer, UART1_RECEIVE_SIZE);
+    MSC_CleanBuffer(RX2_Buffer, UART2_RECEIVE_SIZE);
+    MSC_CleanBuffer(RX3_Buffer, UART3_RECEIVE_SIZE);
+    MSC_CleanBuffer(RX4_Buffer, UART4_RECEIVE_SIZE);
+    MSC_CleanBuffer(RX5_Buffer, UART5_RECEIVE_SIZE);
+
     /* Set up the Male RS232 port */
     UART_RS232_MaleParameters(115200, NO, 1);
     UART_RS232_Male(ON, ON, ON);
+    IPC9bits.U2IP = 4; // interrupt priority is 4
+    IPC9bits.U2IS = 3; // interrupt sub-priority is 3
+    IFS1bits.U2RXIF = 0;            // clear interrupt
+    UART_ReceiverInterrupt2(ON);
     
     /* Set up the Female RS232 port */
     UART_RS232_FemaleParameters(115200, NO, 1);
     UART_RS232_Female(ON, ON, ON);
-
+    IPC9bits.U4IP = 4; // interrupt priority is 4
+    IPC9bits.U4IS = 3; // interrupt sub-priority is 3
+    IFS2bits.U4RXIF = 0;            // clear interrupt
+    UART_ReceiverInterrupt4(ON);
 }
 
 /******************************************************************************/
@@ -310,6 +334,7 @@ void UART_PrintBanner(void)
         UART_RS232_FemaleSendConstChar('_');
         UART_RS232_FemaleSendConstString(Branch_Version);
     }
+    UART_RS232_FemaleSendStringCRLN(CRLN);
 }
 
 /******************************************************************************/
@@ -751,6 +776,91 @@ void UART_SetParameters5(unsigned long Baud,unsigned char Parity, unsigned char 
 }
 
 /******************************************************************************/
+/* UART_ReceiverInterrupt1
+ *
+ * The function controls the UART module 1 receiver interrupt.
+/******************************************************************************/
+void UART_ReceiverInterrupt1(unsigned char state)
+{
+    if(state)
+    {
+        IEC1bits.U1RXIE = 1; // Turn on the UART module receiver interrupt
+    }
+    else
+    {
+        IEC1bits.U1RXIE = 0; // Turn off the UART module receiver interrupt
+    }
+}
+
+/******************************************************************************/
+/* UART_ReceiverInterrupt2
+ *
+ * The function controls the UART module 2 receiver interrupt.
+/******************************************************************************/
+void UART_ReceiverInterrupt2(unsigned char state)
+{
+    if(state)
+    {
+        IEC1bits.U2RXIE = 1; // Turn on the UART module receiver interrupt
+    }
+    else
+    {
+        IEC1bits.U2RXIE = 0; // Turn off the UART module receiver interrupt
+    }
+}
+
+/******************************************************************************/
+/* UART_ReceiverInterrupt3
+ *
+ * The function controls the UART module 3 receiver interrupt.
+/******************************************************************************/
+void UART_ReceiverInterrupt3(unsigned char state)
+{
+    if(state)
+    {
+        IEC1bits.U3RXIE = 1; // Turn on the UART module receiver interrupt
+    }
+    else
+    {
+        IEC1bits.U3RXIE = 0; // Turn off the UART module receiver interrupt
+    }
+}
+
+/******************************************************************************/
+/* UART_ReceiverInterrupt4
+ *
+ * The function controls the UART module 4 receiver interrupt.
+/******************************************************************************/
+void UART_ReceiverInterrupt4(unsigned char state)
+{
+    if(state)
+    {
+        IEC2bits.U4RXIE = 1; // Turn on the UART module receiver interrupt
+    }
+    else
+    {
+        IEC2bits.U4RXIE = 0; // Turn off the UART module receiver interrupt
+    }
+}
+
+/******************************************************************************/
+/* UART_ReceiverInterrupt5
+ *
+ * The function controls the UART module 5 receiver interrupt.
+/******************************************************************************/
+void UART_ReceiverInterrupt5(unsigned char state)
+{
+    if(state)
+    {
+        IEC2bits.U5RXIE = 1; // Turn on the UART module receiver interrupt
+    }
+    else
+    {
+        IEC2bits.U5RXIE = 0; // Turn off the UART module receiver interrupt
+    }
+}
+
+/******************************************************************************/
 /* UART_Receiver1
  *
  * The function controls the UART module 1 receiver.
@@ -1081,6 +1191,56 @@ void UART_RS232_FemaleDriver(unsigned char state)
         LATD &= ~RS232_FEMALE_ENABLE;     // disable the driver
         LATD &= ~RS232_FEMALE_SHUTDOWN;    // shutdown the driver
     }
+}
+
+/******************************************************************************/
+/* UART_CleanReceive1
+ *
+ * The function clears the UART 1 receive buffer.
+/******************************************************************************/
+void UART_CleanReceive1(void)
+{
+    RX1_Buffer_Place = 0;
+}
+
+/******************************************************************************/
+/* UART_CleanReceive2
+ *
+ * The function clears the UART 2 receive buffer.
+/******************************************************************************/
+void UART_CleanReceive2(void)
+{
+    RX2_Buffer_Place = 0;
+}
+
+/******************************************************************************/
+/* UART_CleanReceive3
+ *
+ * The function clears the UART 3 receive buffer.
+/******************************************************************************/
+void UART_CleanReceive3(void)
+{
+    RX3_Buffer_Place = 0;
+}
+
+/******************************************************************************/
+/* UART_CleanReceive4
+ *
+ * The function clears the UART 4 receive buffer.
+/******************************************************************************/
+void UART_CleanReceive4(void)
+{
+    RX4_Buffer_Place = 0;
+}
+
+/******************************************************************************/
+/* UART_CleanReceive5
+ *
+ * The function clears the UART 5 receive buffer.
+/******************************************************************************/
+void UART_CleanReceive5(void)
+{
+    RX5_Buffer_Place = 0;
 }
 
 /*-----------------------------------------------------------------------------/
