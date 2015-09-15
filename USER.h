@@ -98,11 +98,11 @@
 #define RASP_ON2Tris	TRISAbits.TRISA14
 #define RASP_ON2 0x00004000 //RA14
 
-/* Connected to a pull up pin to detect if a raspberry pi is mounted */
+/* Connected to pull up pin to detect if a raspberry pi is mounted */
 #define RASP_ConnectedTris	TRISGbits.TRISG7
 #define RASP_Connected 0x00000080 //RG7
 
-/* Connected to a UART RX on Rasberry pi */
+/* Connected to UART RX on Rasberry pi */
 #define RASP_UART_TXTris	TRISCbits.TRISC4
 #define RASP_UART_TX 0x00000010        // RC4 used as U1TX
 #define RASP_UART_TX_Module 0b0011     // RPnR Value for U1TX
@@ -110,10 +110,41 @@
 #define RASP_UART_TX2Tris	TRISCbits.TRISC3
 #define RASP_UART_TX2 0x00000008        // RC3
 
-/* Connected to a UART TX on Rasberry pi */
+/* Connected to UART TX on Rasberry pi */
 #define RASP_UART_RXTris	TRISBbits.TRISB9
-#define RASP_UART_RX 0x00000010        // RB9 used as U1RX
+#define RASP_UART_RX 0x00000200        // RB9 used as U1RX
 #define RASP_UART_RX_Pin 0b0101        // U1RX is pin RPB9
+
+/* Connected to SPI MOSI on Rasberry pi */
+#define RASP_SPI_MOSITris	TRISBbits.TRISB10
+#define RASP_SPI_MOSI 0x00000400        // RB10 used as SDO2
+#define RASP_SPI_MOSI_Pin 0b0110        // SDO2 is pin RPB10 (master mode)
+
+#define RASP_SPI_MOSI2Tris	TRISGbits.TRISG0
+#define RASP_SPI_MOSI2 0x00000001        // RB10 used as SDO2
+#define RASP_SPI_MOSI_Module 0b1100     // SDI2 is pin RPG0 (slave mode)
+
+/* Connected to SPI MISO on Rasberry pi */
+#define RASP_SPI_MISOTris	TRISDbits.TRISD15
+#define RASP_SPI_MISO 0x00008000        // RD15 used as SDI2
+#define RASP_SPI_MISO_Module 0b1011     // SDI2 is pin RPD15 (master mode)
+#define RASP_SPI_MISO_Pin 0b0110        // SDO2 is pin RPD15 (slave mode)
+
+/* Connected to SPI CLK on Rasberry pi */
+#define RASP_SPI_CLKTris	TRISGbits.TRISG6
+#define RASP_SPI_CLK 0x00000040        // RG6 used as SCK2
+
+/* Connected to SPI CS on Rasberry pi */
+#define RASP_SPI_CSTris	TRISAbits.TRISA0
+#define RASP_SPI_CS 0x00000001        // RA0
+
+#define RASP_SPI_CS2Tris	TRISEbits.TRISE8
+#define RASP_SPI_CS2 0x00000100        // RE8 used as SS2
+#define RASP_SPI_CS2_Pin 0b0110        // SS2 is pin RPE8
+#define RASP_SPI_CS2_Module 0b1101     // SS2 is pin RPE8
+
+#define RASP_SPI_CS3Tris	TRISEbits.TRISE9
+#define RASP_SPI_CS3 0x00000200        // RE9
 
 /************* Voltage rails for ADC read *************/
 /* Connected to the voltage divider to read the 5 volt rail */
@@ -216,11 +247,24 @@
 /************* Relay *************/
 /* Connected to the MOSFET that controls the relay */
 #define RelayTris	TRISAbits.TRISA1
-#define Relay 0x00000002  // RA2
+#define Relay 0x00000002  // RA1
 
 /* Connected to the MOSFET that controls the relay */
 #define Relay2Tris	TRISFbits.TRISF13
-#define Relay2 0x00000002  // RF13
+#define Relay2 0x00002000  // RF13
+
+/************* Expander *************/
+/* Connected to the Expansion header pin 6 */
+#define Expand1_1Tris	TRISAbits.TRISA6
+#define Expand1_1 0x00000040  // RA6
+
+#define Expand1_2Tris	TRISGbits.TRISG1
+#define Expand1_2 0x00000002  // RG1
+
+/* Connected to the Expansion header pin 5 */
+#define Expand2Tris	TRISFbits.TRISF4
+#define Expand2 0x00000002  // RF4
+
 
 /******************************************************************************/
 /* Version variables                                                          */

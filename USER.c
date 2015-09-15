@@ -108,6 +108,15 @@ void Init_App(void)
     RASP_UART_RXTris    = INPUT;
     RASP_UART_TX2Tris   = INPUT;
     RASP_UART_TXTris    = OUTPUT;
+    
+    /* Raspberry pi SPI */
+    RASP_SPI_MOSITris   = INPUT;
+    RASP_SPI_MOSI2Tris  = INPUT;
+    RASP_SPI_MISOTris   = INPUT;
+    RASP_SPI_CLKTris    = INPUT;
+    RASP_SPI_CSTris     = INPUT;
+    RASP_SPI_CS2Tris    = INPUT;
+    RASP_SPI_CS3Tris    = INPUT;
             
     /*~~~~~~~~~~~~~ Voltages rails for ADC ~~~~~~~~~~~~~~~~~*/
     ADC_Volt5_0Tris     = INPUT;
@@ -145,6 +154,11 @@ void Init_App(void)
     /*~~~~~~~~~~~~~ Relay ~~~~~~~~~~~~~~~~~*/
     RelayTris           = OUTPUT;
     Relay2Tris          = INPUT;
+    
+    /*~~~~~~~~~~~~~ Expansion header ~~~~~~~~~~~~~~~~~*/
+    Expand1_1Tris       = INPUT;
+    Expand1_2Tris       = INPUT;
+    Expand2Tris         = INPUT;
 }
 
 /******************************************************************************/

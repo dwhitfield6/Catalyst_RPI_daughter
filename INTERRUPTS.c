@@ -82,6 +82,7 @@
 
 #include "PWM.h"
 #include "UART.h"
+#include "RDI.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -96,7 +97,7 @@
 /******************************************************************************/
 
 /******************************************************************************/
-/* PWM RED interrupt
+/* PWM LED interrupt
 /******************************************************************************/
 void __ISR(_TIMER_2_VECTOR , IPL7AUTO) TMR2_IntHandler (void)
 {
@@ -107,14 +108,131 @@ void __ISR(_TIMER_2_VECTOR , IPL7AUTO) TMR2_IntHandler (void)
 }
 
 /******************************************************************************/
+/* SPI bus to raspberry pi interrupt
+/******************************************************************************/
+void __ISR(_SPI_2_VECTOR , IPL7AUTO) SPI2_IntHandler (void)
+{
+    if(IFS1bits.SPI2RXIF)
+    {
+        /* there are no more word in the receive buffer */
+    }
+    if(IFS1bits.SPI2TXIF)
+    {
+        /* there are no more word in the transmit buffer */
+    }
+    IFS1bits.SPI2RXIF = 0;            // clear interrupt
+    IFS1bits.SPI2TXIF = 0;            // clear interrupt
+}
+
+/******************************************************************************/
 /* UART 2 Interrupt (Male rs232 DB9 connector)
 /******************************************************************************/
 void __ISR(_UART_2_VECTOR , IPL7AUTO) UART2_IntHandler (void)
 {
     unsigned char data;
     
-    data = U2RXREG;
-    IFS1bits.U2RXIF = 0; // clear interrupt
+    if(IFS1bits.U2RXIF)
+    {
+        /* receive interrupt */        
+        if(U2STAbits.FERR)
+        {
+            /* 
+             * Receive error. This could be from a break or incorrect
+             *  baud rate 
+             */
+            while(U2STAbits.URXDA)
+            {
+                data = U2RXREG;
+                if(!data)
+                {
+                    /* There was a break */
+                    Nop();
+                }
+            }
+        }
+        else
+        {
+            while(U2STAbits.URXDA)
+            {
+                /* receive buffer has data */
+                if(!GetProduct)
+                {
+                    data = U2RXREG;
+                    UART_RS232_FemaleSendChar(data);
+                    if(RX2_Buffer_Place < UART2_RECEIVE_SIZE)
+                    {
+                        RX2_Buffer[RX2_Buffer_Place] = data;
+                        RX2_Buffer_Place++;
+                    }
+                    else
+                    {
+                        /* Overflow */
+                        UART_CleanReceive2();
+                    }    
+                    if(UserSentBreak && RDI_product)
+                    {
+                        /* 
+                         * The user sent a break and we have a valid product
+                         *  so insert the extra catalyst message in the banner 
+                         */
+                        if(data == Workhorse_H_ADCP[Banner_Correct_place])
+                        {  
+                            Banner_Correct_place++;
+                            if(Workhorse_H_ADCP[Banner_Correct_place] == 0)
+                            {
+                                /* banner match for Workhorse HADCP */
+                                RDI_PrintBannerExtention();
+                                UserSentBreak = FALSE;
+                            }
+                        }   
+                    }                
+                }
+                else
+                {
+                    data = U2RXREG;
+                    if(Banner_Buffer_Place < Banner_RECEIVE_SIZE)
+                    {
+                        Banner_Buffer[Banner_Buffer_Place] = data;
+                        Banner_Buffer_Place++;
+                        if(data == Workhorse_H_ADCP[Banner_Correct_place])
+                        {  
+                            Banner_Correct_place++;
+                            if(Workhorse_H_ADCP[Banner_Correct_place] == 0)
+                            {
+                                RDI_product = PROD_WORKHORSE_HADCP;
+                            }
+                        }
+                        else
+                        {
+                            Banner_Correct_place = 0;
+                        }                        
+                    }
+                    if(data == '>')
+                    {
+                        BannerFinished = TRUE;
+                    }
+                }
+            }
+        }
+    }
+    if(IFS1bits.U2TXIF)
+    {
+        if(TX2_Buffer_REMOVE_Place != TX2_Buffer_ADD_Place)
+        {
+            U2TXREG = TX2_Buffer[TX2_Buffer_REMOVE_Place];
+            TX2_Buffer_REMOVE_Place++;
+            if(TX2_Buffer_REMOVE_Place >= UART2_TRANSMIT_SIZE)
+            {
+                TX2_Buffer_REMOVE_Place = 0;
+            }
+        }
+        else
+        {
+            UART_TransmitterInterrupt2(OFF);
+        }
+    }
+    IFS1bits.U2RXIF = 0;
+    IFS1bits.U2TXIF = 0; 
 }
 
 /******************************************************************************/
@@ -123,24 +241,30 @@ void __ISR(_UART_2_VECTOR , IPL7AUTO) UART2_IntHandler (void)
 void __ISR(_UART_4_VECTOR , IPL7AUTO) UART4_IntHandler (void)
 {
     unsigned char data;
+
     
     if(IFS2bits.U4RXIF)
     {
         /* receive interrupt */        
         if(U4STAbits.FERR)
         {
+            /* 
+             * Receive error. This could be from a break or incorrect
+             *  baud rate 
+             */
             while(U4STAbits.URXDA)
             {
-                /* 
-                 * Receive error. This could be from a break or incorrect
-                 *  baud rate 
-                 */
                 data = U4RXREG;
                 if(!data)
                 {
                     /* There was a break */
-                    Nop();
+                    UserSentBreak = TRUE;
+                    Banner_Correct_place = 0;
                 }
+            }
+            if(UserSentBreak)
+            {
+                UART_SendLongBreak2();
             }
         }
         else
@@ -163,7 +287,24 @@ void __ISR(_UART_4_VECTOR , IPL7AUTO) UART4_IntHandler (void)
             }
         }
     }
-    IFS2bits.U4RXIF = 0; // clear interrupt
+    if(IFS2bits.U4TXIF)
+    {
+        if(TX4_Buffer_REMOVE_Place != TX4_Buffer_ADD_Place)
+        {
+            U4TXREG = TX4_Buffer[TX4_Buffer_REMOVE_Place];
+            TX4_Buffer_REMOVE_Place++;
+            if(TX4_Buffer_REMOVE_Place >= UART4_TRANSMIT_SIZE)
+            {
+                TX4_Buffer_REMOVE_Place = 0;
+            }
+        }
+        else
+        {
+            UART_TransmitterInterrupt4(OFF);
+        }
+    }
+    IFS2bits.U4RXIF = 0;
+    IFS2bits.U4TXIF = 0;
 }
 
 /*-----------------------------------------------------------------------------/

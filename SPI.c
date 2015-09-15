@@ -24,6 +24,8 @@
 
 #include "USER.h"
 #include "SPI.h"
+#include "SYSTEM.h"
+#include "MISC.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -75,9 +77,21 @@ inline void SPI_Module(unsigned char state)
 /******************************************************************************/
 void InitSPI(void)
 {
+    SPI_TransmitterInterrupt(OFF);
+    SPI_ReceiverInterrupt(OFF);
+    SPI_Module(OFF);
+    SPI2CONbits.ENHBUF = 1; // Enhanced Buffer mode is enabled
+    SPI2CONbits.MSSEN = 1;  // Slave select SPI support enabled (master mode)
+    SPI2CONbits.SSEN = 1;   // Slave select pin used for Slave mode
     SPI2CONbits.DISSDO = 0; // SDO pin is controlled by the module
-    SPI2CONbits.DISSDI = 0; // SDI pin is controlled by the module
-    SPI_Mode(MASTER, BITS8, 0);
+    SPI2CONbits.DISSDI = 0; // SDI pin is controlled by the module 
+    IPC8bits.SPI2IP = 6; // interrupt priority is 6
+    IPC8bits.SPI2IS = 3; // interrupt sub-priority is 3
+    IFS1bits.SPI2RXIF = 0;            // clear interrupt
+    IFS1bits.SPI2TXIF = 0;            // clear interrupt
+    SPI_Mode(MASTER, BITS8, 0, 3000);    
+    SPI2STATbits.SPIROV = 0; // no overflow has occurred
+    SPI_Module(ON);
 }
 
 /******************************************************************************/
@@ -85,15 +99,46 @@ void InitSPI(void)
  *
  * The function configures the SPI module.
 /******************************************************************************/
-void SPI_Mode(unsigned char master_slave, unsigned char bits, unsigned char mode)
+void SPI_Mode(unsigned char master_slave, unsigned char bits, unsigned char mode, unsigned long speedKhz)
 {
+    double speedKhzDB = (double) speedKhz;
+    speedKhzDB *= 1000.0;
+    
     if(master_slave == MASTER)
     {
         SPI2CONbits.MSTEN = 1; // master mode
+        RASP_SPI_MOSITris   = OUTPUT;
+        RASP_SPI_MOSI2Tris  = INPUT;
+        RASP_SPI_MISOTris   = INPUT;
+        RASP_SPI_CLKTris    = OUTPUT;
+        RASP_SPI_CSTris     = OUTPUT;
+        RASP_SPI_CS2Tris    = INPUT;
+        RASP_SPI_CS3Tris    = INPUT;
+            
+        /* Set remappable outputs */
+        RPB10R = RASP_SPI_MOSI_Pin;         // SDO2 aka MOSI
+        RPE8R = RASP_SPI_CS2_Pin;           // SS2 aka CS
+    
+        /* Set remappable inputs */
+        SDI2R = RASP_SPI_MISO_Module;       // SDI2 aka MISO
     }
     else
     {
-        SPI2CONbits.MSTEN = 0; // slave mode   
+        SPI2CONbits.MSTEN = 0; // slave mode  
+        RASP_SPI_MOSITris   = INPUT;
+        RASP_SPI_MOSI2Tris  = INPUT;
+        RASP_SPI_MISOTris   = OUTPUT;
+        RASP_SPI_CLKTris    = INPUT;
+        RASP_SPI_CSTris     = INPUT;
+        RASP_SPI_CS2Tris    = INPUT;
+        RASP_SPI_CS3Tris    = INPUT;
+                
+        /* Set remappable outputs */
+        RPB15R = RASP_SPI_MISO_Pin;         // SDO2 aka MOSI
+    
+        /* Set remappable inputs */
+        SDI2R = RASP_SPI_MOSI_Module;       // SDI2 aka MISO
+        SS2R = RASP_SPI_CS2_Module;         // SS2 aka CS
     }
     
     if(bits == 8)
@@ -114,21 +159,118 @@ void SPI_Mode(unsigned char master_slave, unsigned char bits, unsigned char mode
     
     if(mode == 0)
     {
-        
+        SPI2CONbits.CKP = 0;
+        SPI2CONbits.CKE = 1;
     }
     else if(mode == 1)
     {
-        
+        SPI2CONbits.CKP = 0;
+        SPI2CONbits.CKE = 0;
     }
     else if(mode == 2)
     {
-        
+        SPI2CONbits.CKP = 1;
+        SPI2CONbits.CKE = 1;
     }
     else
     {
-        
+        SPI2CONbits.CKP = 1;
+        SPI2CONbits.CKE = 0;
     }
     
+    /* 
+     * Transmit interrupt is generated when the last transfer is shifted out
+     *  of SPISR and transmit operations are complete
+     */
+    SPI2CONbits.STXISEL = 0b00; 
+    
+    /* 
+     * Receive interrupt is generated when the last word in the receive
+     *  buffer is read (i.e., buffer is empty)
+     */
+    SPI2CONbits.SRXISEL = 0b00; 
+    
+    SPI2CONbits.MCLKSEL = 0; // PBCLK is used by the Baud Rate Generator
+    SPI2BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(2.0 * (double) speedKhzDB)) - 1.0);   
+}
+
+/******************************************************************************/
+/* SPI_TransmitterInterrupt
+ *
+ * The function controls the SPI module 2 transmitter interrupt.
+/******************************************************************************/
+void SPI_TransmitterInterrupt(unsigned char state)
+{
+    if(state)
+    {
+        IEC1bits.SPI2TXIE = 1; // Turn on the SPI module transmitter interrupt
+    }
+    else
+    {
+        IEC1bits.SPI2TXIE = 0; // Turn off the SPI module transmitter interrupt
+    }
+}
+
+/******************************************************************************/
+/* SPI_ReceiverInterrupt
+ *
+ * The function controls the SPI module 2 receiver interrupt.
+/******************************************************************************/
+void SPI_ReceiverInterrupt(unsigned char state)
+{
+    if(state)
+    {
+        IEC1bits.SPI2RXIE = 1; // Turn on the SPI module receiver interrupt
+    }
+    else
+    {
+        IEC1bits.SPI2RXIE = 0; // Turn off the SPI module receiver interrupt
+    }
+}
+
+/******************************************************************************/
+/* SPI_WriteRead
+ *
+ * The function writes a byte over the SPI and listens for a response.
+/******************************************************************************/
+unsigned char SPI_WriteRead(unsigned char write, unsigned char* read)
+{
+    unsigned int dummy;
+
+    /* dummy read */
+    dummy = SPI2BUF;
+    
+    while(SPI2STATbits.SPITBF); 
+    while(!SPI2STATbits.SRMT);
+    /* send data */
+    SPI2BUF = write;  
+    
+    /* read data */
+    *read = dummy;
+    
+    if(SPI2STATbits.SPIRBE)
+    {
+        /* RX FIFO is not empty (CRPTR != SWPTR) */
+        return 0;
+    }
+    return 1;
+}
+
+/******************************************************************************/
+/* SPI_WriteRead
+ *
+ * The function writes a byte over the SPI and listens for a response.
+/******************************************************************************/
+void SPI_CS(unsigned char state)
+{
+    if(state == ENABLE)
+    {
+        LATA &= ~RASP_SPI_CS;
+    }
+    else
+    {
+        LATA |= RASP_SPI_CS;
+    }
 }
 
 /*-----------------------------------------------------------------------------/

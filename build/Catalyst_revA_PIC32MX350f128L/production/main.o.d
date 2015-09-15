@@ -3,4 +3,5 @@ main.c  \
 SYSTEM.h  \
  USER.h  \
 MISC.h  \
-ADC.h 
+ADC.h  \
+SPI.h 

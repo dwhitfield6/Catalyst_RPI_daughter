@@ -40,6 +40,13 @@ unsigned char RX2_Buffer[UART2_RECEIVE_SIZE];
 unsigned char RX3_Buffer[UART3_RECEIVE_SIZE];
 unsigned char RX4_Buffer[UART4_RECEIVE_SIZE];
 unsigned char RX5_Buffer[UART5_RECEIVE_SIZE];
+unsigned char TX2_Buffer[UART2_TRANSMIT_SIZE];
+unsigned char TX4_Buffer[UART4_TRANSMIT_SIZE];
+volatile unsigned int TX2_Buffer_ADD_Place = 0;
+volatile unsigned int TX4_Buffer_ADD_Place = 0;
+unsigned int TX2_Buffer_REMOVE_Place = 0;
+unsigned int TX4_Buffer_REMOVE_Place = 0;
+unsigned char UserSentBreak = FALSE;
 
 /******************************************************************************/
 /* Inline Functions
@@ -202,6 +209,7 @@ inline void UART_Module5(unsigned char state)
 /******************************************************************************/
 inline void UART_SendCharacter1(unsigned char data)
 {
+    while(U1STAbits.UTXBF);
     U1TXREG = data;
 }
 
@@ -212,6 +220,7 @@ inline void UART_SendCharacter1(unsigned char data)
 /******************************************************************************/
 inline void UART_SendCharacter2(unsigned char data)
 {
+    while(U2STAbits.UTXBF);
     U2TXREG = data;
 }
 
@@ -222,6 +231,7 @@ inline void UART_SendCharacter2(unsigned char data)
 /******************************************************************************/
 inline void UART_SendCharacter3(unsigned char data)
 {
+    while(U3STAbits.UTXBF);
     U3TXREG = data;
 }
 
@@ -232,6 +242,7 @@ inline void UART_SendCharacter3(unsigned char data)
 /******************************************************************************/
 inline void UART_SendCharacter4(unsigned char data)
 {
+    while(U4STAbits.UTXBF);
     U4TXREG = data;
 }
 
@@ -242,6 +253,7 @@ inline void UART_SendCharacter4(unsigned char data)
 /******************************************************************************/
 inline void UART_SendCharacter5(unsigned char data)
 {
+    while(U5STAbits.UTXBF);
     U5TXREG = data;
 }
 
@@ -294,7 +306,9 @@ void InitUART(void)
     IPC9bits.U2IP = 4; // interrupt priority is 4
     IPC9bits.U2IS = 3; // interrupt sub-priority is 3
     IFS1bits.U2RXIF = 0;            // clear interrupt
+    IFS1bits.U2TXIF = 0;            // clear interrupt
     UART_ReceiverInterrupt2(ON);
+    UART_TransmitterInterrupt2(OFF);
     
     /* Set up the Female RS232 port */
     UART_RS232_FemaleParameters(115200, NO, 1);
@@ -302,39 +316,9 @@ void InitUART(void)
     IPC9bits.U4IP = 4; // interrupt priority is 4
     IPC9bits.U4IS = 3; // interrupt sub-priority is 3
     IFS2bits.U4RXIF = 0;            // clear interrupt
+    IFS2bits.U4TXIF = 0;            // clear interrupt
     UART_ReceiverInterrupt4(ON);
-}
-
-/******************************************************************************/
-/* UART_PrintBanner
- *
- * The function prints the banner on the female rs232 port.
-/******************************************************************************/
-void UART_PrintBanner(void)
-{
-    UART_RS232_FemaleSendStringCRLN("\r\nCatalyst PIC Board");
-    UART_RS232_FemaleSendStringCRLN("RD Instruments (c) 2015");
-    UART_RS232_FemaleSendStringCRLN("All rights reserved.");
-    UART_RS232_FemaleSendString("Version: ");
-    if(Version[0]!= 0)
-    {
-        UART_RS232_FemaleSendConstString(Version);
-    }
-    if(Revision[0]!= 0)
-    {
-        UART_RS232_FemaleSendConstChar('.');
-        UART_RS232_FemaleSendConstString(Revision);
-    }
-    if(Alpha[0]!= 0)
-    {
-        UART_RS232_FemaleSendConstString(Alpha);
-    }
-    if(Branch_Version[0]!= 0)
-    {
-        UART_RS232_FemaleSendConstChar('_');
-        UART_RS232_FemaleSendConstString(Branch_Version);
-    }
-    UART_RS232_FemaleSendStringCRLN(CRLN);
+    UART_TransmitterInterrupt4(OFF);
 }
 
 /******************************************************************************/
@@ -344,10 +328,14 @@ void UART_PrintBanner(void)
 /******************************************************************************/
 void UART_RS232_FemaleSendChar(unsigned char data)
 {
-    while(U4STAbits.UTXBF);
-    
-    /* transmit buffer has room */
-    UART_SendCharacter4(data);
+    /* transmit buffer is full so use interrupts to empty buffer */
+    TX4_Buffer[TX4_Buffer_ADD_Place] = data;
+    TX4_Buffer_ADD_Place++;
+    if(TX4_Buffer_ADD_Place >= UART4_TRANSMIT_SIZE)
+    {
+        TX4_Buffer_ADD_Place = 0;
+    }
+    UART_TransmitterInterrupt4(ON);
 }
 
 /******************************************************************************/
@@ -357,37 +345,14 @@ void UART_RS232_FemaleSendChar(unsigned char data)
 /******************************************************************************/
 void UART_RS232_MaleSendChar(unsigned char data)
 {
-    while(U2STAbits.UTXBF);
-    
-    /* transmit buffer has room */
-    UART_SendCharacter2(data);
-}
-
-/******************************************************************************/
-/* UART_RS232_FemaleSendConstChar
- *
- * The function sends a constant character over the Female rs232 port.
-/******************************************************************************/
-void UART_RS232_FemaleSendConstChar(const unsigned char data)
-{
-    while(U4STAbits.UTXBF);
-
-    /* transmit buffer has room */
-    UART_SendCharacter4((unsigned char)data);
-
-}
-
-/******************************************************************************/
-/* UART_RS232_MaleSendConstChar
- *
- * The function sends a constant character over the Male rs232 port.
-/******************************************************************************/
-void UART_RS232_MaleSendConstChar(const unsigned char data)
-{
-    while(U2STAbits.UTXBF);
-
-    /* transmit buffer has room */
-    UART_SendCharacter2((unsigned char)data);
+    /* transmit buffer is full so use interrupts to empty buffer */
+    TX2_Buffer[TX2_Buffer_ADD_Place] = data;
+    TX2_Buffer_ADD_Place++;
+    if(TX2_Buffer_ADD_Place >= UART2_TRANSMIT_SIZE)
+    {
+        TX2_Buffer_ADD_Place = 0;
+    }
+    UART_TransmitterInterrupt2(ON);
 }
 
 /******************************************************************************/
@@ -484,11 +449,11 @@ void UART_RS232_FemaleSendStringCRLN(unsigned char* data)
  * The function sends a constant string followed by a carriage return over the 
  *  Male rs232 port. 
 /******************************************************************************/
-void UART_RS232_MaleSendConstStringCRLN(unsigned char* data)
+void UART_RS232_MaleSendConstStringCRLN(const unsigned char* data)
 {
     while(*data)
     {
-        UART_RS232_MaleSendConstChar(*data);
+        UART_RS232_MaleSendChar(*data);
         data++;
     }
     UART_RS232_MaleSendConstString("\r\n");
@@ -500,14 +465,14 @@ void UART_RS232_MaleSendConstStringCRLN(unsigned char* data)
  * The function sends a constant string followed by a carriage return over the 
  *  Female rs232 port. 
 /******************************************************************************/
-void UART_RS232_FemaleSendConstStringCRLN(unsigned char* data)
+void UART_RS232_FemaleSendConstStringCRLN(const unsigned char* data)
 {
     while(*data)
     {
-        UART_RS232_FemaleSendConstChar(*data);
+        UART_RS232_FemaleSendChar(*data);
         data++;
     }
-    UART_RS232_FemaleSendConstString("\r\n");
+    UART_RS232_FemaleSendString("\r\n");
 }
 
 /******************************************************************************/
@@ -946,6 +911,56 @@ void UART_Receiver5(unsigned char state)
 }
 
 /******************************************************************************/
+/* UART_Receiver1Read
+ *
+ * The function returns the status of the UART 1 module receiver.
+/******************************************************************************/
+unsigned char UART_Receiver1Read(void)
+{
+    return U1STAbits.URXEN;
+}
+
+/******************************************************************************/
+/* UART_Receiver2Read
+ *
+ * The function returns the status of the UART 2 module receiver.
+/******************************************************************************/
+unsigned char UART_Receiver2Read(void)
+{
+    return U2STAbits.URXEN;
+}
+
+/******************************************************************************/
+/* UART_Receiver3Read
+ *
+ * The function returns the status of the UART 3 module receiver.
+/******************************************************************************/
+unsigned char UART_Receiver3Read(void)
+{
+    return U3STAbits.URXEN;
+}
+
+/******************************************************************************/
+/* UART_Receiver4Read
+ *
+ * The function returns the status of the UART 4 module receiver.
+/******************************************************************************/
+unsigned char UART_Receiver4Read(void)
+{
+    return U4STAbits.URXEN;
+}
+
+/******************************************************************************/
+/* UART_Receiver5Read
+ *
+ * The function returns the status of the UART 5 module receiver.
+/******************************************************************************/
+unsigned char UART_Receiver5Read(void)
+{
+    return U5STAbits.URXEN;
+}
+
+/******************************************************************************/
 /* UART_Transmitter1
  *
  * The function controls the UART module 1 transmitter.
@@ -1031,6 +1046,141 @@ void UART_Transmitter5(unsigned char state)
 }
 
 /******************************************************************************/
+/* UART_Transmitter1Read
+ *
+ * The function returns the status of the UART 1 module transmitter.
+/******************************************************************************/
+unsigned char UART_Transmitter1Read(void)
+{
+    return U1STAbits.UTXEN;
+}
+
+/******************************************************************************/
+/* UART_Transmitter2Read
+ *
+ * The function returns the status of the UART 2 module transmitter.
+/******************************************************************************/
+unsigned char UART_Transmitter2Read(void)
+{
+    return U2STAbits.UTXEN;
+}
+
+/******************************************************************************/
+/* UART_Transmitter3Read
+ *
+ * The function returns the status of the UART 3 module transmitter.
+/******************************************************************************/
+unsigned char UART_Transmitter3Read(void)
+{
+    return U3STAbits.UTXEN;
+}
+
+/******************************************************************************/
+/* UART_Transmitter4Read
+ *
+ * The function returns the status of the UART 4 module transmitter.
+/******************************************************************************/
+unsigned char UART_Transmitter4Read(void)
+{
+    return U4STAbits.UTXEN;
+}
+
+/******************************************************************************/
+/* UART_Transmitter5Read
+ *
+ * The function returns the status of the UART 5 module transmitter.
+/******************************************************************************/
+unsigned char UART_Transmitter5Read(void)
+{
+    return U5STAbits.UTXEN;
+}
+
+/******************************************************************************/
+/* UART_TransmitterInterrupt1
+ *
+ * The function controls the UART module 1 transmitter interrupt.
+/******************************************************************************/
+void UART_TransmitterInterrupt1(unsigned char state)
+{
+    if(state)
+    {
+        IEC1bits.U1TXIE = 1; // Turn on the UART module transmitter interrupt
+    }
+    else
+    {
+        IEC1bits.U1TXIE = 0; // Turn off the UART module transmitter interrupt
+    }
+}
+
+/******************************************************************************/
+/* UART_TransmitterInterrupt2
+ *
+ * The function controls the UART module 2 transmitter interrupt.
+/******************************************************************************/
+void UART_TransmitterInterrupt2(unsigned char state)
+{
+    if(state)
+    {
+        IEC1bits.U2TXIE = 1; // Turn on the UART module transmitter interrupt
+    }
+    else
+    {
+        IEC1bits.U2TXIE = 0; // Turn off the UART module transmitter interrupt
+    }
+}
+
+/******************************************************************************/
+/* UART_TransmitterInterrupt3
+ *
+ * The function controls the UART module 3 transmitter interrupt.
+/******************************************************************************/
+void UART_TransmitterInterrupt3(unsigned char state)
+{
+    if(state)
+    {
+        IEC2bits.U3TXIE = 1; // Turn on the UART module transmitter interrupt
+    }
+    else
+    {
+        IEC2bits.U3TXIE = 0; // Turn off the UART module transmitter interrupt
+    }
+}
+
+/******************************************************************************/
+/* UART_TransmitterInterrupt4
+ *
+ * The function controls the UART module 4 transmitter interrupt.
+/******************************************************************************/
+void UART_TransmitterInterrupt4(unsigned char state)
+{
+    if(state)
+    {
+        IEC2bits.U4TXIE = 1; // Turn on the UART module transmitter interrupt
+    }
+    else
+    {
+        IEC2bits.U4TXIE = 0; // Turn off the UART module transmitter interrupt
+    }
+}
+
+/******************************************************************************/
+/* UART_TransmitterInterrupt5
+ *
+ * The function controls the UART module 5 transmitter interrupt.
+/******************************************************************************/
+void UART_TransmitterInterrupt5(unsigned char state)
+{
+    if(state)
+    {
+        IEC2bits.U5TXIE = 1; // Turn on the UART module transmitter interrupt
+    }
+    else
+    {
+        IEC2bits.U5TXIE = 0; // Turn off the UART module transmitter interrupt
+    }
+}
+
+/******************************************************************************/
 /* UART_SendShortBreak1
  *
  * The function sends a short break on the next transmission.
@@ -1087,12 +1237,22 @@ void UART_SendShortBreak5(void)
 /******************************************************************************/
 void UART_SendLongBreak1(void)
 {
-    LATC &= ~RASP_UART_TX;
-    RPC4R = 0;        
+    unsigned char status;
+    
+    status = UART_Transmitter1Read();
+    
     LATC |= RASP_UART_TX;
-    MSC_DelayUS(LONG_BREAK_US);
+    RPC4R = 0;      
+    UART_Transmitter1(OFF);
     LATC &= ~RASP_UART_TX;
+    MSC_DelayUS(LONG_BREAK_US);
+    LATC |= RASP_UART_TX;
     RPC4R = RASP_UART_TX_Module;        // U1TX
+    
+    if(status)
+    {
+        UART_Transmitter1(ON);
+    }
 }
 
 /******************************************************************************/
@@ -1102,12 +1262,22 @@ void UART_SendLongBreak1(void)
 /******************************************************************************/
 void UART_SendLongBreak2(void)
 {
-    LATF &= ~RS232_MALE_TX;
-    RPF5R = 0;        
+    unsigned char status;
+    
+    status = UART_Transmitter2Read();
+    
     LATF |= RS232_MALE_TX;
-    MSC_DelayUS(LONG_BREAK_US);
+    RPF5R = 0; 
+    UART_Transmitter2(OFF);     
     LATF &= ~RS232_MALE_TX;
+    MSC_DelayUS(LONG_BREAK_US);
+    LATF |= RS232_MALE_TX;
     RPF5R = RS232_MALE_TX_Module;       // U2TX
+    
+    if(status)
+    {
+        UART_Transmitter2(ON);
+    }
 }
 
 /******************************************************************************/
@@ -1117,12 +1287,22 @@ void UART_SendLongBreak2(void)
 /******************************************************************************/
 void UART_SendLongBreak3(void)
 {
-    LATD &= ~RS232_MALE_RTS;
-    RPF5R = 0;        
+    unsigned char status;
+    
+    status = UART_Transmitter3Read();   
+
     LATD |= RS232_MALE_RTS;
+    RPF5R = 0;  
+    UART_Transmitter3(OFF);
+    LATD &= ~RS232_MALE_RTS;
     MSC_DelayUS(LONG_BREAK_US);
-    LATD &= ~RS232_MALE_TX;
+    LATD |= RS232_MALE_RTS;
     RPF5R = RS232_MALE_RTS_Module;      // U3TX
+    
+    if(status)
+    {
+        UART_Transmitter3(ON);
+    }
 }
 
 /******************************************************************************/
@@ -1132,12 +1312,22 @@ void UART_SendLongBreak3(void)
 /******************************************************************************/
 void UART_SendLongBreak4(void)
 {
-    LATF &= ~RS232_FEMALE_TX;
-    RPF5R = 0;        
+    unsigned char status;
+    
+    status = UART_Transmitter4Read();
+    
     LATF |= RS232_FEMALE_TX;
-    MSC_DelayUS(LONG_BREAK_US);
+    RPF5R = 0;   
+    UART_Transmitter4(OFF);
     LATF &= ~RS232_FEMALE_TX;
+    MSC_DelayUS(LONG_BREAK_US);
+        LATF |= RS232_FEMALE_TX;
     RPF12R = RS232_FEMALE_TX_Module;    // U4TX
+    
+    if(status)
+    {
+        UART_Transmitter4(ON);
+    }
 }
 
 /******************************************************************************/
@@ -1147,12 +1337,22 @@ void UART_SendLongBreak4(void)
 /******************************************************************************/
 void UART_SendLongBreak5(void)
 {
-    LATF &= ~RS232_FEMALE_RTS;
-    RPF5R = 0;        
+    unsigned char status;
+    
+    status = UART_Transmitter5Read();
+    
     LATF |= RS232_FEMALE_RTS;
-    MSC_DelayUS(LONG_BREAK_US);
+    RPF5R = 0;    
+    UART_Transmitter5(OFF);    
     LATF &= ~RS232_FEMALE_RTS;
+    MSC_DelayUS(LONG_BREAK_US);
+    LATF |= RS232_FEMALE_RTS;
     RPF8R = RS232_FEMALE_RTS_Module;    // U5TX
+    
+    if(status)
+    {
+        UART_Transmitter5(ON);
+    }
 }
 
 /******************************************************************************/

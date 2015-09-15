@@ -27,34 +27,36 @@
  *
  * This is the number of characters that fit in the UART 1 receive buffer.
 /******************************************************************************/
-#define UART1_RECEIVE_SIZE 250
+#define UART1_RECEIVE_SIZE 512
 
 /******************************************************************************/
 /* UART2_RECEIVE_SIZE
  *
  * This is the number of characters that fit in the UART 2 receive buffer.
 /******************************************************************************/
-#define UART2_RECEIVE_SIZE 250
+#define UART2_RECEIVE_SIZE 512
+#define UART2_TRANSMIT_SIZE 512
 
 /******************************************************************************/
 /* UART3_RECEIVE_SIZE
  *
  * This is the number of characters that fit in the UART 3 receive buffer.
 /******************************************************************************/
-#define UART3_RECEIVE_SIZE 250
+#define UART3_RECEIVE_SIZE 512
 /******************************************************************************/
 /* UART4_RECEIVE_SIZE
  *
  * This is the number of characters that fit in the UART 4 receive buffer.
 /******************************************************************************/
-#define UART4_RECEIVE_SIZE 250
+#define UART4_RECEIVE_SIZE 512
+#define UART4_TRANSMIT_SIZE 512
 
 /******************************************************************************/
 /* UART5_RECEIVE_SIZE
  *
  * This is the number of characters that fit in the UART 5 receive buffer.
 /******************************************************************************/
-#define UART5_RECEIVE_SIZE 250
+#define UART5_RECEIVE_SIZE 512
 
 /******************************************************************************/
 /* LONG_BREAK_US
@@ -85,7 +87,13 @@ extern unsigned char RX2_Buffer[UART2_RECEIVE_SIZE];
 extern unsigned char RX3_Buffer[UART3_RECEIVE_SIZE];
 extern unsigned char RX4_Buffer[UART4_RECEIVE_SIZE];
 extern unsigned char RX5_Buffer[UART5_RECEIVE_SIZE];
-
+extern unsigned char TX2_Buffer[UART2_TRANSMIT_SIZE];
+extern unsigned char TX4_Buffer[UART4_TRANSMIT_SIZE];
+extern volatile unsigned int TX2_Buffer_ADD_Place;
+extern volatile unsigned int TX4_Buffer_ADD_Place;
+extern unsigned int TX2_Buffer_REMOVE_Place;
+extern unsigned int TX4_Buffer_REMOVE_Place;
+extern unsigned char UserSentBreak;
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
@@ -100,7 +108,6 @@ inline void UART_SendCharacter3(unsigned char data);
 inline void UART_SendCharacter4(unsigned char data);
 inline void UART_SendCharacter5(unsigned char data);
 void InitUART(void);
-void UART_PrintBanner(void);
 void UART_RS232_FemaleSendChar(unsigned char data);
 void UART_RS232_MaleSendChar(unsigned char data);
 void UART_RS232_FemaleSendConstChar(const unsigned char data);
@@ -111,8 +118,8 @@ void UART_RS232_MaleSendConstString(const unsigned char* data);
 void UART_RS232_FemaleSendConstString(const unsigned char* data);
 void UART_RS232_MaleSendStringCRLN(unsigned char* data);
 void UART_RS232_FemaleSendStringCRLN(unsigned char* data);
-void UART_RS232_MaleSendConstStringCRLN(unsigned char* data);
-void UART_RS232_FemaleSendConstStringCRLN(unsigned char* data);
+void UART_RS232_MaleSendConstStringCRLN(const unsigned char* data);
+void UART_RS232_FemaleSendConstStringCRLN(const unsigned char* data);
 void UART_Rasp(unsigned char module, unsigned char transmit, unsigned char receive);
 void UART_RS232_Male(unsigned char module, unsigned char transmit, unsigned char receive);
 void UART_RS232_MaleParameters(unsigned long Baud,unsigned char Parity, unsigned char Stop);
@@ -133,11 +140,26 @@ void UART_Receiver2(unsigned char state);
 void UART_Receiver3(unsigned char state);
 void UART_Receiver4(unsigned char state);
 void UART_Receiver5(unsigned char state);
+unsigned char UART_Receiver1Read(void);
+unsigned char UART_Receiver2Read(void);
+unsigned char UART_Receiver3Read(void);
+unsigned char UART_Receiver4Read(void);
+unsigned char UART_Receiver5Read(void);
 void UART_Transmitter1(unsigned char state);
 void UART_Transmitter2(unsigned char state);
 void UART_Transmitter3(unsigned char state);
 void UART_Transmitter4(unsigned char state);
 void UART_Transmitter5(unsigned char state);
+unsigned char UART_Transmitter1Read(void);
+unsigned char UART_Transmitter2Read(void);
+unsigned char UART_Transmitter3Read(void);
+unsigned char UART_Transmitter4Read(void);
+unsigned char UART_Transmitter5Read(void);
+void UART_TransmitterInterrupt1(unsigned char state);
+void UART_TransmitterInterrupt2(unsigned char state);
+void UART_TransmitterInterrupt3(unsigned char state);
+void UART_TransmitterInterrupt4(unsigned char state);
+void UART_TransmitterInterrupt5(unsigned char state);
 void UART_SendShortBreak1(void);
 void UART_SendShortBreak2(void);
 void UART_SendShortBreak3(void);

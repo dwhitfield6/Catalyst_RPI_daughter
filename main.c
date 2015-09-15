@@ -6,11 +6,15 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 09/10/15     1.0_DW0a    Initial project make.
+ * 09/14/15     1.0_DW0a    Initial project make.
  *                          Added RGB LED functionality.
  *                          Added internal ADC read functionality.
  *                          Added UART functionality.
  *                          Fixed UART bugs.
+ *                          Added UART TX software FIFOs.
+ *                          Parse the RDI banner and input the catalyst 
+ *                            extention.
+ *                          Implement SPI mater and slave mode.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -33,6 +37,7 @@
 #include "USER.h"
 #include "MISC.h"
 #include "ADC.h"
+#include "SPI.h"
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -49,13 +54,14 @@
 int main (void)
 {
     unsigned long i;
+    unsigned char value;
     
     /* Initialize */
     SYS_ConfigureOscillator();
     Init_App();
     Init_System();
-    PWR_StatusUpdate();
-    UART_PrintBanner();        
+    PWR_StatusUpdate();        
+    RDI_GetProduct();
 
     MSC_Relay(ON);
     
@@ -72,7 +78,8 @@ int main (void)
     
     while(1)
     {
-
+        SPI_WriteRead('D', &value);
+        MSC_DelayUS(1000);
     }
 }
 /*-----------------------------------------------------------------------------/
