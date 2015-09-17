@@ -91,7 +91,7 @@ void InitADC(void)
 /******************************************************************************/
 double ADC_ReadChannel(unsigned char channel)
 {
-    int RawCounts = 0;
+    short RawCounts = 0;
     double Voltage = 0.0;
 
     AD1CHSbits.CH0SB = channel;

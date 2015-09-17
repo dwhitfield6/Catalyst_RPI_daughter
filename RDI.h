@@ -57,8 +57,8 @@ extern const unsigned char Catalyst_String[];
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-extern unsigned int RDI_product;
-extern unsigned int Banner_Buffer_Place;
+extern unsigned short RDI_product;
+extern unsigned short Banner_Buffer_Place;
 extern unsigned char Banner_Buffer[Banner_RECEIVE_SIZE];
 extern unsigned char GetProduct;
 extern volatile unsigned char BannerFinished;

@@ -235,7 +235,7 @@ void SPI_ReceiverInterrupt(unsigned char state)
 /******************************************************************************/
 unsigned char SPI_WriteRead(unsigned char write, unsigned char* read)
 {
-    unsigned int dummy;
+    unsigned short dummy;
 
     /* dummy read */
     dummy = SPI2BUF;

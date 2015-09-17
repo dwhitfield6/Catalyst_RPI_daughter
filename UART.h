@@ -77,11 +77,11 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-extern unsigned int RX1_Buffer_Place;
-extern unsigned int RX2_Buffer_Place;
-extern unsigned int RX3_Buffer_Place;
-extern unsigned int RX4_Buffer_Place;
-extern unsigned int RX5_Buffer_Place;
+extern unsigned short RX1_Buffer_Place;
+extern unsigned short RX2_Buffer_Place;
+extern unsigned short RX3_Buffer_Place;
+extern unsigned short RX4_Buffer_Place;
+extern unsigned short RX5_Buffer_Place;
 extern unsigned char RX1_Buffer[UART1_RECEIVE_SIZE];
 extern unsigned char RX2_Buffer[UART2_RECEIVE_SIZE];
 extern unsigned char RX3_Buffer[UART3_RECEIVE_SIZE];
@@ -89,10 +89,10 @@ extern unsigned char RX4_Buffer[UART4_RECEIVE_SIZE];
 extern unsigned char RX5_Buffer[UART5_RECEIVE_SIZE];
 extern unsigned char TX2_Buffer[UART2_TRANSMIT_SIZE];
 extern unsigned char TX4_Buffer[UART4_TRANSMIT_SIZE];
-extern volatile unsigned int TX2_Buffer_ADD_Place;
-extern volatile unsigned int TX4_Buffer_ADD_Place;
-extern unsigned int TX2_Buffer_REMOVE_Place;
-extern unsigned int TX4_Buffer_REMOVE_Place;
+extern volatile unsigned short TX2_Buffer_ADD_Place;
+extern volatile unsigned short TX4_Buffer_ADD_Place;
+extern unsigned short TX2_Buffer_REMOVE_Place;
+extern unsigned short TX4_Buffer_REMOVE_Place;
 extern unsigned char UserSentBreak;
 /******************************************************************************/
 /* Function prototypes                                                        */

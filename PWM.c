@@ -29,9 +29,9 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-unsigned int Red_Duty = 0;
-unsigned int Green_Duty = 0;
-unsigned int Blue_Duty = 0;
+unsigned short Red_Duty = 0;
+unsigned short Green_Duty = 0;
+unsigned short Blue_Duty = 0;
 
 /******************************************************************************/
 /* Inline Functions                                                           */
@@ -42,7 +42,7 @@ unsigned int Blue_Duty = 0;
  *
  * Sets the duty cycle for the Red LED.
 /******************************************************************************/
-inline void PWM_SetRed(unsigned int Value)
+inline void PWM_SetRed(unsigned short Value)
 {
     Red_Duty = Value;
 }
@@ -52,7 +52,7 @@ inline void PWM_SetRed(unsigned int Value)
  *
  * Sets the duty cycle for the Green LED.
 /******************************************************************************/
-inline void PWM_SetGreen(unsigned int Value)
+inline void PWM_SetGreen(unsigned short Value)
 {
     Green_Duty = Value;
 }
@@ -62,7 +62,7 @@ inline void PWM_SetGreen(unsigned int Value)
  *
  * Sets the duty cycle for the Blue LED.
 /******************************************************************************/
-inline void PWM_SetBlue(unsigned int Value)
+inline void PWM_SetBlue(unsigned short Value)
 {
     Blue_Duty = Value;
 }
@@ -72,7 +72,7 @@ inline void PWM_SetBlue(unsigned int Value)
  *
  * Sets the LED Color via 3 color maps.
 /******************************************************************************/
-inline void PWM_SetRGB(unsigned int Red, unsigned int Green, unsigned int Blue)
+inline void PWM_SetRGB(unsigned short Red, unsigned short Green, unsigned short Blue)
 {
     PWM_SetRed(Red);
     PWM_SetGreen(Green);
@@ -136,7 +136,7 @@ void InitPWM(void)
  *
  * Sets the LED Color by name.
 /******************************************************************************/
-void PWM_SetColor(unsigned int Color)
+void PWM_SetColor(unsigned short Color)
 {
     switch (Color)
     {

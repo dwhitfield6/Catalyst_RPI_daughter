@@ -15,6 +15,8 @@
  *                          Parse the RDI banner and input the catalyst 
  *                            extention.
  *                          Implement SPI mater and slave mode.
+ *                          Added external Flash IC functionality.
+ *                          Added RTCC functionality.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -51,7 +53,7 @@
 /* Main Program                                                               */
 /******************************************************************************/
 
-int main (void)
+short main (void)
 {
     unsigned long i;
     unsigned char value;

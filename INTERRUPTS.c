@@ -83,6 +83,8 @@
 #include "PWM.h"
 #include "UART.h"
 #include "RDI.h"
+#include "RTCC.h"
+#include "TIMERS.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -104,6 +106,7 @@ void __ISR(_TIMER_2_VECTOR , IPL7AUTO) TMR2_IntHandler (void)
     OC1RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
     OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
     OC3RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
+    RTCC_Read(&CurrentTime); // update current time
     IFS0bits.T2IF = 0; // Clear Timer 2 interrupt flag
 }
 

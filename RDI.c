@@ -45,8 +45,8 @@ const unsigned char Catalyst_String[] = "with Catalyst";
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-unsigned int RDI_product;
-unsigned int Banner_Buffer_Place = 0;
+unsigned short RDI_product;
+unsigned short Banner_Buffer_Place = 0;
 unsigned char Banner_Buffer[Banner_RECEIVE_SIZE];
 unsigned char GetProduct = FALSE;
 volatile unsigned char BannerFinished = FALSE;
@@ -131,7 +131,7 @@ void RDI_PrintBanner(void)
     }
     else 
     {
-        /* print product specific banner */
+        /* prshort product specific banner */
         if(RDI_product == PROD_WORKHORSE_HADCP)
         {
             UART_RS232_FemaleSendConstString(Workhorse_H_ADCP);

@@ -30,6 +30,7 @@
 #include "POWER.h"
 #include "SPI.h"
 #include "RDI.h"
+#include "FLASH.h"
 
 /******************************************************************************/
 /* Version variables                                                          */
@@ -159,6 +160,29 @@ void Init_App(void)
     Expand1_1Tris       = INPUT;
     Expand1_2Tris       = INPUT;
     Expand2Tris         = INPUT;
+    
+    /*~~~~~~~~~~~~~ External Flash IC ~~~~~~~~~~~~~~~~~*/
+    FLH_EXT_ChipSelect(OFF);
+    ExtFlash_IO_0Tris   = INPUT;
+    ExtFlash_IO_1Tris   = INPUT;
+    ExtFlash_IO_2Tris   = INPUT;
+    ExtFlash_IO_3Tris   = INPUT;
+    ExtFlash_IO_4Tris   = INPUT;
+    ExtFlash_IO_5Tris   = INPUT;
+    ExtFlash_IO_6Tris   = INPUT;
+    ExtFlash_IO_7Tris   = INPUT;
+    ExtFlash_RBTris     = INPUT;
+    ExtFlash_RB2Tris    = INPUT;
+    ExtFlash_RETris     = OUTPUT;
+    ExtFlash_CETris     = OUTPUT;
+    ExtFlash_CLETris    = OUTPUT;
+    ExtFlash_ALETris    = OUTPUT;
+    ExtFlash_WETris     = OUTPUT;
+    ExtFlash_WPTris     = OUTPUT;
+    
+    /*~~~~~~~~~~~~~ Secondary Oscillator for RTCC ~~~~~~~~~~~~~~~~~*/
+    SOSCOTris           = INPUT;
+    SOSCITris           = INPUT;
 }
 
 /******************************************************************************/
@@ -175,6 +199,8 @@ void Init_System(void)
     InitUART();
     InitSPI();
     InitRDI();
+    InitExtFlash();
+    InitRTCC();
     SYS_Interrupts(ON);
 }
 

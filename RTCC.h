@@ -6,14 +6,14 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 08/21/15     1.0_DW0a    Initial project make.
+ * 09/15/15     1.0_DW0a    Initial project make.
 /******************************************************************************/
 
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
-#ifndef PWM_H
-#define	PWM_H
+#ifndef RTCC_H
+#define	RTCC_H
 
 #include <xc.h>         /* XC8 General Include File */
 
@@ -23,29 +23,52 @@
 #include "USER.h"
 
 /******************************************************************************/
-/* COLORS
- *
- * This is the available Colors to set the LED.
+/* Structures                                                                 */
 /******************************************************************************/
-#define NONE        0
-#define RED         1
-#define YELLOW      2
-#define GREEN       3
-#define BLUE        4
-#define PURPLE      5
-#define WHITE       6
-#define TURQUOISE   7
-
-/******************************************************************************/
-/* User Global Variable Declaration                                           */
-/******************************************************************************/
-extern unsigned short Red_Duty;
-extern unsigned short Green_Duty;
-extern unsigned short Blue_Duty;
+typedef struct time
+{
+    unsigned char Second;
+    unsigned char Minute;
+    unsigned char Hour;
+    unsigned char Weekday;
+    unsigned char Date;
+    unsigned char Month;
+    unsigned int Year;
+}TIMETYPE;
 
 /******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
+
+/******************************************************************************/
+/* Time Macros                                                                */
+/******************************************************************************/
+#define January 1
+#define February 2
+#define March 3
+#define April 4
+#define May 5
+#define June 6
+#define July 7
+#define August 8
+#define September 9
+#define October 10
+#define November 11
+#define December 12
+
+#define Sunday 0
+#define Monday 1
+#define Tuesday 2
+#define Wednesday 3
+#define Thursday 4
+#define Friday 5
+#define Saturday 6
+
+/******************************************************************************/
+/* User Global Variable Declaration                                           */
+/******************************************************************************/
+extern TIMETYPE CurrentTime;
+extern TIMETYPE SetTime;
 
 /******************************************************************************/
 /* Macro Functions                                                            */
@@ -54,11 +77,13 @@ extern unsigned short Blue_Duty;
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-void InitPWM(void);
-inline void PWM_SetRed(unsigned short Value);
-inline void PWM_SetGreen(unsigned short Value);
-inline void PWM_SetBlue(unsigned short Value);
-inline void PWM_SetRGB(unsigned short Red, unsigned short Green, unsigned short Blue);
-void PWM_SetColor(unsigned short Color);
+void InitRTCC(void);
+unsigned char RTCC_Module(unsigned char state);
+void RTCC_ClearTime(TIMETYPE* Time);
+unsigned char RTCC_Access(unsigned char Yes_No);
+void RTCC_Read(TIMETYPE* Time);
+void RTCC_Write(TIMETYPE Time);
+void RTCC_SetDefaultTime(void);
+void RTCC_ConfigOscillator(void);
 
-#endif	/* PWM_H */
+#endif	/* RTCC_H */

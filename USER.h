@@ -265,6 +265,69 @@
 #define Expand2Tris	TRISFbits.TRISF4
 #define Expand2 0x00000002  // RF4
 
+/************* External Flash IC *************/
+/* Connected to the external Flash IC IO pin 0 */
+#define ExtFlash_IO_0Tris	TRISEbits.TRISE0
+#define ExtFlash_IO_0 0x00000001  // RE0
+
+/* Connected to the external Flash IC IO pin 1 */
+#define ExtFlash_IO_1Tris	TRISEbits.TRISE1
+#define ExtFlash_IO_1 0x00000002  // RE1
+
+/* Connected to the external Flash IC IO pin 2 */
+#define ExtFlash_IO_2Tris	TRISEbits.TRISE2
+#define ExtFlash_IO_2 0x00000004  // RE2
+
+/* Connected to the external Flash IC IO pin 3 */
+#define ExtFlash_IO_3Tris	TRISEbits.TRISE3
+#define ExtFlash_IO_3 0x00000008  // RE3
+
+/* Connected to the external Flash IC IO pin 4 */
+#define ExtFlash_IO_4Tris	TRISEbits.TRISE4
+#define ExtFlash_IO_4 0x00000010  // RE4
+
+/* Connected to the external Flash IC IO pin 5 */
+#define ExtFlash_IO_5Tris	TRISEbits.TRISE5
+#define ExtFlash_IO_5 0x00000020  // RE5
+
+/* Connected to the external Flash IC IO pin 6 */
+#define ExtFlash_IO_6Tris	TRISEbits.TRISE6
+#define ExtFlash_IO_6 0x00000040  // RE6
+
+/* Connected to the external Flash IC IO pin 7 */
+#define ExtFlash_IO_7Tris	TRISEbits.TRISE7
+#define ExtFlash_IO_7 0x00000080  // RE7
+
+/* Connected to the external Flash IC RB (read busy) pin */
+#define ExtFlash_RBTris	TRISGbits.TRISG13
+#define ExtFlash_RB 0x00002000  // RG13
+
+#define ExtFlash_RB2Tris	TRISGbits.TRISG12
+#define ExtFlash_RB2 0x00001000  // RG12
+
+/* Connected to the external Flash IC RE (read enable) pin */
+#define ExtFlash_RETris	TRISDbits.TRISD5
+#define ExtFlash_RE 0x00000020  // RD5
+
+/* Connected to the external Flash IC CE (chip enable) pin */
+#define ExtFlash_CETris	TRISDbits.TRISD11
+#define ExtFlash_CE 0x00000800  // RD11
+
+/* Connected to the external Flash IC CLE (command latch enable) pin */
+#define ExtFlash_CLETris	TRISBbits.TRISB14
+#define ExtFlash_CLE 0x00004000  // RB14
+
+/* Connected to the external Flash IC ALE (address latch enable) pin */
+#define ExtFlash_ALETris	TRISBbits.TRISB15
+#define ExtFlash_ALE 0x00008000  // RB15
+
+/* Connected to the external Flash IC WE (write enable) pin */
+#define ExtFlash_WETris	TRISDbits.TRISD4
+#define ExtFlash_WE 0x00000010  // RD4
+
+/* Connected to the external Flash IC WP (write protect) pin */
+#define ExtFlash_WPTris	TRISGbits.TRISG14
+#define ExtFlash_WP 0x00004000  // RG14
 
 /******************************************************************************/
 /* Version variables                                                          */

@@ -7,4 +7,5 @@ PWM.h  \
 TIMERS.h  \
 POWER.h  \
 SPI.h  \
-RDI.h 
+RDI.h  \
+FLASH.h 

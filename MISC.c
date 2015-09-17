@@ -171,9 +171,9 @@ unsigned char MSC_IsAlphaNumericString(unsigned char* data)
  *
  * This function sets an amount of data in the array as 0.
 /******************************************************************************/
-void MSC_CleanBuffer(unsigned char* data, unsigned int count)
+void MSC_CleanBuffer(unsigned char* data, unsigned short count)
 {
-    unsigned int i=0;
+    unsigned short i=0;
     for(i=0; i<count;i++)
     {
         data[i]= 0;
@@ -185,9 +185,9 @@ void MSC_CleanBuffer(unsigned char* data, unsigned int count)
  *
  * This function sets an amount of data in the array as 0.
 /******************************************************************************/
-void MSC_CleanBufferInt(unsigned int* data, unsigned int count)
+void MSC_CleanBufferInt(unsigned int* data, unsigned short count)
 {
-    unsigned int i=0;
+    unsigned short i=0;
     for(i=0; i<count;i++)
     {
         data[i]= 0;
@@ -211,9 +211,9 @@ double MSC_Round(double input)
  *
  * This function copies the 'from' array to the 'to' array.
 /******************************************************************************/
-void MSC_BufferCopy(unsigned char* from,unsigned char* to, unsigned int count, unsigned int shift)
+void MSC_BufferCopy(unsigned char* from,unsigned char* to, unsigned short count, unsigned short shift)
 {
-    unsigned int i=0;
+    unsigned short i=0;
     MSC_CleanBuffer(to,count);
     for(i = shift; i>0; i--)
     {
@@ -451,9 +451,9 @@ unsigned char MSC_ReverseByte(unsigned char This)
  *
  * The function reads the value of 'This' and returns the reverse of the data.
 /******************************************************************************/
-unsigned int MSC_ReverseInt(unsigned int This)
+unsigned short MSC_ReverseInt(unsigned short This)
 {
-    unsigned int temp=0;
+    unsigned short temp=0;
 
     temp += (This & 0x0001) << 15;
     temp += (This & 0x0002) << 13;
@@ -983,13 +983,13 @@ long MSC_Scale(long Input, long InputRangeLow, long InputRangeHigh, long OutputR
  *
  * This function converts from Hex to BCD.
 /******************************************************************************/
-unsigned int MSC_HEXtoBCD(unsigned int input)
+unsigned short MSC_HEXtoBCD(unsigned short input)
 {
-    unsigned int temp0;
-    unsigned int temp1;
-    unsigned int temp2;
-    unsigned int temp3;
-    unsigned int Value = input;
+    unsigned short temp0;
+    unsigned short temp1;
+    unsigned short temp2;
+    unsigned short temp3;
+    unsigned short Value = input;
     
     temp3 = Value/1000;
     Value -= (temp3 * 1000);
@@ -1007,13 +1007,13 @@ unsigned int MSC_HEXtoBCD(unsigned int input)
  *
  * This function converts from BCD to Hex.
 /******************************************************************************/
-unsigned int MSC_BCDtoHEX(unsigned int input)
+unsigned short MSC_BCDtoHEX(unsigned short input)
 {
-    unsigned int temp0;
-    unsigned int temp1;
-    unsigned int temp2;
-    unsigned int temp3;
-    unsigned int Value = input;
+    unsigned short temp0;
+    unsigned short temp1;
+    unsigned short temp2;
+    unsigned short temp3;
+    unsigned short Value = input;
     
     temp3 = Value >> 12;
     Value -= (temp3 << 12);
@@ -1031,9 +1031,9 @@ unsigned int MSC_BCDtoHEX(unsigned int input)
  *
  * This function checks to see if wach array match.
 /******************************************************************************/
-unsigned char MSC_BufferMatch(unsigned char* This, unsigned char* That, unsigned int size)
+unsigned char MSC_BufferMatch(unsigned char* This, unsigned char* That, unsigned short size)
 {
-    unsigned int i;
+    unsigned short i;
     for (i=0; i < size; i++)
     {
         if(This[i] != That[i])
@@ -1060,7 +1060,7 @@ void MSC_TestFunctionPointer(void)
  * This function converts a 2 byte number from big endian to little endian or
  * vice versa.
 /******************************************************************************/
-unsigned int MSC_EndianInt(unsigned int number)
+unsigned short MSC_EndianInt(unsigned short number)
 {
     unsigned char temp1, temp2;
 
@@ -1076,7 +1076,7 @@ unsigned int MSC_EndianInt(unsigned int number)
  * This function converts an array from big endian to little endian or
  * vice versa.
 /******************************************************************************/
-unsigned int MSC_EndianIntArray(unsigned char* buffer)
+unsigned short MSC_EndianIntArray(unsigned char* buffer)
 {
     unsigned char temp1, temp2;
 
