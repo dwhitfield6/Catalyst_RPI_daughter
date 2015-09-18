@@ -8,4 +8,5 @@ TIMERS.h  \
 POWER.h  \
 SPI.h  \
 RDI.h  \
-FLASH.h 
+FLASH.h  \
+EXCEPTIONS.h 

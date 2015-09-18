@@ -60,8 +60,6 @@ c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/
                               c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib/./proc/32MX350F128L\default_isr_vectors.o (__vector_dispatch_23)
 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector24.o)
                               c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib/./proc/32MX350F128L\default_isr_vectors.o (__vector_dispatch_24)
-c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector25.o)
-                              c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib/./proc/32MX350F128L\default_isr_vectors.o (__vector_dispatch_25)
 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector26.o)
                               c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib/./proc/32MX350F128L\default_isr_vectors.o (__vector_dispatch_26)
 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector27.o)
@@ -144,16 +142,19 @@ Common symbol       size              file
 
 RX1_Buffer          0x200             build/Catalyst_revA_PIC32MX350f128L/production/UART.o
 RX3_Buffer          0x200             build/Catalyst_revA_PIC32MX350f128L/production/UART.o
-FlashONFI           0xff              build/Catalyst_revA_PIC32MX350f128L/production/USER.o
+FlashONFI           0xff              build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
 Banner_Buffer       0xfa              build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
 RX4_Buffer          0x200             build/Catalyst_revA_PIC32MX350f128L/production/UART.o
 TX4_Buffer          0x200             build/Catalyst_revA_PIC32MX350f128L/production/UART.o
+SetAlarm            0xc               build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
 SetTime             0xc               build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
+Fault               0x1               build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
 RX2_Buffer          0x200             build/Catalyst_revA_PIC32MX350f128L/production/UART.o
+CurrentAlarm        0xc               build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
 RDI_product         0x2               build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
 CurrentTime         0xc               build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
-FlashID             0x18              build/Catalyst_revA_PIC32MX350f128L/production/USER.o
-RailStatus          0x1c              build/Catalyst_revA_PIC32MX350f128L/production/USER.o
+FlashID             0x18              build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
+RailStatus          0x1c              build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
 TX2_Buffer          0x200             build/Catalyst_revA_PIC32MX350f128L/production/UART.o
 RX5_Buffer          0x200             build/Catalyst_revA_PIC32MX350f128L/production/UART.o
 
@@ -162,49 +163,51 @@ Microchip PIC32 Memory-Usage Report
 kseg0 Program-Memory Usage
 section                    address  length [bytes]      (dec)  Description
 -------                 ----------  -------------------------  -----------
-.text                   0x9d000000         0x7b40       31552  App's exec code 
-.text.libm              0x9d007b40          0x408        1032   
-.text                   0x9d007f48          0x6a4        1700  App's exec code 
-.text.libm              0x9d0085ec          0x2b4         692   
-.text                   0x9d0088a0          0x28c         652  App's exec code 
-.text.fpsubadd          0x9d008b2c          0x278         632   
-.text.fp32div           0x9d008da4          0x230         560   
-.text                   0x9d008fd4          0x3e8        1000  App's exec code 
-.text.fp32mul           0x9d0093bc          0x1bc         444   
-.text.powf              0x9d009578          0x148         328   
-.dinit                  0x9d0096c0          0x140         320   
-.text.dpcmp             0x9d009800          0x12c         300   
-.text                   0x9d00992c          0x218         536  App's exec code 
-.text.dptofp            0x9d009b44          0x100         256   
-.text.general_exception 0x9d009c44           0xdc         220   
-.text.libm              0x9d009d20           0xd4         212   
-.rodata                 0x9d009df4           0xcc         204  Read-only const 
-.text.fptodp            0x9d009ec0           0xac         172   
-.text.fpcmp             0x9d009f6c           0x9c         156   
-.text.isinf             0x9d00a008           0x8c         140   
-.text.isinff            0x9d00a094           0x8c         140   
-.text.fptoli            0x9d00a120           0x80         128   
-.text.fptoul            0x9d00a1a0           0x7c         124   
-.text.__unorddf2        0x9d00a21c           0x64         100   
-.text.sitofp            0x9d00a280           0x60          96   
-.text.main_entry        0x9d00a2e0           0x54          84   
-.text                   0x9d00a334           0x4c          76  App's exec code 
-.text._bootstrap_except 0x9d00a380           0x48          72   
-.text._general_exceptio 0x9d00a3c8           0x48          72   
-.vector_default         0x9d00a410           0x48          72   
-.text                   0x9d00a458           0x78         120  App's exec code 
-.text.isnan             0x9d00a4d0           0x34          52   
-.text.isnanf            0x9d00a504           0x34          52   
-.text.isnanl            0x9d00a538           0x28          40   
-.text.isinfl            0x9d00a560           0x28          40   
-.rodata                 0x9d00a588           0x1c          28  Read-only const 
-.text                   0x9d00a5a4           0x18          24  App's exec code 
-.rodata                 0x9d00a5bc           0x38          56  Read-only const 
-.text._on_reset         0x9d00a5f4            0x8           8   
-.text._on_bootstrap     0x9d00a5fc            0x8           8   
-.rodata                 0x9d00a604            0x4           4  Read-only const 
-.rodata                 0x9d00a608            0x8           8  Read-only const 
-      Total kseg0_program_mem used  :      0xa610       42512  32.4% of 0x20000
+.text                   0x9d000000         0x8e5c       36444  App's exec code 
+.text.libm              0x9d008e5c          0x408        1032   
+.text                   0x9d009264          0x318         792  App's exec code 
+.text.libm              0x9d00957c          0x2b4         692   
+.text                   0x9d009830          0x28c         652  App's exec code 
+.text.fpsubadd          0x9d009abc          0x278         632   
+.text.fp32div           0x9d009d34          0x230         560   
+.text                   0x9d009f64          0x3e8        1000  App's exec code 
+.text.fp32mul           0x9d00a34c          0x1bc         444   
+.dinit                  0x9d00a508          0x180         384   
+.text                   0x9d00a688          0x15c         348  App's exec code 
+.text.powf              0x9d00a7e4          0x148         328   
+.text.dpcmp             0x9d00a92c          0x12c         300   
+.text                   0x9d00aa58          0x118         280  App's exec code 
+.text.dptofp            0x9d00ab70          0x100         256   
+.text.general_exception 0x9d00ac70           0xdc         220   
+.text.libm              0x9d00ad4c           0xd4         212   
+.rodata                 0x9d00ae20           0xcc         204  Read-only const 
+.text.fptodp            0x9d00aeec           0xac         172   
+.text.fpcmp             0x9d00af98           0x9c         156   
+.text.isinf             0x9d00b034           0x8c         140   
+.text.isinff            0x9d00b0c0           0x8c         140   
+.text                   0x9d00b14c           0x88         136  App's exec code 
+.text.fptoli            0x9d00b1d4           0x80         128   
+.text.fptoul            0x9d00b254           0x7c         124   
+.text.__unorddf2        0x9d00b2d0           0x64         100   
+.text.sitofp            0x9d00b334           0x60          96   
+.text.main_entry        0x9d00b394           0x54          84   
+.text                   0x9d00b3e8           0x4c          76  App's exec code 
+.text._bootstrap_except 0x9d00b434           0x48          72   
+.text._general_exceptio 0x9d00b47c           0x48          72   
+.vector_default         0x9d00b4c4           0x48          72   
+.text                   0x9d00b50c           0x44          68  App's exec code 
+.text.isnan             0x9d00b550           0x34          52   
+.text.isnanf            0x9d00b584           0x34          52   
+.text.isnanl            0x9d00b5b8           0x28          40   
+.text.isinfl            0x9d00b5e0           0x28          40   
+.rodata                 0x9d00b608           0x1c          28  Read-only const 
+.text                   0x9d00b624           0x18          24  App's exec code 
+.rodata                 0x9d00b63c           0x38          56  Read-only const 
+.text._on_reset         0x9d00b674            0x8           8   
+.text._on_bootstrap     0x9d00b67c            0x8           8   
+.rodata                 0x9d00b684            0x4           4  Read-only const 
+.rodata                 0x9d00b688            0x8           8  Read-only const 
+      Total kseg0_program_mem used  :      0xb690       46736  35.7% of 0x20000
 
 kseg0 Boot-Memory Usage
 section                    address  length [bytes]      (dec)  Description
@@ -270,29 +273,30 @@ section                    address  length [bytes]      (dec)  Description
 .bev_excpt              0xbfc00380           0x10          16  BEV-Exception 
          Total kseg1_boot_mem used  :       0x204         516  44.2% of 0x490
         --------------------------------------------------------------------------
-         Total Program Memory used  :      0xa994       43412  31.3% of 0x21e00
+         Total Program Memory used  :      0xba14       47636  34.3% of 0x21e00
         --------------------------------------------------------------------------
 
 
 kseg1 Data-Memory Usage
 section                    address  length [bytes]      (dec)  Description
 -------                 ----------  -------------------------  -----------
-.sbss                   0xa0000000           0x2c          44  Small uninit data 
-.bss                    0xa000002c         0x1048        4168  Uninitialized data 
-.data                   0xa0001074           0xa8         168  Initialized data 
-.data.math_errhandling_ 0xa000111c            0x4           4   
-.bss.errno              0xa0001120            0x4           4   
-         Total kseg1_data_mem used  :      0x1124        4388  13.4% of 0x8000
+.sdata                  0xa0000000            0xc          12  Small init data 
+.sbss                   0xa000000c           0x40          64  Small uninit data 
+.bss                    0xa000004c         0x1060        4192  Uninitialized data 
+.data                   0xa00010ac           0xa8         168  Initialized data 
+.data.math_errhandling_ 0xa0001154            0x4           4   
+.bss.errno              0xa0001158            0x4           4   
+         Total kseg1_data_mem used  :      0x115c        4444  13.6% of 0x8000
         --------------------------------------------------------------------------
-            Total Data Memory used  :      0x1124        4388  13.4% of 0x8000
+            Total Data Memory used  :      0x115c        4444  13.6% of 0x8000
         --------------------------------------------------------------------------
 
 
 Dynamic Data-Memory Reservation
 section                    address  length [bytes]      (dec)  Description
 -------                 ----------  -------------------------  -----------
-heap                    0xa0001128           0x10          16  Reserved for heap 
-stack                   0xa0001150         0x6ea0       28320  Reserved for stack 
+heap                    0xa0001160           0x10          16  Reserved for heap 
+stack                   0xa0001188         0x6e68       28264  Reserved for stack 
 
         --------------------------------------------------------------------------
 
@@ -351,7 +355,6 @@ Discarded input sections
  .reginfo       0x00000000       0x18 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector22.o)
  .reginfo       0x00000000       0x18 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector23.o)
  .reginfo       0x00000000       0x18 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector24.o)
- .reginfo       0x00000000       0x18 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector25.o)
  .reginfo       0x00000000       0x18 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector26.o)
  .reginfo       0x00000000       0x18 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector27.o)
  .reginfo       0x00000000       0x18 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector28.o)
@@ -650,7 +653,7 @@ END GROUP
 
 .vector_25      0x9fc01520        0x8
  *(.vector_25)
- .vector_25     0x9fc01520        0x8 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector25.o)
+ .vector_25     0x9fc01520        0x8 build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
                 0x9fc01520                __vector_dispatch_25
                 0x00000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_25) <= (_vector_spacing << 0x5))), function at exception vector 25 too large)
 
@@ -964,78 +967,92 @@ END GROUP
  *(.got)
                 0xa0000000                . = ALIGN (0x4)
 
-.sdata          0xa0000000        0x0
+.sdata          0xa0000000        0xc
                 0xa0000000                _sdata_begin = .
  *(.sdata .sdata.* .gnu.linkonce.s.*)
-                0xa0000000                . = ALIGN (0x4)
-                0xa0000000                _sdata_end = .
+ .sdata         0xa0000000        0xc build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
+                0xa0000000                PWM_Action
+                0xa0000004                PWM_Speed
+                0xa0000008                PWM_Direction
+                0xa000000c                . = ALIGN (0x4)
+                0xa000000c                _sdata_end = .
 
 .lit8
  *(.lit8)
 
 .lit4
  *(.lit4)
-                0xa0000000                . = ALIGN (0x4)
-                0xa0000000                _data_end = .
-                0xa0000000                _bss_begin = .
+                0xa000000c                . = ALIGN (0x4)
+                0xa000000c                _data_end = .
+                0xa000000c                _bss_begin = .
 
-.sbss           0xa0000000       0x2c
-                0xa0000000                _sbss_begin = .
+.sbss           0xa000000c       0x40
+                0xa000000c                _sbss_begin = .
  *(.dynsbss)
  *(.sbss .sbss.* .gnu.linkonce.sb.*)
- .sbss          0xa0000000        0x8 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
- .sbss          0xa0000008       0x14 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
-                0xa0000008                RX1_Buffer_Place
-                0xa000000a                RX2_Buffer_Place
-                0xa000000c                RX3_Buffer_Place
-                0xa000000e                RX4_Buffer_Place
-                0xa0000010                RX5_Buffer_Place
-                0xa0000012                TX2_Buffer_ADD_Place
-                0xa0000014                TX4_Buffer_ADD_Place
-                0xa0000016                TX2_Buffer_REMOVE_Place
-                0xa0000018                TX4_Buffer_REMOVE_Place
-                0xa000001a                UserSentBreak
- .sbss          0xa000001c        0x6 build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
-                0xa000001c                Red_Duty
-                0xa000001e                Green_Duty
-                0xa0000020                Blue_Duty
- .sbss          0xa0000022        0x6 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
-                0xa0000022                Banner_Buffer_Place
-                0xa0000024                GetProduct
-                0xa0000025                BannerFinished
-                0xa0000026                Banner_Correct_place
+ .sbss          0xa000000c        0x8 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
+ .sbss          0xa0000014        0x4 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
+ .sbss          0xa0000018       0x14 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
+                0xa0000018                RX1_Buffer_Place
+                0xa000001a                RX2_Buffer_Place
+                0xa000001c                RX3_Buffer_Place
+                0xa000001e                RX4_Buffer_Place
+                0xa0000020                RX5_Buffer_Place
+                0xa0000022                TX2_Buffer_ADD_Place
+                0xa0000024                TX4_Buffer_ADD_Place
+                0xa0000026                TX2_Buffer_REMOVE_Place
+                0xa0000028                TX4_Buffer_REMOVE_Place
+                0xa000002a                UserSentBreak
+ .sbss          0xa000002c       0x10 build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
+                0xa000002c                Red_Duty
+                0xa000002e                Green_Duty
+                0xa0000030                Blue_Duty
+                0xa0000034                PWM_TIMER
+                0xa0000038                PWM_Steps
+ .sbss          0xa000003c        0x6 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
+                0xa000003c                Banner_Buffer_Place
+                0xa000003e                GetProduct
+                0xa000003f                BannerFinished
+                0xa0000040                Banner_Correct_place
+ *fill*         0xa0000042        0x2 
+ .sbss          0xa0000044        0x4 build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
  *(.scommon)
- .scommon       0xa0000028        0x2 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
-                0xa0000028                RDI_product
-                0xa000002a                _sbss_end = .
-                0xa000002c                . = ALIGN (0x4)
- *fill*         0xa000002a        0x2 
+ .scommon       0xa0000048        0x1 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
+                0xa0000048                Fault
+ *fill*         0xa0000049        0x1 
+ .scommon       0xa000004a        0x2 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
+                0xa000004a                RDI_product
+                0xa000004c                _sbss_end = .
+                0xa000004c                . = ALIGN (0x4)
 
-.bss            0xa000002c     0x1048
+.bss            0xa000004c     0x1060
  *(.dynbss)
  *(COMMON)
- COMMON         0xa000002c      0x134 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
-                0xa000002c                FlashONFI
-                0xa000012c                FlashID
-                0xa0000144                RailStatus
- COMMON         0xa0000160      0xe00 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
-                0xa0000160                RX1_Buffer
-                0xa0000360                RX3_Buffer
-                0xa0000560                RX4_Buffer
-                0xa0000760                TX4_Buffer
-                0xa0000960                RX2_Buffer
-                0xa0000b60                TX2_Buffer
-                0xa0000d60                RX5_Buffer
- COMMON         0xa0000f60       0xfa build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
-                0xa0000f60                Banner_Buffer
- *fill*         0xa000105a        0x2 
- COMMON         0xa000105c       0x18 build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
-                0xa000105c                SetTime
-                0xa0001068                CurrentTime
-                0xa0001074                . = ALIGN ((. != 0x0)?0x4:0x1)
-                0xa0001074                . = ALIGN (0x4)
-                0xa0001074                _end = .
-                0xa0001074                _bss_end = .
+ COMMON         0xa000004c      0xe00 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
+                0xa000004c                RX1_Buffer
+                0xa000024c                RX3_Buffer
+                0xa000044c                RX4_Buffer
+                0xa000064c                TX4_Buffer
+                0xa000084c                RX2_Buffer
+                0xa0000a4c                TX2_Buffer
+                0xa0000c4c                RX5_Buffer
+ COMMON         0xa0000e4c      0x118 build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
+                0xa0000e4c                FlashONFI
+                0xa0000f4c                FlashID
+ COMMON         0xa0000f64       0x1c build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
+                0xa0000f64                RailStatus
+ COMMON         0xa0000f80       0xfa build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
+                0xa0000f80                Banner_Buffer
+ *fill*         0xa000107a        0x2 
+ COMMON         0xa000107c       0x30 build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
+                0xa000107c                SetAlarm
+                0xa0001088                SetTime
+                0xa0001094                CurrentAlarm
+                0xa00010a0                CurrentTime
+                0xa00010ac                . = ALIGN ((. != 0x0)?0x4:0x1)
+                0xa00010ac                . = ALIGN (0x4)
+                0xa00010ac                _end = .
+                0xa00010ac                _bss_end = .
                 0x00008000                _bmxdudba_address = 0x8000
                 0x00008000                _bmxdupba_address = 0x8000
 
@@ -1056,37 +1073,37 @@ END GROUP
  *(.gptab.bss)
  *(.gptab.sbss)
 
-.mdebug.abi32   0xa0001074        0x0
+.mdebug.abi32   0xa00010ac        0x0
  *(.mdebug.abi32)
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/CONFIGURATION.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/main.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/DMA.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
- .mdebug.abi32  0xa0001074        0x0 build/Catalyst_revA_PIC32MX350f128L/production/I2C.o
- .mdebug.abi32  0xa0001074        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
- .mdebug.abi32  0xa0001074        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
- .mdebug.abi32  0xa0001074        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
- .mdebug.abi32  0xa0001074        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
- .mdebug.abi32  0xa0001074        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
- .mdebug.abi32  0xa0001074        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
- .mdebug.abi32  0xa0001074        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
- .mdebug.abi32  0xa0001074        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(s_lib_ver.o)
- .mdebug.abi32  0xa0001074        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libc.a(errno.o)
- .mdebug.abi32  0xa0001074        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
- .mdebug.abi32  0xa0001074        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/CONFIGURATION.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/main.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/DMA.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
+ .mdebug.abi32  0xa00010ac        0x0 build/Catalyst_revA_PIC32MX350f128L/production/I2C.o
+ .mdebug.abi32  0xa00010ac        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
+ .mdebug.abi32  0xa00010ac        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
+ .mdebug.abi32  0xa00010ac        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
+ .mdebug.abi32  0xa00010ac        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
+ .mdebug.abi32  0xa00010ac        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
+ .mdebug.abi32  0xa00010ac        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
+ .mdebug.abi32  0xa00010ac        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
+ .mdebug.abi32  0xa00010ac        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(s_lib_ver.o)
+ .mdebug.abi32  0xa00010ac        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libc.a(errno.o)
+ .mdebug.abi32  0xa00010ac        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+ .mdebug.abi32  0xa00010ac        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
 
 .mdebug.abiN32
  *(.mdebug.abiN32)
@@ -1233,156 +1250,156 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0xcd30
+.debug_info     0x00000000     0xd537
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x13d build/Catalyst_revA_PIC32MX350f128L/production/CONFIGURATION.o
- .debug_info    0x0000013d      0x1ea build/Catalyst_revA_PIC32MX350f128L/production/main.o
- .debug_info    0x00000327      0x537 build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
- .debug_info    0x0000085e      0x270 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
- .debug_info    0x00000ace     0x10bb build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
- .debug_info    0x00001b89     0x15db build/Catalyst_revA_PIC32MX350f128L/production/USER.o
- .debug_info    0x00003164      0xfbe build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
- .debug_info    0x00004122      0x133 build/Catalyst_revA_PIC32MX350f128L/production/DMA.o
- .debug_info    0x00004255     0x3396 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
- .debug_info    0x000075eb      0xacb build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
- .debug_info    0x000080b6      0xa69 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
- .debug_info    0x00008b1f      0x717 build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
- .debug_info    0x00009236      0xc02 build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
- .debug_info    0x00009e38      0x3a8 build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
- .debug_info    0x0000a1e0     0x15bb build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
- .debug_info    0x0000b79b      0x3f9 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
- .debug_info    0x0000bb94      0x8ab build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
- .debug_info    0x0000c43f      0x133 build/Catalyst_revA_PIC32MX350f128L/production/I2C.o
- .debug_info    0x0000c572      0x11f c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
- .debug_info    0x0000c691       0xe3 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
- .debug_info    0x0000c774       0xbd c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
- .debug_info    0x0000c831       0xc5 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
- .debug_info    0x0000c8f6       0xdf c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
- .debug_info    0x0000c9d5       0xd7 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
- .debug_info    0x0000caac       0xab c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
- .debug_info    0x0000cb57      0x11b c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
- .debug_info    0x0000cc72       0xbe c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
+ .debug_info    0x0000013d      0x371 build/Catalyst_revA_PIC32MX350f128L/production/main.o
+ .debug_info    0x000004ae      0x537 build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
+ .debug_info    0x000009e5      0x301 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
+ .debug_info    0x00000ce6     0x10a1 build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
+ .debug_info    0x00001d87      0xf8c build/Catalyst_revA_PIC32MX350f128L/production/USER.o
+ .debug_info    0x00002d13      0xfbe build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
+ .debug_info    0x00003cd1      0x133 build/Catalyst_revA_PIC32MX350f128L/production/DMA.o
+ .debug_info    0x00003e04     0x3396 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
+ .debug_info    0x0000719a      0xaca build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
+ .debug_info    0x00007c64      0xa69 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
+ .debug_info    0x000086cd      0x7f5 build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
+ .debug_info    0x00008ec2      0xc0a build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
+ .debug_info    0x00009acc      0x3ac build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
+ .debug_info    0x00009e78     0x15bb build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
+ .debug_info    0x0000b433      0x3f9 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
+ .debug_info    0x0000b82c     0x141a build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
+ .debug_info    0x0000cc46      0x133 build/Catalyst_revA_PIC32MX350f128L/production/I2C.o
+ .debug_info    0x0000cd79      0x11f c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
+ .debug_info    0x0000ce98       0xe3 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
+ .debug_info    0x0000cf7b       0xbd c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
+ .debug_info    0x0000d038       0xc5 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
+ .debug_info    0x0000d0fd       0xdf c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
+ .debug_info    0x0000d1dc       0xd7 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
+ .debug_info    0x0000d2b3       0xab c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
+ .debug_info    0x0000d35e      0x11b c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+ .debug_info    0x0000d479       0xbe c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
 
-.debug_abbrev   0x00000000     0x13cd
+.debug_abbrev   0x00000000     0x1527
  *(.debug_abbrev)
  .debug_abbrev  0x00000000       0x1b build/Catalyst_revA_PIC32MX350f128L/production/CONFIGURATION.o
- .debug_abbrev  0x0000001b       0x94 build/Catalyst_revA_PIC32MX350f128L/production/main.o
- .debug_abbrev  0x000000af       0xdc build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
- .debug_abbrev  0x0000018b       0x5c build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
- .debug_abbrev  0x000001e7      0x15f build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
- .debug_abbrev  0x00000346      0x146 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
- .debug_abbrev  0x0000048c      0x1b4 build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
- .debug_abbrev  0x00000640       0x1b build/Catalyst_revA_PIC32MX350f128L/production/DMA.o
- .debug_abbrev  0x0000065b      0x19b build/Catalyst_revA_PIC32MX350f128L/production/UART.o
- .debug_abbrev  0x000007f6      0x14a build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
- .debug_abbrev  0x00000940      0x116 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
- .debug_abbrev  0x00000a56      0x10f build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
- .debug_abbrev  0x00000b65      0x1aa build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
- .debug_abbrev  0x00000d0f       0xce build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
- .debug_abbrev  0x00000ddd      0x155 build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
- .debug_abbrev  0x00000f32       0xde build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
- .debug_abbrev  0x00001010      0x1dd build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
- .debug_abbrev  0x000011ed       0x1b build/Catalyst_revA_PIC32MX350f128L/production/I2C.o
- .debug_abbrev  0x00001208       0x62 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
- .debug_abbrev  0x0000126a       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
- .debug_abbrev  0x00001292       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
- .debug_abbrev  0x000012ba       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
- .debug_abbrev  0x000012e2       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
- .debug_abbrev  0x0000130a       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
- .debug_abbrev  0x00001332       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
- .debug_abbrev  0x0000135a       0x3e c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
- .debug_abbrev  0x00001398       0x35 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
+ .debug_abbrev  0x0000001b      0x111 build/Catalyst_revA_PIC32MX350f128L/production/main.o
+ .debug_abbrev  0x0000012c       0xdc build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
+ .debug_abbrev  0x00000208       0xb0 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
+ .debug_abbrev  0x000002b8      0x14c build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
+ .debug_abbrev  0x00000404      0x120 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
+ .debug_abbrev  0x00000524      0x1b4 build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
+ .debug_abbrev  0x000006d8       0x1b build/Catalyst_revA_PIC32MX350f128L/production/DMA.o
+ .debug_abbrev  0x000006f3      0x19b build/Catalyst_revA_PIC32MX350f128L/production/UART.o
+ .debug_abbrev  0x0000088e      0x14a build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
+ .debug_abbrev  0x000009d8      0x116 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
+ .debug_abbrev  0x00000aee      0x10f build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
+ .debug_abbrev  0x00000bfd      0x1aa build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
+ .debug_abbrev  0x00000da7       0xce build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
+ .debug_abbrev  0x00000e75      0x155 build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
+ .debug_abbrev  0x00000fca       0xde build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
+ .debug_abbrev  0x000010a8      0x29f build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
+ .debug_abbrev  0x00001347       0x1b build/Catalyst_revA_PIC32MX350f128L/production/I2C.o
+ .debug_abbrev  0x00001362       0x62 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
+ .debug_abbrev  0x000013c4       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
+ .debug_abbrev  0x000013ec       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
+ .debug_abbrev  0x00001414       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
+ .debug_abbrev  0x0000143c       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
+ .debug_abbrev  0x00001464       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
+ .debug_abbrev  0x0000148c       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
+ .debug_abbrev  0x000014b4       0x3e c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+ .debug_abbrev  0x000014f2       0x35 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
 
-.debug_line     0x00000000     0x1c01
+.debug_line     0x00000000     0x1d62
  *(.debug_line)
  .debug_line    0x00000000       0x1d build/Catalyst_revA_PIC32MX350f128L/production/CONFIGURATION.o
- .debug_line    0x0000001d       0xdb build/Catalyst_revA_PIC32MX350f128L/production/main.o
- .debug_line    0x000000f8       0xe1 build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
- .debug_line    0x000001d9       0x8b build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
- .debug_line    0x00000264      0x191 build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
- .debug_line    0x000003f5      0x16e build/Catalyst_revA_PIC32MX350f128L/production/USER.o
- .debug_line    0x00000563      0x43b build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
- .debug_line    0x0000099e       0x1d build/Catalyst_revA_PIC32MX350f128L/production/DMA.o
- .debug_line    0x000009bb      0x3b8 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
- .debug_line    0x00000d73      0x11b build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
- .debug_line    0x00000e8e       0xf2 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
- .debug_line    0x00000f80      0x117 build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
- .debug_line    0x00001097      0x20a build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
- .debug_line    0x000012a1      0x10d build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
- .debug_line    0x000013ae      0x15c build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
- .debug_line    0x0000150a       0xc3 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
- .debug_line    0x000015cd      0x150 build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
- .debug_line    0x0000171d       0x1d build/Catalyst_revA_PIC32MX350f128L/production/I2C.o
- .debug_line    0x0000173a       0x8a c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
- .debug_line    0x000017c4       0x97 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
- .debug_line    0x0000185b       0x84 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
- .debug_line    0x000018df       0x88 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
- .debug_line    0x00001967       0x95 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
- .debug_line    0x000019fc       0x96 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
- .debug_line    0x00001a92       0x77 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
- .debug_line    0x00001b09        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(s_lib_ver.o)
- .debug_line    0x00001b09        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libc.a(errno.o)
- .debug_line    0x00001b09       0x79 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
- .debug_line    0x00001b82       0x7f c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
+ .debug_line    0x0000001d       0xeb build/Catalyst_revA_PIC32MX350f128L/production/main.o
+ .debug_line    0x00000108       0xe1 build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
+ .debug_line    0x000001e9       0x95 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
+ .debug_line    0x0000027e      0x1ef build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
+ .debug_line    0x0000046d      0x169 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
+ .debug_line    0x000005d6      0x43b build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
+ .debug_line    0x00000a11       0x1d build/Catalyst_revA_PIC32MX350f128L/production/DMA.o
+ .debug_line    0x00000a2e      0x3b8 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
+ .debug_line    0x00000de6      0x11b build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
+ .debug_line    0x00000f01       0xf2 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
+ .debug_line    0x00000ff3      0x130 build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
+ .debug_line    0x00001123      0x20a build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
+ .debug_line    0x0000132d      0x10d build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
+ .debug_line    0x0000143a      0x15c build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
+ .debug_line    0x00001596       0xc3 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
+ .debug_line    0x00001659      0x225 build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
+ .debug_line    0x0000187e       0x1d build/Catalyst_revA_PIC32MX350f128L/production/I2C.o
+ .debug_line    0x0000189b       0x8a c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
+ .debug_line    0x00001925       0x97 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
+ .debug_line    0x000019bc       0x84 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
+ .debug_line    0x00001a40       0x88 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
+ .debug_line    0x00001ac8       0x95 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
+ .debug_line    0x00001b5d       0x96 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
+ .debug_line    0x00001bf3       0x77 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
+ .debug_line    0x00001c6a        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(s_lib_ver.o)
+ .debug_line    0x00001c6a        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libc.a(errno.o)
+ .debug_line    0x00001c6a       0x79 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+ .debug_line    0x00001ce3       0x7f c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
 
-.debug_frame    0x00000000     0x1a94
+.debug_frame    0x00000000     0x1bd4
  *(.debug_frame)
  .debug_frame   0x00000000       0x2c build/Catalyst_revA_PIC32MX350f128L/production/main.o
  .debug_frame   0x0000002c       0x84 build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
- .debug_frame   0x000000b0       0x2c build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
- .debug_frame   0x000000dc      0x150 build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
- .debug_frame   0x0000022c       0x50 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
- .debug_frame   0x0000027c      0x484 build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
- .debug_frame   0x00000700      0x96c build/Catalyst_revA_PIC32MX350f128L/production/UART.o
- .debug_frame   0x0000106c      0x148 build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
- .debug_frame   0x000011b4       0xac build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
- .debug_frame   0x00001260       0xc4 build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
- .debug_frame   0x00001324      0x20c build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
- .debug_frame   0x00001530       0xd0 build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
- .debug_frame   0x00001600       0xf0 build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
- .debug_frame   0x000016f0       0xac build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
- .debug_frame   0x0000179c      0x12c build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
- .debug_frame   0x000018c8       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
- .debug_frame   0x000018f0       0x2c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
- .debug_frame   0x0000191c       0x20 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
- .debug_frame   0x0000193c       0x20 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
- .debug_frame   0x0000195c       0x2c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
- .debug_frame   0x00001988       0x20 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
- .debug_frame   0x000019a8       0x2c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
- .debug_frame   0x000019d4       0xa0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
- .debug_frame   0x00001a74       0x20 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
+ .debug_frame   0x000000b0       0x68 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
+ .debug_frame   0x00000118      0x178 build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
+ .debug_frame   0x00000290       0x50 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
+ .debug_frame   0x000002e0      0x484 build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
+ .debug_frame   0x00000764      0x96c build/Catalyst_revA_PIC32MX350f128L/production/UART.o
+ .debug_frame   0x000010d0      0x148 build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
+ .debug_frame   0x00001218       0xac build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
+ .debug_frame   0x000012c4       0xe0 build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
+ .debug_frame   0x000013a4      0x20c build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
+ .debug_frame   0x000015b0       0xd0 build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
+ .debug_frame   0x00001680       0xf0 build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
+ .debug_frame   0x00001770       0xac build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
+ .debug_frame   0x0000181c      0x1ec build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
+ .debug_frame   0x00001a08       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
+ .debug_frame   0x00001a30       0x2c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
+ .debug_frame   0x00001a5c       0x20 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
+ .debug_frame   0x00001a7c       0x20 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
+ .debug_frame   0x00001a9c       0x2c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
+ .debug_frame   0x00001ac8       0x20 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
+ .debug_frame   0x00001ae8       0x2c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
+ .debug_frame   0x00001b14       0xa0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+ .debug_frame   0x00001bb4       0x20 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
 
-.debug_str      0x00000000      0x1de
+.debug_str      0x00000000      0x1f9
  *(.debug_str)
  .debug_str     0x00000000        0x0 build/Catalyst_revA_PIC32MX350f128L/production/CONFIGURATION.o
  .debug_str     0x00000000        0x0 build/Catalyst_revA_PIC32MX350f128L/production/main.o
  .debug_str     0x00000000        0x0 build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
  .debug_str     0x00000000        0x0 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
  .debug_str     0x00000000       0x24 build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
- .debug_str     0x00000024        0x9 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
- .debug_str     0x0000002d       0x82 build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
- .debug_str     0x000000af        0x0 build/Catalyst_revA_PIC32MX350f128L/production/DMA.o
- .debug_str     0x000000af       0xef build/Catalyst_revA_PIC32MX350f128L/production/UART.o
- .debug_str     0x0000019e        0x0 build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
- .debug_str     0x0000019e        0x0 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
- .debug_str     0x0000019e        0xe build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
- .debug_str     0x000001ac       0x12 build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
- .debug_str     0x000001be        0x7 build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
- .debug_str     0x000001c5        0x6 build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
- .debug_str     0x000001cb       0x13 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
- .debug_str     0x000001de        0x0 build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
- .debug_str     0x000001de        0x0 build/Catalyst_revA_PIC32MX350f128L/production/I2C.o
- .debug_str     0x000001de        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
- .debug_str     0x000001de        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
- .debug_str     0x000001de        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
- .debug_str     0x000001de        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
- .debug_str     0x000001de        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
- .debug_str     0x000001de        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
- .debug_str     0x000001de        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
- .debug_str     0x000001de        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(s_lib_ver.o)
- .debug_str     0x000001de        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libc.a(errno.o)
- .debug_str     0x000001de        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
- .debug_str     0x000001de        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
+ .debug_str     0x00000024        0x0 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
+ .debug_str     0x00000024       0x82 build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
+ .debug_str     0x000000a6        0x0 build/Catalyst_revA_PIC32MX350f128L/production/DMA.o
+ .debug_str     0x000000a6       0xef build/Catalyst_revA_PIC32MX350f128L/production/UART.o
+ .debug_str     0x00000195        0x0 build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
+ .debug_str     0x00000195        0x0 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
+ .debug_str     0x00000195        0xe build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
+ .debug_str     0x000001a3       0x12 build/Catalyst_revA_PIC32MX350f128L/production/FLASH.o
+ .debug_str     0x000001b5        0x7 build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
+ .debug_str     0x000001bc        0x6 build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
+ .debug_str     0x000001c2       0x13 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
+ .debug_str     0x000001d5       0x24 build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
+ .debug_str     0x000001f9        0x0 build/Catalyst_revA_PIC32MX350f128L/production/I2C.o
+ .debug_str     0x000001f9        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
+ .debug_str     0x000001f9        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
+ .debug_str     0x000001f9        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
+ .debug_str     0x000001f9        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
+ .debug_str     0x000001f9        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
+ .debug_str     0x000001f9        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
+ .debug_str     0x000001f9        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
+ .debug_str     0x000001f9        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(s_lib_ver.o)
+ .debug_str     0x000001f9        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libc.a(errno.o)
+ .debug_str     0x000001f9        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+ .debug_str     0x000001f9        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
 
 .debug_loc      0x00000000       0x74
  *(.debug_loc)
@@ -1498,22 +1515,22 @@ LOAD data_init
 .reginfo        0x00000000       0x18
  .reginfo       0x00000000       0x18 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib/./proc/32MX350F128L/crt0_mips32r2.o
 
-.stack          0xa0001150      0x400
- .stack         0xa0001150      0x400 stack
+.stack          0xa0001188      0x400
+ .stack         0xa0001188      0x400 stack
 
-.data           0xa0001074       0xa8
- .data          0xa0001074       0x8c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpexlog.o)
- .data          0xa0001100       0x1c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpexp32.o)
+.data           0xa00010ac       0xa8
+ .data          0xa00010ac       0x8c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpexlog.o)
+ .data          0xa0001138       0x1c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpexp32.o)
 
 .data.math_errhandling_flag
-                0xa000111c        0x4
+                0xa0001154        0x4
  .data.math_errhandling_flag
-                0xa000111c        0x4 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(s_lib_ver.o)
-                0xa000111c                math_errhandling
+                0xa0001154        0x4 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(s_lib_ver.o)
+                0xa0001154                math_errhandling
 
-.bss.errno      0xa0001120        0x4
- .bss.errno     0xa0001120        0x4 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libc.a(errno.o)
-                0xa0001120                errno
+.bss.errno      0xa0001158        0x4
+ .bss.errno     0xa0001158        0x4 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libc.a(errno.o)
+                0xa0001158                errno
 
 .bss            0x00000000        0x0
  .bss           0x00000000        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
@@ -1736,12 +1753,6 @@ LOAD data_init
 
 .data           0x00000000        0x0
  .data          0x00000000        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector26.o)
-
-.bss            0x00000000        0x0
- .bss           0x00000000        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector25.o)
-
-.data           0x00000000        0x0
- .data          0x00000000        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector25.o)
 
 .bss            0x00000000        0x0
  .bss           0x00000000        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector24.o)
@@ -2067,7 +2078,7 @@ LOAD data_init
                 0xbfc00480       0x2c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\debug-exception-return.o
                 0xbfc00480                __DbgExecReturn
 
-.text           0x9d000000     0x7b40
+.text           0x9d000000     0x8e5c
  .text          0x9d000000     0x2790 build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
                 0x9d000000                MSC_Relay
                 0x9d000068                MSC_DelayUS
@@ -2201,286 +2212,300 @@ LOAD data_init
                 0x9d005154                FLH_EXT_ReadID
                 0x9d00583c                FLH_EXT_ReadONFI
                 0x9d0058dc                FLH_EXT_ReadPage
- .text          0x9d005a24      0x918 build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
-                0x9d005a24                TMR2_IntHandler
-                0x9d005ba0                SPI2_IntHandler
-                0x9d005c54                UART2_IntHandler
-                0x9d006064                UART4_IntHandler
- .text          0x9d00633c      0x74c build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
-                0x9d00633c                SPI_Module
-                0x9d00639c                InitSPI
-                0x9d0064c0                SPI_Mode
-                0x9d0068b4                SPI_TransmitterInterrupt
-                0x9d006914                SPI_ReceiverInterrupt
-                0x9d006974                SPI_WriteRead
-                0x9d006a1c                SPI_CS
- .text          0x9d006a88      0x658 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
-                0x9d006a88                Init_App
-                0x9d007058                Init_System
- .text          0x9d0070e0      0x5f8 build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
-                0x9d0070e0                InitRTCC
-                0x9d00718c                RTCC_ConfigOscillator
-                0x9d0071d8                RTCC_ClearTime
-                0x9d007234                RTCC_SetDefaultTime
-                0x9d0072e4                RTCC_Module
-                0x9d00735c                RTCC_Status
-                0x9d00738c                RTCC_Access
-                0x9d007418                RTCC_Read
-                0x9d007564                RTCC_Write
- .text          0x9d0076d8      0x468 build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
-                0x9d0076d8                ADC_ModuleOFF
-                0x9d007708                ADC_ModuleON
-                0x9d00773c                InitADC
-                0x9d007790                ADC_ReadChannel
-                0x9d0078b0                ADC_ReadVIN
-                0x9d007924                ADC_ReadVolt5_0
-                0x9d007998                ADC_ReadVolt3_3
-                0x9d007a0c                ADC_ReadVolt4_1
-                0x9d007a80                ADC_ReadVCAP
-                0x9d007af0                ADC_ReadRails
+ .text          0x9d005a24      0xf3c build/Catalyst_revA_PIC32MX350f128L/production/RTCC.o
+                0x9d005a24                InitRTCC
+                0x9d005b14                RTCC_ConfigOscillator
+                0x9d005bc4                RTCC_ClearTime
+                0x9d005c38                RTCC_CalculateHours
+                0x9d005d78                RTCC_SetDefaultTime
+                0x9d005e24                RTCC_SetDefaultAlarm
+                0x9d005ec4                RTCC_Module
+                0x9d005f6c                RTCC_Status
+                0x9d005f9c                RTCC_Access
+                0x9d00606c                RTCC_Read
+                0x9d0061c8                RTCC_Write
+                0x9d006364                RTCC_SetAlarm
+                0x9d0064dc                RTCC_ReadAlarm
+                0x9d006638                RTCC_Alarm
+                0x9d0068f0                RTCC_AlarmInterrupts
+ .text          0x9d006960      0xe40 build/Catalyst_revA_PIC32MX350f128L/production/INTERRUPTS.o
+                0x9d006960                TMR2_IntHandler
+                0x9d006eb4                SPI2_IntHandler
+                0x9d006f68                UART2_IntHandler
+                0x9d007378                UART4_IntHandler
+                0x9d007650                RTCC_IntHandler
+ .text          0x9d0077a0      0x74c build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
+                0x9d0077a0                SPI_Module
+                0x9d007800                InitSPI
+                0x9d007924                SPI_Mode
+                0x9d007d18                SPI_TransmitterInterrupt
+                0x9d007d78                SPI_ReceiverInterrupt
+                0x9d007dd8                SPI_WriteRead
+                0x9d007e80                SPI_CS
+ .text          0x9d007eec      0x660 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
+                0x9d007eec                Init_App
+                0x9d0084bc                Init_System
+ .text          0x9d00854c      0x4a8 build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
+                0x9d00854c                PWM_SetRed
+                0x9d00857c                PWM_SetGreen
+                0x9d0085ac                PWM_SetBlue
+                0x9d0085dc                PWM_SetRGB
+                0x9d008648                InitPWM
+                0x9d008780                PWM_SetAction
+                0x9d0087bc                PWM_SetColor
+ .text          0x9d0089f4      0x468 build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
+                0x9d0089f4                ADC_ModuleOFF
+                0x9d008a24                ADC_ModuleON
+                0x9d008a58                InitADC
+                0x9d008aac                ADC_ReadChannel
+                0x9d008bcc                ADC_ReadVIN
+                0x9d008c40                ADC_ReadVolt5_0
+                0x9d008cb4                ADC_ReadVolt3_3
+                0x9d008d28                ADC_ReadVolt4_1
+                0x9d008d9c                ADC_ReadVCAP
+                0x9d008e0c                ADC_ReadRails
 
-.text.libm      0x9d007b40      0x408
- .text.libm     0x9d007b40      0x408 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fppow32.o)
-                0x9d007b40                fppow
-                0x9d007b40                __mchp_powf
+.text.libm      0x9d008e5c      0x408
+ .text.libm     0x9d008e5c      0x408 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fppow32.o)
+                0x9d008e5c                fppow
+                0x9d008e5c                __mchp_powf
 
-.text           0x9d007f48      0x6a4
- .text          0x9d007f48      0x38c build/Catalyst_revA_PIC32MX350f128L/production/PWM.o
-                0x9d007f48                PWM_SetRed
-                0x9d007f78                PWM_SetGreen
-                0x9d007fa8                PWM_SetBlue
-                0x9d007fd8                PWM_SetRGB
-                0x9d008044                InitPWM
-                0x9d00817c                PWM_SetColor
- .text          0x9d0082d4      0x318 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
-                0x9d0082d4                InitRDI
-                0x9d0082f8                RDI_GetProduct
-                0x9d008398                RDI_ClearProduct
-                0x9d0083e0                RDI_PrintBanner
-                0x9d008580                RDI_PrintBannerExtention
+.text           0x9d009264      0x318
+ .text          0x9d009264      0x318 build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
+                0x9d009264                InitRDI
+                0x9d009288                RDI_GetProduct
+                0x9d009328                RDI_ClearProduct
+                0x9d009370                RDI_PrintBanner
+                0x9d009510                RDI_PrintBannerExtention
 
-.text.libm      0x9d0085ec      0x2b4
- .text.libm     0x9d0085ec      0x2b4 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpexlog.o)
-                0x9d0085ec                fpexlog
+.text.libm      0x9d00957c      0x2b4
+ .text.libm     0x9d00957c      0x2b4 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpexlog.o)
+                0x9d00957c                fpexlog
 
-.text           0x9d0088a0      0x28c
- .text          0x9d0088a0      0x28c build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
-                0x9d0088a0                PWR_Charge
-                0x9d008924                PWR_Volts5
-                0x9d0089a8                PWR_RASP
-                0x9d008a2c                PWR_RASP_Read
-                0x9d008a8c                PWR_RASP_Connected
-                0x9d008aec                PWR_StatusUpdate
+.text           0x9d009830      0x28c
+ .text          0x9d009830      0x28c build/Catalyst_revA_PIC32MX350f128L/production/POWER.o
+                0x9d009830                PWR_Charge
+                0x9d0098b4                PWR_Volts5
+                0x9d009938                PWR_RASP
+                0x9d0099bc                PWR_RASP_Read
+                0x9d009a1c                PWR_RASP_Connected
+                0x9d009a7c                PWR_StatusUpdate
 
-.text.fpsubadd  0x9d008b2c      0x278
+.text.fpsubadd  0x9d009abc      0x278
  .text.fpsubadd
-                0x9d008b2c      0x278 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fp32subadd.o)
-                0x9d008b2c                fpsub
-                0x9d008b2c                __subsf3
-                0x9d008b34                __addsf3
-                0x9d008b34                fpadd
+                0x9d009abc      0x278 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fp32subadd.o)
+                0x9d009abc                fpsub
+                0x9d009abc                __subsf3
+                0x9d009ac4                __addsf3
+                0x9d009ac4                fpadd
 
-.text.fp32div   0x9d008da4      0x230
- .text.fp32div  0x9d008da4      0x230 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fp32div.o)
-                0x9d008da4                fpdiv
-                0x9d008da4                __divsf3
+.text.fp32div   0x9d009d34      0x230
+ .text.fp32div  0x9d009d34      0x230 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fp32div.o)
+                0x9d009d34                fpdiv
+                0x9d009d34                __divsf3
 
-.text           0x9d008fd4      0x3e8
- .text          0x9d008fd4      0x204 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpexp32.o)
-                0x9d008fd4                fpexexp
-                0x9d0090ec                fpexp
-                0x9d0090ec                __mchp_expf
- .text          0x9d0091d8      0x1e4 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
-                0x9d0091d8                TMR_EnableTimer2
-                0x9d009238                TMR_InterruptTimer2
-                0x9d009298                TMR_ResetTimer2
-                0x9d0092c0                InitTIMERS
-                0x9d0092f0                InitTIMER2
+.text           0x9d009f64      0x3e8
+ .text          0x9d009f64      0x204 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpexp32.o)
+                0x9d009f64                fpexexp
+                0x9d00a07c                fpexp
+                0x9d00a07c                __mchp_expf
+ .text          0x9d00a168      0x1e4 build/Catalyst_revA_PIC32MX350f128L/production/TIMERS.o
+                0x9d00a168                TMR_EnableTimer2
+                0x9d00a1c8                TMR_InterruptTimer2
+                0x9d00a228                TMR_ResetTimer2
+                0x9d00a250                InitTIMERS
+                0x9d00a280                InitTIMER2
 
-.text.fp32mul   0x9d0093bc      0x1bc
- .text.fp32mul  0x9d0093bc      0x1bc c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fp32mul.o)
-                0x9d0093bc                fpmul
-                0x9d0093bc                __mulsf3
+.text.fp32mul   0x9d00a34c      0x1bc
+ .text.fp32mul  0x9d00a34c      0x1bc c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fp32mul.o)
+                0x9d00a34c                fpmul
+                0x9d00a34c                __mulsf3
 
-.text.powf      0x9d009578      0x148
- .text.powf     0x9d009578      0x148 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
-                0x9d009578                powf
+.dinit          0x9d00a508      0x180
+ .dinit         0x9d00a508      0x180 data_init
 
-.dinit          0x9d0096c0      0x140
- .dinit         0x9d0096c0      0x140 data_init
+.text           0x9d00a688      0x15c
+ .text          0x9d00a688      0x15c build/Catalyst_revA_PIC32MX350f128L/production/main.o
+                0x9d00a688                main
 
-.text.dpcmp     0x9d009800      0x12c
- .text.dpcmp    0x9d009800      0x12c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(dpcmp.o)
-                0x9d009800                __gtdf2
-                0x9d009800                __ltdf2
-                0x9d009800                dpcmp
-                0x9d009800                __ledf2
-                0x9d009800                __nedf2
-                0x9d009800                __gedf2
-                0x9d009800                __eqdf2
+.text.powf      0x9d00a7e4      0x148
+ .text.powf     0x9d00a7e4      0x148 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
+                0x9d00a7e4                powf
 
-.text           0x9d00992c      0x218
- .text          0x9d00992c      0x118 build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
-                0x9d00992c                SYS_ConfigureOscillator
-                0x9d009978                SYS_SystemUnlock
-                0x9d0099c0                SYS_SystemLock
-                0x9d0099f0                SYS_Interrupts
- .text          0x9d009a44      0x100 build/Catalyst_revA_PIC32MX350f128L/production/main.o
-                0x9d009a44                main
+.text.dpcmp     0x9d00a92c      0x12c
+ .text.dpcmp    0x9d00a92c      0x12c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(dpcmp.o)
+                0x9d00a92c                __gtdf2
+                0x9d00a92c                __ltdf2
+                0x9d00a92c                dpcmp
+                0x9d00a92c                __ledf2
+                0x9d00a92c                __nedf2
+                0x9d00a92c                __gedf2
+                0x9d00a92c                __eqdf2
 
-.text.dptofp    0x9d009b44      0x100
- .text.dptofp   0x9d009b44      0x100 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(dptofp.o)
-                0x9d009b44                __truncdfsf2
-                0x9d009b44                dptofp
+.text           0x9d00aa58      0x118
+ .text          0x9d00aa58      0x118 build/Catalyst_revA_PIC32MX350f128L/production/SYSTEM.o
+                0x9d00aa58                SYS_ConfigureOscillator
+                0x9d00aaa4                SYS_SystemUnlock
+                0x9d00aaec                SYS_SystemLock
+                0x9d00ab1c                SYS_Interrupts
+
+.text.dptofp    0x9d00ab70      0x100
+ .text.dptofp   0x9d00ab70      0x100 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(dptofp.o)
+                0x9d00ab70                __truncdfsf2
+                0x9d00ab70                dptofp
 
 .text.general_exception
-                0x9d009c44       0xdc
+                0x9d00ac70       0xdc
  .text.general_exception
-                0x9d009c44       0xdc c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(general-exception.o)
-                0x9d009c44                _general_exception_context
+                0x9d00ac70       0xdc c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(general-exception.o)
+                0x9d00ac70                _general_exception_context
 
-.text.libm      0x9d009d20       0xd4
- .text.libm     0x9d009d20       0xd4 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpmodf.o)
-                0x9d009d20                fpmodf
-                0x9d009d20                modff
+.text.libm      0x9d00ad4c       0xd4
+ .text.libm     0x9d00ad4c       0xd4 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpmodf.o)
+                0x9d00ad4c                fpmodf
+                0x9d00ad4c                modff
 
-.rodata         0x9d009df4       0xcc
- .rodata        0x9d009df4       0xcc build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
-                0x9d009df4                Workhorse_H_ADCP
-                0x9d009e18                Catalyst_PIC_only_String
-                0x9d009e38                Catalyst_String
+.rodata         0x9d00ae20       0xcc
+ .rodata        0x9d00ae20       0xcc build/Catalyst_revA_PIC32MX350f128L/production/RDI.o
+                0x9d00ae20                Workhorse_H_ADCP
+                0x9d00ae44                Catalyst_PIC_only_String
+                0x9d00ae64                Catalyst_String
 
-.text.fptodp    0x9d009ec0       0xac
- .text.fptodp   0x9d009ec0       0xac c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fptodp.o)
-                0x9d009ec0                fptodp
-                0x9d009ec0                __extendsfdf2
+.text.fptodp    0x9d00aeec       0xac
+ .text.fptodp   0x9d00aeec       0xac c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fptodp.o)
+                0x9d00aeec                fptodp
+                0x9d00aeec                __extendsfdf2
 
-.text.fpcmp     0x9d009f6c       0x9c
- .text.fpcmp    0x9d009f6c       0x9c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpcmp.o)
-                0x9d009f6c                __nesf2
-                0x9d009f6c                __gtsf2
-                0x9d009f6c                __eqsf2
-                0x9d009f6c                __ltsf2
-                0x9d009f6c                fpcmp
-                0x9d009f6c                __gesf2
-                0x9d009f6c                __lesf2
+.text.fpcmp     0x9d00af98       0x9c
+ .text.fpcmp    0x9d00af98       0x9c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fpcmp.o)
+                0x9d00af98                __nesf2
+                0x9d00af98                __gtsf2
+                0x9d00af98                __eqsf2
+                0x9d00af98                __ltsf2
+                0x9d00af98                fpcmp
+                0x9d00af98                __gesf2
+                0x9d00af98                __lesf2
 
-.text.isinf     0x9d00a008       0x8c
- .text.isinf    0x9d00a008       0x8c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
-                0x9d00a008                isinf
+.text.isinf     0x9d00b034       0x8c
+ .text.isinf    0x9d00b034       0x8c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+                0x9d00b034                isinf
 
-.text.isinff    0x9d00a094       0x8c
- .text.isinff   0x9d00a094       0x8c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
-                0x9d00a094                isinff
+.text.isinff    0x9d00b0c0       0x8c
+ .text.isinff   0x9d00b0c0       0x8c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+                0x9d00b0c0                isinff
 
-.text.fptoli    0x9d00a120       0x80
- .text.fptoli   0x9d00a120       0x80 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fptoli.o)
-                0x9d00a120                fptoli
-                0x9d00a120                fptosi
-                0x9d00a120                __fixsfsi
+.text           0x9d00b14c       0x88
+ .text          0x9d00b14c       0x88 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
+                0x9d00b14c                InitException
+                0x9d00b17c                EXC_ClearFaults
+                0x9d00b1a0                EXC_General_Exception_Handler
 
-.text.fptoul    0x9d00a1a0       0x7c
- .text.fptoul   0x9d00a1a0       0x7c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fptoul.o)
-                0x9d00a1a0                __fixunssfsi
-                0x9d00a1a0                fptoul
-                0x9d00a1a0                fptoui
+.text.fptoli    0x9d00b1d4       0x80
+ .text.fptoli   0x9d00b1d4       0x80 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fptoli.o)
+                0x9d00b1d4                fptoli
+                0x9d00b1d4                fptosi
+                0x9d00b1d4                __fixsfsi
+
+.text.fptoul    0x9d00b254       0x7c
+ .text.fptoul   0x9d00b254       0x7c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(fptoul.o)
+                0x9d00b254                __fixunssfsi
+                0x9d00b254                fptoul
+                0x9d00b254                fptoui
 
 .text.__unorddf2
-                0x9d00a21c       0x64
+                0x9d00b2d0       0x64
  .text.__unorddf2
-                0x9d00a21c       0x64 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
-                0x9d00a21c                __unorddf2
+                0x9d00b2d0       0x64 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
+                0x9d00b2d0                __unorddf2
 
-.text.sitofp    0x9d00a280       0x60
- .text.sitofp   0x9d00a280       0x60 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(sitofp.o)
-                0x9d00a280                __floatsisf
-                0x9d00a280                litofp
-                0x9d00a280                sitofp
+.text.sitofp    0x9d00b334       0x60
+ .text.sitofp   0x9d00b334       0x60 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(sitofp.o)
+                0x9d00b334                __floatsisf
+                0x9d00b334                litofp
+                0x9d00b334                sitofp
 
 .text.main_entry
-                0x9d00a2e0       0x54
+                0x9d00b394       0x54
  .text.main_entry
-                0x9d00a2e0       0x54 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib/./proc/32MX350F128L/crt0_mips32r2.o
-                0x9d00a314                __crt0_exit
+                0x9d00b394       0x54 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib/./proc/32MX350F128L/crt0_mips32r2.o
+                0x9d00b3c8                __crt0_exit
 
-.text           0x9d00a334       0x4c
- .text          0x9d00a334       0x4c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
-                0x9d00a334                __floatunsisf
+.text           0x9d00b3e8       0x4c
+ .text          0x9d00b3e8       0x4c c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3\libgcc.a(floatunsisf.o)
+                0x9d00b3e8                __floatunsisf
 
 .text._bootstrap_exception_handler
-                0x9d00a380       0x48
+                0x9d00b434       0x48
  .text._bootstrap_exception_handler
-                0x9d00a380       0x48 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
-                0x9d00a380                _bootstrap_exception_handler
+                0x9d00b434       0x48 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
+                0x9d00b434                _bootstrap_exception_handler
 
 .text._general_exception_handler
-                0x9d00a3c8       0x48
+                0x9d00b47c       0x48
  .text._general_exception_handler
-                0x9d00a3c8       0x48 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
-                0x9d00a3c8                _general_exception_handler
+                0x9d00b47c       0x48 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
+                0x9d00b47c                _general_exception_handler
 
 .vector_default
-                0x9d00a410       0x48
+                0x9d00b4c4       0x48
  .vector_default
-                0x9d00a410       0x48 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
-                0x9d00a410                _DefaultInterrupt
+                0x9d00b4c4       0x48 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
+                0x9d00b4c4                _DefaultInterrupt
 
-.text           0x9d00a458       0x78
- .text          0x9d00a458       0x44 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\pic32_software_reset.o
-                0x9d00a458                __pic32_software_reset
- .text          0x9d00a49c       0x34 build/Catalyst_revA_PIC32MX350f128L/production/EXCEPTIONS.o
-                0x9d00a49c                EXC_General_Exception_Handler
+.text           0x9d00b50c       0x44
+ .text          0x9d00b50c       0x44 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\pic32_software_reset.o
+                0x9d00b50c                __pic32_software_reset
 
-.text.isnan     0x9d00a4d0       0x34
- .text.isnan    0x9d00a4d0       0x34 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
-                0x9d00a4d0                isnan
+.text.isnan     0x9d00b550       0x34
+ .text.isnan    0x9d00b550       0x34 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+                0x9d00b550                isnan
 
-.text.isnanf    0x9d00a504       0x34
- .text.isnanf   0x9d00a504       0x34 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
-                0x9d00a504                isnanf
+.text.isnanf    0x9d00b584       0x34
+ .text.isnanf   0x9d00b584       0x34 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+                0x9d00b584                isnanf
 
-.text.isnanl    0x9d00a538       0x28
- .text.isnanl   0x9d00a538       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
-                0x9d00a538                isnanl
+.text.isnanl    0x9d00b5b8       0x28
+ .text.isnanl   0x9d00b5b8       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+                0x9d00b5b8                isnanl
 
-.text.isinfl    0x9d00a560       0x28
- .text.isinfl   0x9d00a560       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
-                0x9d00a560                isinfl
+.text.isinfl    0x9d00b5e0       0x28
+ .text.isinfl   0x9d00b5e0       0x28 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+                0x9d00b5e0                isinfl
 
-.rodata         0x9d00a588       0x1c
- .rodata        0x9d00a588       0x1c build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
+.rodata         0x9d00b608       0x1c
+ .rodata        0x9d00b608       0x1c build/Catalyst_revA_PIC32MX350f128L/production/ADC.o
 
-.text           0x9d00a5a4       0x18
- .text          0x9d00a5a4       0x18 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-nmi-handler.o)
-                0x9d00a5a4                _nmi_handler
+.text           0x9d00b624       0x18
+ .text          0x9d00b624       0x18 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-nmi-handler.o)
+                0x9d00b624                _nmi_handler
 
-.rodata         0x9d00a5bc       0x38
- .rodata        0x9d00a5bc       0x14 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
-                0x9d00a5bc                Version
-                0x9d00a5c0                Revision
-                0x9d00a5c4                Alpha
-                0x9d00a5c8                Branch_Version
- .rodata        0x9d00a5d0       0x10 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
- .rodata        0x9d00a5e0        0xc build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
- .rodata        0x9d00a5ec        0x8 build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
+.rodata         0x9d00b63c       0x38
+ .rodata        0x9d00b63c       0x14 build/Catalyst_revA_PIC32MX350f128L/production/USER.o
+                0x9d00b63c                Version
+                0x9d00b640                Revision
+                0x9d00b644                Alpha
+                0x9d00b648                Branch_Version
+ .rodata        0x9d00b650       0x10 build/Catalyst_revA_PIC32MX350f128L/production/UART.o
+ .rodata        0x9d00b660        0xc build/Catalyst_revA_PIC32MX350f128L/production/SPI.o
+ .rodata        0x9d00b66c        0x8 build/Catalyst_revA_PIC32MX350f128L/production/MISC.o
 
 .text._on_reset
-                0x9d00a5f4        0x8
+                0x9d00b674        0x8
  .text._on_reset
-                0x9d00a5f4        0x8 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
-                0x9d00a5f4                _on_reset
+                0x9d00b674        0x8 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
+                0x9d00b674                _on_reset
 
 .text._on_bootstrap
-                0x9d00a5fc        0x8
+                0x9d00b67c        0x8
  .text._on_bootstrap
-                0x9d00a5fc        0x8 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
-                0x9d00a5fc                _on_bootstrap
+                0x9d00b67c        0x8 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
+                0x9d00b67c                _on_bootstrap
 
-.rodata         0x9d00a608        0x8
- .rodata        0x9d00a608        0x8 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
+.rodata         0x9d00b688        0x8
+ .rodata        0x9d00b688        0x8 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(isinf.o)
 
-.rodata         0x9d00a604        0x4
- .rodata        0x9d00a604        0x4 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
+.rodata         0x9d00b684        0x4
+ .rodata        0x9d00b684        0x4 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libm.a(w_powf.o)
 
 .text           0x00000000        0x0
  .text          0x00000000        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libe.a(_unorddf2.o)
@@ -2595,9 +2620,6 @@ LOAD data_init
 
 .text           0x00000000        0x0
  .text          0x00000000        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector26.o)
-
-.text           0x00000000        0x0
- .text          0x00000000        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector25.o)
 
 .text           0x00000000        0x0
  .text          0x00000000        0x0 c:/program files (x86)/microchip/xc32/v1.40/bin/bin/../../lib/gcc/pic32mx/4.8.3/../../../../pic32mx/lib\libpic32.a(vector24.o)

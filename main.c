@@ -17,6 +17,8 @@
  *                          Implement SPI mater and slave mode.
  *                          Added external Flash IC functionality.
  *                          Added RTCC functionality.
+ *                          Added RGB LED fade and blink functionality.
+ *                          Added RTC alarm capability.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -40,6 +42,8 @@
 #include "MISC.h"
 #include "ADC.h"
 #include "SPI.h"
+#include "RTCC.h"
+#include "PWM.h"
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -56,7 +60,6 @@
 short main (void)
 {
     unsigned long i;
-    unsigned char value;
     
     /* Initialize */
     SYS_ConfigureOscillator();
@@ -72,16 +75,24 @@ short main (void)
     {
         MSC_RedLEDTOGGLE();
         MSC_DelayUS(100000);
-        PWM_SetColor(i/3);
+        PWM_SetColor(i/3, NOTHING,NOTHING);
     }
     MSC_RedLEDOFF();
     
     MSC_Relay(OFF);
     
+    RTCC_ReadAlarm(&CurrentAlarm);
     while(1)
     {
-        SPI_WriteRead('D', &value);
-        MSC_DelayUS(1000);
+        if(RTCTIMEbits.SEC01 % 2)
+        {
+            RTCC_Read(&CurrentTime); // update current time
+            MSC_RedLEDON();  
+        }
+        else
+        {
+            MSC_RedLEDOFF();
+        }
     }
 }
 /*-----------------------------------------------------------------------------/

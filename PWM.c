@@ -32,6 +32,11 @@
 unsigned short Red_Duty = 0;
 unsigned short Green_Duty = 0;
 unsigned short Blue_Duty = 0;
+unsigned char PWM_Action = FADEUP;
+unsigned long PWM_Speed = PWM_SLOW;
+unsigned long PWM_TIMER = 0;
+unsigned char PWM_Direction = UP;
+unsigned long PWM_Steps = 0;
 
 /******************************************************************************/
 /* Inline Functions                                                           */
@@ -116,9 +121,9 @@ void InitPWM(void)
     OC2CONbits.OCM = 0b110; // PWM mode on OC2; Fault pin disabled
     OC3CONbits.OCM = 0b110; // PWM mode on OC3; Fault pin disabled
     
-    OC1R = 0; // Write the duty cycle for the first PWM pulse of Red LED
+    OC1R = 0; // Write the duty cycle for the first PWM pulse of Blue LED
     OC2R = 0; // Write the duty cycle for the first PWM pulse of Green LED
-    OC3R = 0; // Write the duty cycle for the first PWM pulse of Blue LED
+    OC3R = 0; // Write the duty cycle for the first PWM pulse of Red LED
     OC1RS = 0; // Write the duty cycle for the second PWM pulse
     OC2RS = 0; // Write the duty cycle for the second PWM pulse
     OC3RS = 0; // Write the duty cycle for the second PWM pulse
@@ -132,39 +137,90 @@ void InitPWM(void)
 }
 
 /******************************************************************************/
+/* PWM_SetAction
+ *
+ * Sets the LED action like fade or blink and sets the speed.
+/******************************************************************************/
+void PWM_SetAction(unsigned char type, unsigned long speed)
+{
+    PWM_Action = type;
+    PWM_Speed = speed;
+}
+
+/******************************************************************************/
 /* PWM_SetColor
  *
  * Sets the LED Color by name.
 /******************************************************************************/
-void PWM_SetColor(unsigned short Color)
+void PWM_SetColor(unsigned short Color, unsigned char type, unsigned long speed)
 {
     switch (Color)
     {
         case RED:
-            PWM_SetRGB(35,0,0);
+            PWM_SetRGB(32,0,0);
             break;
         case GREEN:
-            PWM_SetRGB(0,15,0);
+            PWM_SetRGB(0,16,0);
             break;
         case BLUE:
             PWM_SetRGB(0,0,8);
             break;
         case PURPLE:
-            PWM_SetRGB(35,0,8);
+            PWM_SetRGB(32,0,8);
             break;
         case YELLOW:
-            PWM_SetRGB(15,15,0);
+            PWM_SetRGB(16,16,0);
             break;
          case WHITE:
-            PWM_SetRGB(15,15,8);
+            PWM_SetRGB(16,16,8);
             break;
         case TURQUOISE:
-            PWM_SetRGB(0,15,8);
+            PWM_SetRGB(0,16,8);
             break;
         default:
             PWM_SetRGB(0,0,0);
             break;
     }
+    if(type)
+    {
+        PWM_TIMER = speed + 1;
+        PWM_Steps = 0;
+        PWM_Direction = UP;
+        if(Red_Duty != 0)
+        {
+            if(type == FADEDOWN)
+            {
+                Red_Duty = 241;
+            }
+            else
+            {
+                Red_Duty = 1;
+            }       
+        }
+        if(Green_Duty != 0)
+        {
+            if(type == FADEDOWN)
+            {
+                Green_Duty = 241;
+            }
+            else
+            {
+                Green_Duty = 1;
+            }  
+        }
+        if(Blue_Duty != 0)
+        {
+            if(type == FADEDOWN)
+            {
+                Blue_Duty = 241;
+            }
+            else
+            {
+                Blue_Duty = 1;
+            }  
+        }
+    }
+    PWM_SetAction(type, speed);
 }
 
 /*-----------------------------------------------------------------------------/

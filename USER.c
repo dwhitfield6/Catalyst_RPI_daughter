@@ -31,6 +31,7 @@
 #include "SPI.h"
 #include "RDI.h"
 #include "FLASH.h"
+#include "EXCEPTIONS.h"
 
 /******************************************************************************/
 /* Version variables                                                          */
@@ -193,6 +194,7 @@ void Init_App(void)
 void Init_System(void)
 {
     INTCONbits.MVEC = TRUE; // Multi-vectored interrupts
+    InitException();
     InitADC();
     InitTIMERS();
     InitPWM();

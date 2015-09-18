@@ -43,7 +43,7 @@ typedef struct id
     unsigned char Valid;
     unsigned long PlaneSize;
     unsigned char NumPlanes;
-}ID;
+}IDTYPE;
 
 typedef struct __attribute__((packed)) onfi
 {
@@ -88,7 +88,7 @@ typedef struct __attribute__((packed)) onfi
     unsigned short RevisionNumber;
     unsigned char VendorSpecific[88];
     unsigned short CRC;
-}ONFI;
+}ONFITYPE;
 
 /******************************************************************************/
 /* Delays
@@ -113,8 +113,8 @@ typedef struct __attribute__((packed)) onfi
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-ID FlashID;
-ONFI FlashONFI;
+extern IDTYPE FlashID;
+extern ONFITYPE FlashONFI;
 
 /******************************************************************************/
 /* Function prototypes                                                        */

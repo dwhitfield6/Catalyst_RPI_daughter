@@ -103,10 +103,161 @@
 /******************************************************************************/
 void __ISR(_TIMER_2_VECTOR , IPL7AUTO) TMR2_IntHandler (void)
 {
-    OC1RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
-    OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
-    OC3RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
-    RTCC_Read(&CurrentTime); // update current time
+    if(PWM_Action)
+    {
+        if(PWM_Action == FADEUP)
+        {
+            if(PWM_TIMER > PWM_Speed)
+            {
+                if(Red_Duty != 0)
+                {
+                    Red_Duty += PWM_Steps*2;
+                }
+                if(Green_Duty != 0)
+                {
+                    Green_Duty += PWM_Steps*2;
+                }
+                if(Blue_Duty != 0)
+                {
+                    Blue_Duty += PWM_Steps*2; 
+                }
+                PWM_Steps++;
+                if(PWM_Steps > 15)
+                {
+                    PWM_Steps = 0;
+                    if(Red_Duty != 0)
+                    {
+                        Red_Duty = 1;
+                    }
+                    if(Green_Duty != 0)
+                    {
+                        Green_Duty = 1;
+                    }
+                    if(Blue_Duty != 0)
+                    {
+                        Blue_Duty = 1; 
+                    }
+                }
+                PWM_TIMER = 0; 
+            }            
+            PWM_TIMER++;
+        }
+        else if(PWM_Action == FADEDOWN)
+        {
+            if(PWM_TIMER > PWM_Speed)
+            {
+                if(Red_Duty != 0)
+                {
+                    Red_Duty -= PWM_Steps*2;
+                }
+                if(Green_Duty != 0)
+                {
+                    Green_Duty -= PWM_Steps*2;
+                }
+                if(Blue_Duty != 0)
+                {
+                    Blue_Duty -= PWM_Steps*2; 
+                }
+                PWM_Steps++;
+                if(PWM_Steps > 15)
+                {
+                    PWM_Steps = 0;
+                    if(Red_Duty != 0)
+                    {
+                        Red_Duty = 241;
+                    }
+                    if(Green_Duty != 0)
+                    {
+                        Green_Duty = 241;
+                    }
+                    if(Blue_Duty != 0)
+                    {
+                        Blue_Duty = 241; 
+                    }
+                }
+                PWM_TIMER = 0; 
+            }            
+            PWM_TIMER++;
+        }
+        else if(PWM_Action == FADEUPDOWN)
+        {
+            if(PWM_TIMER > PWM_Speed)
+            {
+                PWM_Steps++;
+                if(PWM_Steps > 15)
+                {
+                    if(PWM_Direction == UP)
+                    {
+                        PWM_Direction = DOWN;
+                    }
+                    else
+                    {
+                        PWM_Direction = UP;
+                    }
+                    PWM_Steps = 0;
+                }
+                if(PWM_Direction == UP)
+                {
+                    if(Red_Duty != 0)
+                    {
+                        Red_Duty += PWM_Steps*2;
+                    }
+                    if(Green_Duty != 0)
+                    {
+                        Green_Duty += PWM_Steps*2;
+                    }
+                    if(Blue_Duty != 0)
+                    {
+                        Blue_Duty += PWM_Steps*2; 
+                    }
+                }
+                else
+                {
+                    if(Red_Duty != 0)
+                    {
+                        Red_Duty -= PWM_Steps*2;
+                    }
+                    if(Green_Duty != 0)
+                    {
+                        Green_Duty -= PWM_Steps*2;
+                    }
+                    if(Blue_Duty != 0)
+                    {
+                        Blue_Duty -= PWM_Steps*2; 
+                    }
+                }   
+                PWM_TIMER = 0;
+            }
+            PWM_TIMER++;
+        }
+        else if(PWM_Action == BLINK)
+        {
+            if(PWM_TIMER > PWM_Speed/2)
+            {
+                OC3RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
+                OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
+                OC1RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
+            }
+            else
+            {
+                OC3RS = 0; // Write Duty Cycle value for next PWM cycle
+                OC2RS = 0; // Write Duty Cycle value for next PWM cycle
+                OC1RS = 0; // Write Duty Cycle value for next PWM cycle
+            }
+            if(PWM_TIMER > PWM_Speed)
+            {
+                PWM_TIMER = 0;
+            }
+            PWM_TIMER++;
+        }
+    }
+
+    if(PWM_Action != BLINK)
+    {
+        OC3RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
+        OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
+        OC1RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
+    }
     IFS0bits.T2IF = 0; // Clear Timer 2 interrupt flag
 }
 
@@ -310,6 +461,14 @@ void __ISR(_UART_4_VECTOR , IPL7AUTO) UART4_IntHandler (void)
     IFS2bits.U4TXIF = 0;
 }
 
+/******************************************************************************/
+/* Real Time Clock Alarm Interrupt
+/******************************************************************************/
+void __ISR(_RTCC_VECTOR , IPL7AUTO) RTCC_IntHandler (void)
+{
+    PWM_SetColor(PURPLE, FADEUPDOWN,PWM_MEDIUM);
+    IFS0bits.RTCCIF = 0;
+}
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

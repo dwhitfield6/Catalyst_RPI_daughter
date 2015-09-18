@@ -40,7 +40,7 @@ typedef struct rails
     unsigned char DCDC_state;       // Status of DCDC converter for 5 volt rail
     unsigned char Rasp_state;       // Status of the raspberry pi voltage rail
     unsigned char Rasp_connected;   // Raspberry pi present detector
-}Rails;
+}RAILSTYPE;
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -51,7 +51,7 @@ typedef struct rails
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-Rails RailStatus;
+extern RAILSTYPE RailStatus;
 
 /******************************************************************************/
 /* Function prototypes                                                        */
