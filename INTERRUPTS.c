@@ -85,6 +85,7 @@
 #include "RDI.h"
 #include "RTCC.h"
 #include "TIMERS.h"
+#include "I2C.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -469,6 +470,29 @@ void __ISR(_RTCC_VECTOR , IPL7AUTO) RTCC_IntHandler (void)
     PWM_SetColor(PURPLE, FADEUPDOWN,PWM_MEDIUM);
     IFS0bits.RTCCIF = 0;
 }
+
+/******************************************************************************/
+/* I2C module 1 Interrupt
+/******************************************************************************/
+void __ISR(_I2C_1_VECTOR , IPL7AUTO) I2C_1_IntHandler (void)
+{
+    unsigned char module;
+    
+    if(IFS1bits.I2C1MIF)
+    {
+        /* I2C bus master event */
+        I2C_1_ACK = 1;
+    }
+    if(IFS1bits.I2C1BIF)
+    {
+        I2C1STATbits.BCL = 0; // clear I2C collide status
+        I2C1STATbits.IWCOL = 0; // clear I2C collide status
+    }
+    IFS1bits.I2C1MIF = 0;
+    IFS1bits.I2C1BIF = 0;
+    IFS1bits.I2C1SIF = 0;
+}
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

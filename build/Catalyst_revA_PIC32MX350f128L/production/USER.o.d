@@ -1,12 +1,16 @@
 build/Catalyst_revA_PIC32MX350f128L/production/USER.o:  \
 USER.c  \
-USER.h  \
- MISC.h  \
-SYSTEM.h  \
-PWM.h  \
-TIMERS.h  \
-POWER.h  \
-SPI.h  \
-RDI.h  \
+ADC.h  \
+ USER.h  \
+EXCEPTIONS.h  \
 FLASH.h  \
-EXCEPTIONS.h 
+I2C.h  \
+MISC.h  \
+SYSTEM.h  \
+POWER.h  \
+PWM.h  \
+RDI.h  \
+ RTCC.h  \
+SPI.h  \
+TIMERS.h  \
+UART.h 

@@ -5,4 +5,5 @@ USER.h  \
 UART.h  \
 RDI.h  \
 RTCC.h  \
-TIMERS.h 
+TIMERS.h  \
+I2C.h 

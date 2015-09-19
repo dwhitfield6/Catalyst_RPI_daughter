@@ -329,6 +329,24 @@
 #define ExtFlash_WPTris	TRISGbits.TRISG14
 #define ExtFlash_WP 0x00004000  // RG14
 
+/******* I2C bus 1 (connected to EEPROM and raspberry pi I2C only pins) *******/
+/* Connected to I2C module 1 clock */
+#define I2C_RASP_DRV_ClockTris	TRISGbits.TRISG2
+#define I2C_RASP_DRV_Clock 0x00000004  // RG2
+
+/* Connected to I2C module 1 data */
+#define I2C_RASP_DRV_DataTris	TRISGbits.TRISG3
+#define I2C_RASP_DRV_Data 0x00000008  // RG3
+
+/******* I2C bus 2 (connected to EEPROM and raspberry pi I2C MUX pins) *******/
+/* Connected to I2C module 2 clock */
+#define I2C_RASP_GEN_ClockTris	TRISAbits.TRISA2
+#define I2C_RASP_GEN_Clock 0x00000004  // RA2
+
+/* Connected to I2C module 2 data */
+#define I2C_RASP_GEN_DataTris	TRISAbits.TRISA3
+#define I2C_RASP_GEN_Data 0x00000008  // RA3
+
 /******************************************************************************/
 /* Version variables                                                          */
 /******************************************************************************/

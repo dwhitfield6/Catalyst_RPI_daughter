@@ -19,6 +19,7 @@
  *                          Added RTCC functionality.
  *                          Added RGB LED fade and blink functionality.
  *                          Added RTC alarm capability.
+ *                          Added I2C functionality.
 /******************************************************************************/
 
 /******************************************************************************/

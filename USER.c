@@ -23,15 +23,20 @@
 #include <stdbool.h>        /* For true/false definition */
 #include <stdio.h>         /* For sprintf definition */
 
-#include "USER.h"
-#include "MISC.h"
-#include "PWM.h"
-#include "TIMERS.h"
-#include "POWER.h"
-#include "SPI.h"
-#include "RDI.h"
-#include "FLASH.h"
+#include "ADC.h"
 #include "EXCEPTIONS.h"
+#include "FLASH.h"
+#include "I2C.h"
+#include "MISC.h"
+#include "POWER.h"
+#include "PWM.h"
+#include "RDI.h"
+#include "RTCC.h"
+#include "SPI.h"
+#include "SYSTEM.h"
+#include "TIMERS.h"
+#include "UART.h"
+#include "USER.h"
 
 /******************************************************************************/
 /* Version variables                                                          */
@@ -184,6 +189,12 @@ void Init_App(void)
     /*~~~~~~~~~~~~~ Secondary Oscillator for RTCC ~~~~~~~~~~~~~~~~~*/
     SOSCOTris           = INPUT;
     SOSCITris           = INPUT;
+    
+    /*~~~~~~~~~~~~~ I2C busses ~~~~~~~~~~~~~~~~~*/
+    I2C_RASP_DRV_ClockTris  = INPUT;
+    I2C_RASP_DRV_DataTris   = INPUT;
+    I2C_RASP_GEN_ClockTris  = INPUT;
+    I2C_RASP_GEN_DataTris   = INPUT;
 }
 
 /******************************************************************************/
@@ -203,6 +214,7 @@ void Init_System(void)
     InitRDI();
     InitExtFlash();
     InitRTCC();
+    InitI2C();
     SYS_Interrupts(ON);
 }
 
