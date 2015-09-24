@@ -52,6 +52,9 @@ void InitException(void)
 void EXC_ClearFaults(void)
 {
     Fault.RTCC_Oscillator_Fail = 0;
+    Fault.EEPROM_SerialNumber_Driver_Read_Fail = 0;
+    Fault.EEPROM_SerialNumber_Driver_Write_Fail = 0;
+    
 }
 
 /******************************************************************************/

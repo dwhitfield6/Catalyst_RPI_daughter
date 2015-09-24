@@ -38,10 +38,12 @@
  *
  * Controls the Timer2 module.
 /******************************************************************************/
-inline void TMR_EnableTimer2(unsigned char action)
+inline unsigned char TMR_EnableTimer2(unsigned char action)
 {
+    unsigned char status;
 #ifdef ON
     #undef ON
+    status = T2CONbits.ON;
     if (action)
     {
         T2CONbits.ON = 1; // Enable Timer
@@ -52,6 +54,7 @@ inline void TMR_EnableTimer2(unsigned char action)
     }
     #define ON 1
 #else
+    status = T2CONbits.ON;
     if (action)
     {
         T2CONbits.ON = 1; // Enable Timer
@@ -60,8 +63,43 @@ inline void TMR_EnableTimer2(unsigned char action)
     {
         T2CONbits.ON = 0; // Disable Timer
     }
+    return status;
 #endif
+}
 
+/******************************************************************************/
+/* TMR_EnableTimer4
+ *
+ * Controls the Timer4 module.
+/******************************************************************************/
+inline unsigned char TMR_EnableTimer4(unsigned char action)
+{
+    unsigned char status;
+    
+#ifdef ON
+    #undef ON
+    status = T4CONbits.ON;
+    if (action)
+    {
+        T4CONbits.ON = 1; // Enable Timer
+    }
+    else
+    {
+        T4CONbits.ON = 0; // Disable Timer
+    }
+    #define ON 1
+#else
+    status = T4CONbits.ON;
+    if (action)
+    {
+        T4CONbits.ON = 1; // Enable Timer
+    }
+    else
+    {
+        T4CONbits.ON = 0; // Disable Timer
+    }
+    return status;
+#endif
 }
 
 /******************************************************************************/
@@ -69,8 +107,9 @@ inline void TMR_EnableTimer2(unsigned char action)
  *
  * Controls the Timer2 interrupt.
 /******************************************************************************/
-inline void TMR_InterruptTimer2(unsigned char action)
+inline unsigned char TMR_InterruptTimer2(unsigned char action)
 {
+    unsigned char status = IEC0bits.T2IE;
     if (action)
     {
         IEC0bits.T2IE = 1; // Enable Timer 2 interrupt
@@ -79,6 +118,26 @@ inline void TMR_InterruptTimer2(unsigned char action)
     {
         IEC0bits.T2IE = 0; // disenable Timer 2 interrupt
     }
+    return status;
+}
+
+/******************************************************************************/
+/* TMR_InterruptTimer4
+ *
+ * Controls the Timer4 interrupt.
+/******************************************************************************/
+inline unsigned char TMR_InterruptTimer4(unsigned char action)
+{
+    unsigned char status = IEC0bits.T4IE;
+    if (action)
+    {
+        IEC0bits.T4IE = 1; // Enable Timer 2 interrupt
+    }
+    else
+    {
+        IEC0bits.T4IE = 0; // disenable Timer 2 interrupt
+    }
+    return status;
 }
 
 /******************************************************************************/
@@ -89,6 +148,26 @@ inline void TMR_InterruptTimer2(unsigned char action)
 inline void TMR_ResetTimer2(void)
 {
     TMR2 = 0;
+}
+
+/******************************************************************************/
+/* TMR_ResetTimer4
+ *
+ * Restarts Timer 4.
+/******************************************************************************/
+inline void TMR_ResetTimer4(void)
+{
+    TMR4 = 0;
+}
+
+/******************************************************************************/
+/* TMR_SetTimer4
+ *
+ * Sets the PR register for timer 4 to compare.
+/******************************************************************************/
+inline void TMR_SetTimer4(unsigned int time)
+{
+    PR4 = time;
 }
 
 /******************************************************************************/
@@ -103,6 +182,7 @@ inline void TMR_ResetTimer2(void)
 void InitTIMERS(void)
 {
     InitTIMER2();
+    InitTIMER4();
 }
 
 /******************************************************************************/
@@ -123,6 +203,27 @@ void InitTIMER2(void)
     PR2 = 1000; // Load the period value
     IFS0bits.T2IF = 0; // Clear Timer 2 Interrupt Flag
     TMR_EnableTimer2(ON);
+}
+
+/******************************************************************************/
+/* InitTIMER4
+ *
+ * The function initializes timer 4 which is used for the RGB LED functions like
+ *  fade and blink.
+/******************************************************************************/
+void InitTIMER4(void)
+{
+    TMR_EnableTimer4(OFF);
+    TMR_InterruptTimer4(OFF);
+    IPC4bits.T4IP = 1; // interrupt priority is 1
+    IPC4bits.T4IS = 1; // interrupt sub-priority is 1
+    T4CONbits.TCS = 0; // Select internal instruction cycle clock
+    T4CONbits.TGATE = 0; // Disable Gated Timer mode
+    T4CONbits.TCKPS = 0b111; // Select 1:256 Prescaler
+    TMR4 = 0x00; // Clear timer register
+    PR4 = 0xFFFF; // Load the period value
+    IFS0bits.T4IF = 0; // Clear Timer 4 Interrupt Flag
+    TMR_InterruptTimer4(ON);
 }
 
 /*-----------------------------------------------------------------------------/

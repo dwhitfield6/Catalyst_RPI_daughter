@@ -26,7 +26,7 @@
 #define CPU_VERSION    "63"
 #define CPU_REVISION   "00"
 #define CPU_ALPHA      ""                 /* use "" for no alpha.  */ 
-#define CPU_BRANCH     "DW0a"                 /* use "" for no branch. */
+#define CPU_BRANCH     "DW0a"             /* use "" for no branch. */
 
 /******************************************************************************/
 /* PCB board
@@ -35,6 +35,15 @@
  * 1. Catalyst_PCB_revA             (use configuration "PCB_A__pic32MX350F128L")
 /******************************************************************************/
 #define Catalyst_PCB_revA
+
+/******************************************************************************/
+/* PCB board Serial Number
+ *
+ * This is the PIC boards serial number.
+/******************************************************************************/
+#ifdef Catalyst_PCB_revA
+    #define BOARD_SERIAL     "123456789-123456789"
+#endif
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -354,10 +363,12 @@ extern const unsigned char Version[];
 extern const unsigned char Revision[];
 extern const unsigned char Alpha[];
 extern const unsigned char Branch_Version[];
+extern const unsigned char PIC_Board_Serial_Number[];
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+extern unsigned char Serial_Number[];
 
 /******************************************************************************/
 /* Macro Functions                                                            */

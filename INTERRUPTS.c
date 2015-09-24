@@ -104,162 +104,45 @@
 /******************************************************************************/
 void __ISR(_TIMER_2_VECTOR , IPL7AUTO) TMR2_IntHandler (void)
 {
-    if(PWM_Action)
-    {
-        if(PWM_Action == FADEUP)
-        {
-            if(PWM_TIMER > PWM_Speed)
-            {
-                if(Red_Duty != 0)
-                {
-                    Red_Duty += PWM_Steps*2;
-                }
-                if(Green_Duty != 0)
-                {
-                    Green_Duty += PWM_Steps*2;
-                }
-                if(Blue_Duty != 0)
-                {
-                    Blue_Duty += PWM_Steps*2; 
-                }
-                PWM_Steps++;
-                if(PWM_Steps > 15)
-                {
-                    PWM_Steps = 0;
-                    if(Red_Duty != 0)
-                    {
-                        Red_Duty = 1;
-                    }
-                    if(Green_Duty != 0)
-                    {
-                        Green_Duty = 1;
-                    }
-                    if(Blue_Duty != 0)
-                    {
-                        Blue_Duty = 1; 
-                    }
-                }
-                PWM_TIMER = 0; 
-            }            
-            PWM_TIMER++;
-        }
-        else if(PWM_Action == FADEDOWN)
-        {
-            if(PWM_TIMER > PWM_Speed)
-            {
-                if(Red_Duty != 0)
-                {
-                    Red_Duty -= PWM_Steps*2;
-                }
-                if(Green_Duty != 0)
-                {
-                    Green_Duty -= PWM_Steps*2;
-                }
-                if(Blue_Duty != 0)
-                {
-                    Blue_Duty -= PWM_Steps*2; 
-                }
-                PWM_Steps++;
-                if(PWM_Steps > 15)
-                {
-                    PWM_Steps = 0;
-                    if(Red_Duty != 0)
-                    {
-                        Red_Duty = 241;
-                    }
-                    if(Green_Duty != 0)
-                    {
-                        Green_Duty = 241;
-                    }
-                    if(Blue_Duty != 0)
-                    {
-                        Blue_Duty = 241; 
-                    }
-                }
-                PWM_TIMER = 0; 
-            }            
-            PWM_TIMER++;
-        }
-        else if(PWM_Action == FADEUPDOWN)
-        {
-            if(PWM_TIMER > PWM_Speed)
-            {
-                PWM_Steps++;
-                if(PWM_Steps > 15)
-                {
-                    if(PWM_Direction == UP)
-                    {
-                        PWM_Direction = DOWN;
-                    }
-                    else
-                    {
-                        PWM_Direction = UP;
-                    }
-                    PWM_Steps = 0;
-                }
-                if(PWM_Direction == UP)
-                {
-                    if(Red_Duty != 0)
-                    {
-                        Red_Duty += PWM_Steps*2;
-                    }
-                    if(Green_Duty != 0)
-                    {
-                        Green_Duty += PWM_Steps*2;
-                    }
-                    if(Blue_Duty != 0)
-                    {
-                        Blue_Duty += PWM_Steps*2; 
-                    }
-                }
-                else
-                {
-                    if(Red_Duty != 0)
-                    {
-                        Red_Duty -= PWM_Steps*2;
-                    }
-                    if(Green_Duty != 0)
-                    {
-                        Green_Duty -= PWM_Steps*2;
-                    }
-                    if(Blue_Duty != 0)
-                    {
-                        Blue_Duty -= PWM_Steps*2; 
-                    }
-                }   
-                PWM_TIMER = 0;
-            }
-            PWM_TIMER++;
-        }
-        else if(PWM_Action == BLINK)
-        {
-            if(PWM_TIMER > PWM_Speed/2)
-            {
-                OC3RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
-                OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
-                OC1RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
-            }
-            else
-            {
-                OC3RS = 0; // Write Duty Cycle value for next PWM cycle
-                OC2RS = 0; // Write Duty Cycle value for next PWM cycle
-                OC1RS = 0; // Write Duty Cycle value for next PWM cycle
-            }
-            if(PWM_TIMER > PWM_Speed)
-            {
-                PWM_TIMER = 0;
-            }
-            PWM_TIMER++;
-        }
-    }
-
-    if(PWM_Action != BLINK)
-    {
-        OC3RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
-        OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
-        OC1RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
-    }
+    OC3RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
+    OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
+    OC1RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
     IFS0bits.T2IF = 0; // Clear Timer 2 interrupt flag
+}
+
+/******************************************************************************/
+/* RGB LED Function interrupt
+/******************************************************************************/
+void __ISR(_TIMER_4_VECTOR , IPL7AUTO) TMR4_IntHandler (void)
+{        
+    if(RedAction)
+    {
+        if(RGB_Functions[0][PWM_Action][PWM_Place] != NMM)
+        {
+            Red_Duty = RGB_Functions[0][PWM_Action][PWM_Place];
+        }        
+    }
+    if(GreenAction)
+    {
+        if(RGB_Functions[1][PWM_Action][PWM_Place] != NMM)
+        {
+            Green_Duty = RGB_Functions[1][PWM_Action][PWM_Place];
+        }
+    }
+    if(BlueAction)
+    {
+        if(RGB_Functions[2][PWM_Action][PWM_Place] != NMM)
+        {
+            Blue_Duty = RGB_Functions[2][PWM_Action][PWM_Place];
+        }
+    }
+    
+    PWM_Place++;
+    if(PWM_Place >= 25)
+    {
+        PWM_Place = 0;
+    }
+    IFS0bits.T4IF = 0; // Clear Timer 2 interrupt flag
 }
 
 /******************************************************************************/
@@ -467,7 +350,7 @@ void __ISR(_UART_4_VECTOR , IPL7AUTO) UART4_IntHandler (void)
 /******************************************************************************/
 void __ISR(_RTCC_VECTOR , IPL7AUTO) RTCC_IntHandler (void)
 {
-    PWM_SetColor(PURPLE, FADEUPDOWN,PWM_MEDIUM);
+    /* Alarm went off */
     IFS0bits.RTCCIF = 0;
 }
 
@@ -475,22 +358,284 @@ void __ISR(_RTCC_VECTOR , IPL7AUTO) RTCC_IntHandler (void)
 /* I2C module 1 Interrupt
 /******************************************************************************/
 void __ISR(_I2C_1_VECTOR , IPL7AUTO) I2C_1_IntHandler (void)
-{
-    unsigned char module;
-    
+{   
     if(IFS1bits.I2C1MIF)
     {
         /* I2C bus master event */
-        I2C_1_ACK = 1;
     }
     if(IFS1bits.I2C1BIF)
     {
+        /* I2C bus collision event */
         I2C1STATbits.BCL = 0; // clear I2C collide status
         I2C1STATbits.IWCOL = 0; // clear I2C collide status
     }
     IFS1bits.I2C1MIF = 0;
     IFS1bits.I2C1BIF = 0;
     IFS1bits.I2C1SIF = 0;
+}
+
+/******************************************************************************/
+/* I2C module 2 Interrupt
+/******************************************************************************/
+void __ISR(_I2C_2_VECTOR , IPL7AUTO) I2C_2_IntHandler (void)
+{   
+    if(IFS1bits.I2C2MIF)
+    {
+        /* I2C bus master event */
+    }
+    if(IFS1bits.I2C2BIF)
+    {
+        /* I2C bus collision event */
+        I2C2STATbits.BCL = 0; // clear I2C collide status
+        I2C2STATbits.IWCOL = 0; // clear I2C collide status
+    }
+    IFS1bits.I2C2MIF = 0;
+    IFS1bits.I2C2BIF = 0;
+    IFS1bits.I2C2SIF = 0;
+}
+
+/******************************************************************************/
+/* DMA0 Interrupt
+/******************************************************************************/
+void __ISR(_DMA_0_VECTOR , IPL7AUTO) DMA_0_IntHandler (void)
+{   
+    if(DCH0INTbits.CHSDIF)
+    {
+        /* Channel Source Pointer has reached end of source (CHSPTR = CHSSIZ) */
+        DCH0INTbits.CHSDIF = 0;
+    }
+    if(DCH0INTbits.CHSHIF)
+    {
+        /* 
+         * Channel Source Pointer has reached midpoint of source 
+         * (CHSPTR = CHSSIZ/2) 
+         */
+        DCH0INTbits.CHSHIF = 0;
+    }
+    if(DCH0INTbits.CHDHIF)
+    {
+        /*  
+         * Channel Destination Pointer has reached midpoint of destination
+         *  (CHDPTR = CHDSIZ/2) 
+         */
+        DCH0INTbits.CHDHIF = 0;
+    }
+    if(DCH0INTbits.CHBCIF)
+    {
+        /* 
+         * A block transfer has been completed (the larger of CHSSIZ/CHDSIZ
+         *  bytes has been transferred), or a pattern match event occurs  
+         */
+        DCH0INTbits.CHBCIF = 0;
+    }
+    if(DCH0INTbits.CHCCIF)
+    {
+        /* 
+         * A cell transfer has been completed (CHCSIZ bytes have been
+         *  transferred) 
+         */
+        DCH0INTbits.CHCCIF = 0;
+    }
+    if(DCH0INTbits.CHTAIF)
+    {
+        /* 
+         * An interrupt matching CHAIRQ has been detected and the DMA transfer
+         *  has been aborted 
+         */
+        DCH0INTbits.CHTAIF = 0;
+    }
+    if(DCH0INTbits.CHERIF)
+    {
+        /* 
+         * A channel address error has been detected. Either the source or the
+         *  destination address is invalid.
+         */
+        DCH0INTbits.CHERIF = 0;
+    }
+    IFS2bits.DMA0IF = 0;
+}
+
+/******************************************************************************/
+/* DMA1 Interrupt
+/******************************************************************************/
+void __ISR(_DMA_1_VECTOR , IPL7AUTO) DMA_1_IntHandler (void)
+{   
+    if(DCH1INTbits.CHSDIF)
+    {
+        /* Channel Source Pointer has reached end of source (CHSPTR = CHSSIZ) */
+        DCH1INTbits.CHSDIF = 0;
+    }
+    if(DCH1INTbits.CHSHIF)
+    {
+        /* 
+         * Channel Source Pointer has reached midpoint of source 
+         * (CHSPTR = CHSSIZ/2) 
+         */
+        DCH1INTbits.CHSHIF = 0;
+    }
+    if(DCH1INTbits.CHDHIF)
+    {
+        /*  
+         * Channel Destination Pointer has reached midpoint of destination
+         *  (CHDPTR = CHDSIZ/2) 
+         */
+        DCH1INTbits.CHDHIF = 0;
+    }
+    if(DCH1INTbits.CHBCIF)
+    {
+        /* 
+         * A block transfer has been completed (the larger of CHSSIZ/CHDSIZ
+         *  bytes has been transferred), or a pattern match event occurs  
+         */
+        DCH1INTbits.CHBCIF = 0;
+    }
+    if(DCH1INTbits.CHCCIF)
+    {
+        /* 
+         * A cell transfer has been completed (CHCSIZ bytes have been
+         *  transferred) 
+         */
+        DCH1INTbits.CHCCIF = 0;
+    }
+    if(DCH1INTbits.CHTAIF)
+    {
+        /* 
+         * An interrupt matching CHAIRQ has been detected and the DMA transfer
+         *  has been aborted 
+         */
+        DCH1INTbits.CHTAIF = 0;
+    }
+    if(DCH1INTbits.CHERIF)
+    {
+        /* 
+         * A channel address error has been detected. Either the source or the
+         *  destination address is invalid.
+         */
+        DCH1INTbits.CHERIF = 0;
+    }
+    IFS2bits.DMA1IF = 0;
+}
+
+/******************************************************************************/
+/* DMA2 Interrupt
+/******************************************************************************/
+void __ISR(_DMA_2_VECTOR , IPL7AUTO) DMA_2_IntHandler (void)
+{   
+    if(DCH2INTbits.CHSDIF)
+    {
+        /* Channel Source Pointer has reached end of source (CHSPTR = CHSSIZ) */
+        DCH2INTbits.CHSDIF = 0;
+    }
+    if(DCH2INTbits.CHSHIF)
+    {
+        /* 
+         * Channel Source Pointer has reached midpoint of source 
+         * (CHSPTR = CHSSIZ/2) 
+         */
+        DCH2INTbits.CHSHIF = 0;
+    }
+    if(DCH2INTbits.CHDHIF)
+    {
+        /*  
+         * Channel Destination Pointer has reached midpoint of destination
+         *  (CHDPTR = CHDSIZ/2) 
+         */
+        DCH2INTbits.CHDHIF = 0;
+    }
+    if(DCH2INTbits.CHBCIF)
+    {
+        /* 
+         * A block transfer has been completed (the larger of CHSSIZ/CHDSIZ
+         *  bytes has been transferred), or a pattern match event occurs  
+         */
+        DCH2INTbits.CHBCIF = 0;
+    }
+    if(DCH2INTbits.CHCCIF)
+    {
+        /* 
+         * A cell transfer has been completed (CHCSIZ bytes have been
+         *  transferred) 
+         */
+        DCH2INTbits.CHCCIF = 0;
+    }
+    if(DCH2INTbits.CHTAIF)
+    {
+        /* 
+         * An interrupt matching CHAIRQ has been detected and the DMA transfer
+         *  has been aborted 
+         */
+        DCH2INTbits.CHTAIF = 0;
+    }
+    if(DCH2INTbits.CHERIF)
+    {
+        /* 
+         * A channel address error has been detected. Either the source or the
+         *  destination address is invalid.
+         */
+        DCH2INTbits.CHERIF = 0;
+    }
+    IFS2bits.DMA2IF = 0;
+}
+
+/******************************************************************************/
+/* DMA3 Interrupt
+/******************************************************************************/
+void __ISR(_DMA_3_VECTOR , IPL7AUTO) DMA_3_IntHandler (void)
+{   
+    if(DCH3INTbits.CHSDIF)
+    {
+        /* Channel Source Pointer has reached end of source (CHSPTR = CHSSIZ) */
+        DCH3INTbits.CHSDIF = 0;
+    }
+    if(DCH3INTbits.CHSHIF)
+    {
+        /* 
+         * Channel Source Pointer has reached midpoint of source 
+         * (CHSPTR = CHSSIZ/2) 
+         */
+        DCH3INTbits.CHSHIF = 0;
+    }
+    if(DCH3INTbits.CHDHIF)
+    {
+        /*  
+         * Channel Destination Pointer has reached midpoint of destination
+         *  (CHDPTR = CHDSIZ/2) 
+         */
+        DCH3INTbits.CHDHIF = 0;
+    }
+    if(DCH3INTbits.CHBCIF)
+    {
+        /* 
+         * A block transfer has been completed (the larger of CHSSIZ/CHDSIZ
+         *  bytes has been transferred), or a pattern match event occurs  
+         */
+        DCH3INTbits.CHBCIF = 0;
+    }
+    if(DCH3INTbits.CHCCIF)
+    {
+        /* 
+         * A cell transfer has been completed (CHCSIZ bytes have been
+         *  transferred) 
+         */
+        DCH3INTbits.CHCCIF = 0;
+    }
+    if(DCH3INTbits.CHTAIF)
+    {
+        /* 
+         * An interrupt matching CHAIRQ has been detected and the DMA transfer
+         *  has been aborted 
+         */
+        DCH3INTbits.CHTAIF = 0;
+    }
+    if(DCH3INTbits.CHERIF)
+    {
+        /* 
+         * A channel address error has been detected. Either the source or the
+         *  destination address is invalid.
+         */
+        DCH3INTbits.CHERIF = 0;
+    }
+    IFS2bits.DMA3IF = 0;
 }
 
 /*-----------------------------------------------------------------------------/

@@ -24,6 +24,7 @@
 #include <stdio.h>         /* For sprintf definition */
 
 #include "ADC.h"
+#include "DMA.h"
 #include "EXCEPTIONS.h"
 #include "FLASH.h"
 #include "I2C.h"
@@ -45,6 +46,7 @@ const unsigned char Version[]        = CPU_VERSION;
 const unsigned char Revision[]       = CPU_REVISION;
 const unsigned char Alpha[]          = CPU_ALPHA;
 const unsigned char Branch_Version[] = CPU_BRANCH;
+const unsigned char PIC_Board_Serial_Number[] = BOARD_SERIAL;
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -215,6 +217,7 @@ void Init_System(void)
     InitExtFlash();
     InitRTCC();
     InitI2C();
+    InitDMA();
     SYS_Interrupts(ON);
 }
 

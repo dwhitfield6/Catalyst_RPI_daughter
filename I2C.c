@@ -37,11 +37,11 @@
 #include "I2C.h"
 #include "SYSTEM.h"
 #include "MISC.h"
+#include "EXCEPTIONS.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-unsigned char I2C_1_ACK = 0;
 
 /******************************************************************************/
 /* Inline Functions
@@ -196,7 +196,6 @@ inline unsigned char I2C_RASP_GEN_Address(unsigned char address, unsigned char R
 /******************************************************************************/
 void InitI2C(void)
 {
-    unsigned char data = 0;
     I2C_RASP_DRV_Module(OFF);
     I2C_RASP_GEN_Module(OFF);
     I2C1CONbits.A10M = 0; // I2CxADD register is a 7-bit slave address
@@ -208,25 +207,15 @@ void InitI2C(void)
     I2C_RASP_DRV_SetParameters(_100kHz);
     I2C_RASP_GEN_SetParameters(_100kHz);
     I2C_RASP_DRV_CTP();
+    I2C_RASP_GEN_CTP();
     I2C_RASP_DRV_Module(ON);
     I2C_RASP_GEN_Module(ON);
     I2C_RASP_DRV_Interrupt(OFF,OFF,ON);
-    I2C_RASP_GEN_Interrupt(OFF,OFF,OFF);
-    if(!I2C_RASP_DRV_EEPROMWrite(0,'D'))
-    {
-        I2C_RASP_DRV_CTP();
-    }
-    while(1)
-    {
-        if(!I2C_RASP_DRV_EEPROMRead(0,&data))
-        {
-            I2C_RASP_DRV_CTP();
-        }
-        else
-        {
-            Nop();
-        }
-    }    
+    I2C_RASP_GEN_Interrupt(OFF,OFF,ON);
+    I2C_RASP_DRV_EEPROMWriteSerialNumbers();
+    I2C_RASP_GEN_EEPROMWriteString(0,"David Whitfield");
+    I2C_RASP_DRV_Module(OFF);
+    I2C_RASP_GEN_Module(OFF);
 }
 
 /******************************************************************************/
@@ -249,6 +238,29 @@ void I2C_RASP_DRV_CTP(void)
     if(status)
     {
         I2C_RASP_DRV_Module(ON);
+    }
+}
+
+/******************************************************************************/
+/* I2C_RASP_GEN_CTP
+ *
+ * This function "clocks through the problem" on the module 2 I2C bus.
+/******************************************************************************/
+void I2C_RASP_GEN_CTP(void)
+{ 
+    unsigned char i;
+    unsigned char status = I2C_RASP_GEN_Module(OFF);
+    
+    I2C_RASP_GEN_ClockTris  = OUTPUT;
+    for(i=0;i<20;i++)
+    {
+        LATA ^= I2C_RASP_GEN_Clock;
+        MSC_DelayUS(10);
+    }
+    I2C_RASP_GEN_ClockTris  = INPUT;
+    if(status)
+    {
+        I2C_RASP_GEN_Module(ON);
     }
 }
 
@@ -445,7 +457,7 @@ void I2C_RASP_GEN_SetParameters(unsigned long Clock)
 }
 
 /******************************************************************************/
-/* I2C_RASP_DRV_EEPROMWrite
+/* I2C_RASP_DRV_Write
  *
  * This function writes a byte of data to the EEPROM IC on the Raspberry Pi
  *  driver install bus.
@@ -479,14 +491,53 @@ unsigned char I2C_RASP_DRV_Write(unsigned char data)
     {
         return FAIL;
     }
-    MSC_DelayUS(10);
+    MSC_DelayUS(50);
     return PASS;
 }
 
 /******************************************************************************/
-/* I2C_RASP_DRV_EEPROMWrite
+/* I2C_RASP_GEN_Write
  *
- * This function writes a byte of data to the EEPROM IC on the Raspberry Pi
+ * This function writes a byte of data to the EEPROM IC on the Raspberry Pi's 
+ *  general purpose I2C bus.
+/******************************************************************************/
+unsigned char I2C_RASP_GEN_Write(unsigned char data)
+{
+    unsigned long timer = 0;
+   
+    while(!I2C2STATbits.TBF) // wait for master transmit to start
+    {
+        I2C2STATbits.BCL = 0; // clear I2C collide status
+        I2C2STATbits.IWCOL = 0; // clear I2C collide status
+        timer++;
+        if(timer > I2C_SEND_TIMEOUT)
+        {
+            return FAIL;
+        }
+        I2C2TRN = data; 
+    }
+    
+    timer = 0;
+    while(I2C2STATbits.TBF) // wait for master transmit to finish
+    {
+        timer++;
+        if(timer > I2C_SEND_TIMEOUT)
+        {
+            return FAIL;
+        }
+    }
+    if(I2C2STATbits.ACKSTAT)
+    {
+        return FAIL;
+    }
+    MSC_DelayUS(50);
+    return PASS;
+}
+
+/******************************************************************************/
+/* I2C_RASP_DRV_Read
+ *
+ * This function reads a byte of data from the EEPROM IC on the Raspberry Pi
  *  driver install bus.
 /******************************************************************************/
 unsigned char I2C_RASP_DRV_Read(unsigned char* data)
@@ -509,12 +560,37 @@ unsigned char I2C_RASP_DRV_Read(unsigned char* data)
 }
 
 /******************************************************************************/
-/* I2C_RASP_DRV_EEPROMWrite
+/* I2C_RASP_GEN_Read
+ *
+ * This function reads a byte of data from the EEPROM IC on the Raspberry Pi's
+ *  general purpose I2C bus.
+/******************************************************************************/
+unsigned char I2C_RASP_GEN_Read(unsigned char* data)
+{
+    unsigned long timer;
+    unsigned char dummy1;
+    timer=0;
+    dummy1 = I2C2RCV;
+    while(!I2C2STATbits.RBF) // wait for acknowledge
+    {
+        timer++;
+        if(timer > I2C_RECEIVE_TIMEOUT)
+        {
+            *data =0;
+            return FAIL;
+        }
+    }
+    *data = I2C2RCV;
+    return PASS;
+}
+
+/******************************************************************************/
+/* I2C_RASP_DRV_EEPROMWriteByte
  *
  * This function writes a byte of data to the EEPROM IC on the Raspberry Pi
  *  driver install bus.
 /******************************************************************************/
-unsigned char I2C_RASP_DRV_EEPROMWrite(unsigned short DataAddress, unsigned char data)
+unsigned char I2C_RASP_DRV_EEPROMWriteByte(unsigned short DataAddress, unsigned char data)
 {
     unsigned char I2C_address;
     
@@ -537,17 +613,50 @@ unsigned char I2C_RASP_DRV_EEPROMWrite(unsigned short DataAddress, unsigned char
         return FAIL;
     }
     I2C_RASP_DRV_Stop();
-    MSC_DelayUS(100);
+    MSC_DelayUS(10000);
     return PASS;
 }
 
 /******************************************************************************/
-/* I2C_RASP_DRV_EEPROMRead
+/* I2C_RASP_GEN_EEPROMWriteByte
+ *
+ * This function writes a byte of data to the EEPROM IC on the Raspberry Pi's
+ *  general purpose I2C bus.
+/******************************************************************************/
+unsigned char I2C_RASP_GEN_EEPROMWriteByte(unsigned short DataAddress, unsigned char data)
+{
+    unsigned char I2C_address;
+    
+    I2C_RASP_GEN_Start();
+    I2C_address = I2C_RASP_GEN_Address(I2C_RASP_GEN_EEPROM_ADDRESS, WRITE);
+    if(!I2C_RASP_GEN_Write(I2C_address))
+    {
+        return FAIL;
+    }
+    if(!I2C_RASP_GEN_Write((unsigned char)(DataAddress & 0x00FF)))
+    {
+        return FAIL;
+    }
+    if(!I2C_RASP_GEN_Write((unsigned char)((DataAddress & 0xFF00) >> 8)))
+    {
+        return FAIL;
+    }
+    if(!I2C_RASP_GEN_Write(data))
+    {
+        return FAIL;
+    }
+    I2C_RASP_GEN_Stop();
+    MSC_DelayUS(10000);
+    return PASS;
+}
+
+/******************************************************************************/
+/* I2C_RASP_DRV_EEPROMReadByte
  *
  * This function reads a byte of data from the EEPROM IC on the Raspberry Pi
  *  driver install bus.
 /******************************************************************************/
-unsigned char I2C_RASP_DRV_EEPROMRead(unsigned short DataAddress, unsigned char* data)
+unsigned char I2C_RASP_DRV_EEPROMReadByte(unsigned short DataAddress, unsigned char* data)
 {
     unsigned char I2C_address;
     
@@ -583,6 +692,336 @@ unsigned char I2C_RASP_DRV_EEPROMRead(unsigned short DataAddress, unsigned char*
     I2C_RASP_DRV_Stop();
     MSC_DelayUS(100);
     return PASS;
+}
+
+/******************************************************************************/
+/* I2C_RASP_GEN_EEPROMReadByte
+ *
+ * This function reads a byte of data from the EEPROM IC on the Raspberry Pi
+ *  general purpose I2C bus.
+/******************************************************************************/
+unsigned char I2C_RASP_GEN_EEPROMReadByte(unsigned short DataAddress, unsigned char* data)
+{
+    unsigned char I2C_address;
+    
+    I2C_RASP_GEN_Start();
+    I2C_address = I2C_RASP_GEN_Address(I2C_RASP_DRV_EEPROM_ADDRESS, WRITE);
+    if(!I2C_RASP_GEN_Write(I2C_address))
+    {
+        return FAIL;
+    }
+    if(!I2C_RASP_GEN_Write((unsigned char)(DataAddress & 0x00FF)))
+    {
+        return FAIL;
+    }
+    if(!I2C_RASP_GEN_Write((unsigned char)((DataAddress & 0xFF00) >> 8)))
+    {
+        return FAIL;
+    }
+    I2C_RASP_GEN_Restart();
+    I2C_address = I2C_RASP_GEN_Address(I2C_RASP_DRV_EEPROM_ADDRESS, READ);
+    if(!I2C_RASP_GEN_Write(I2C_address))
+    {
+        return FAIL;
+    }
+    while(!I2C2CONbits.RCEN)
+    {
+        I2C2CONbits.RCEN = 1; //  Enables Receive mode for I2C, automatically cleared by module at end of 8-bit receive data byte
+    }
+    if(!I2C_RASP_GEN_Read(data))
+    {
+        return FAIL;
+    }
+    I2C_RASP_GEN_Ack(NACK);
+    I2C_RASP_GEN_Stop();
+    MSC_DelayUS(100);
+    return PASS;
+}
+
+/******************************************************************************/
+/* I2C_RASP_DRV_EEPROMReadByteVerify
+ *
+ * This function tries to read a byte of data the number of times saved in
+ *  Macro I2C_ReadLimit on the driver install bus.
+/******************************************************************************/
+unsigned char I2C_RASP_DRV_EEPROMReadByteVerify(unsigned short DataAddress, unsigned char* data)
+{
+    unsigned char i;
+    
+    for(i=0;i<I2C_ReadLimit;i++)
+    {
+        if(I2C_RASP_DRV_EEPROMReadByte(DataAddress,data))
+        {
+            return PASS;
+        }
+        I2C_RASP_DRV_CTP();
+    }
+    return FAIL;
+}
+
+/******************************************************************************/
+/* I2C_RASP_GEN_EEPROMReadByteVerify
+ *
+ * This function tries to read a byte of data the number of times saved in
+ *  Macro I2C_ReadLimit on the general purpose bus.
+/******************************************************************************/
+unsigned char I2C_RASP_GEN_EEPROMReadByteVerify(unsigned short DataAddress, unsigned char* data)
+{
+    unsigned char i;
+    
+    for(i=0;i<I2C_ReadLimit;i++)
+    {
+        if(I2C_RASP_GEN_EEPROMReadByte(DataAddress,data))
+        {
+            return PASS;
+        }
+        I2C_RASP_GEN_CTP();
+    }
+    return FAIL;
+}
+
+/******************************************************************************/
+/* I2C_RASP_DRV_EEPROMWriteByteVerify
+ *
+ * This function tries to write a byte of data the number of times saved in
+ *  Macro I2C_WriteLimit on the driver install bus. 
+/******************************************************************************/
+unsigned char I2C_RASP_DRV_EEPROMWriteByteVerify(unsigned short DataAddress, unsigned char data)
+{
+    unsigned char i;
+    unsigned char ReadData;
+    for(i=0;i<I2C_WriteLimit;i++)
+    {
+        I2C_RASP_DRV_EEPROMWriteByte(DataAddress,data);
+        if(I2C_RASP_DRV_EEPROMReadByteVerify(DataAddress,&ReadData))
+        {
+            if(ReadData == data)
+            {
+                return PASS;
+            }
+        }
+        I2C_RASP_DRV_CTP();
+    }
+    return FAIL;   
+}
+
+/******************************************************************************/
+/* I2C_RASP_GEN_EEPROMWriteByteVerify
+ *
+ * This function tries to write a byte of data the number of times saved in
+ *  Macro I2C_WriteLimit on the general purpose bus.
+/******************************************************************************/
+unsigned char I2C_RASP_GEN_EEPROMWriteByteVerify(unsigned short DataAddress, unsigned char data)
+{
+    unsigned char i;
+    unsigned char ReadData;
+    for(i=0;i<I2C_WriteLimit;i++)
+    {
+        I2C_RASP_GEN_EEPROMWriteByte(DataAddress,data);
+        if(I2C_RASP_GEN_EEPROMReadByteVerify(DataAddress,&ReadData))
+        {
+            if(ReadData == data)
+            {
+                return PASS;
+            }
+        }
+        I2C_RASP_GEN_CTP();
+    }
+    return FAIL;   
+}
+
+/******************************************************************************/
+/* I2C_RASP_DRV_EEPROMReadArray
+ *
+ * This function reads an array from the EEPROM on the driver install bus.
+/******************************************************************************/
+unsigned char I2C_RASP_DRV_EEPROMReadArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data)
+{
+    unsigned short address;
+    unsigned short i; 
+    
+    address = DataAddressStart;
+    for(i=0;i<Amount;i++)
+    {
+        if(!I2C_RASP_DRV_EEPROMReadByteVerify(address,data))
+        {
+            return FAIL;
+        }
+        address++;
+        data++;
+    }
+    return PASS;    
+}
+
+/******************************************************************************/
+/* I2C_RASP_GEN_EEPROMReadArray
+ *
+ * This function reads an array from the EEPROM on the general purpose bus.
+/******************************************************************************/
+unsigned char I2C_RASP_GEN_EEPROMReadArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data)
+{
+    unsigned short address;
+    unsigned short i; 
+    
+    address = DataAddressStart;
+    for(i=0;i<Amount;i++)
+    {
+        if(!I2C_RASP_GEN_EEPROMReadByteVerify(address,data))
+        {
+            return FAIL;
+        }
+        address++;
+        data++;
+    }
+    return PASS;    
+}
+
+/******************************************************************************/
+/* I2C_RASP_DRV_EEPROMWriteArray
+ *
+ * This function writes an array to the EEPROM on the driver install bus.
+/******************************************************************************/
+unsigned char I2C_RASP_DRV_EEPROMWriteArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data)
+{
+    unsigned short address;
+    unsigned short i; 
+    
+    address = DataAddressStart;
+    for(i=0;i<Amount;i++)
+    {
+        if(!I2C_RASP_DRV_EEPROMWriteByteVerify(address,*data))
+        {
+            return FAIL;
+        }
+        address++;
+        data++;
+    }
+    return PASS;    
+}
+
+/******************************************************************************/
+/* I2C_RASP_GEN_EEPROMWriteArray
+ *
+ * This function writes an array to the EEPROM on the general purpose bus.
+/******************************************************************************/
+unsigned char I2C_RASP_GEN_EEPROMWriteArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data)
+{
+    unsigned short address;
+    unsigned short i; 
+    
+    address = DataAddressStart;
+    for(i=0;i<Amount;i++)
+    {
+        if(!I2C_RASP_GEN_EEPROMWriteByteVerify(address,*data))
+        {
+            return FAIL;
+        }
+        address++;
+        data++;
+    }
+    return PASS;    
+}
+
+/******************************************************************************/
+/* I2C_RASP_DRV_EEPROMWriteString
+ *
+ * This function writes a string to the EEPROM on the driver install bus.
+/******************************************************************************/
+unsigned char I2C_RASP_DRV_EEPROMWriteString(unsigned short DataAddressStart, unsigned char* data)
+{
+    unsigned short address; 
+    
+    address = DataAddressStart;
+    while(1)
+    {
+        if(!I2C_RASP_DRV_EEPROMWriteByteVerify(address,*data))
+        {
+            return FAIL;
+        }
+        if(*data == 0)
+        {
+            return PASS;  
+        }
+        address++;
+        data++;
+    }
+    return PASS;    
+}
+
+/******************************************************************************/
+/* I2C_RASP_GEN_EEPROMWriteString
+ *
+ * This function writes a string to the EEPROM on the general purpose bus.
+/******************************************************************************/
+unsigned char I2C_RASP_GEN_EEPROMWriteString(unsigned short DataAddressStart, unsigned char* data)
+{
+    unsigned short address; 
+    
+    address = DataAddressStart;
+    while(1)
+    {
+        if(!I2C_RASP_GEN_EEPROMWriteByteVerify(address,*data))
+        {
+            return FAIL;
+        }
+        if(*data == 0)
+        {
+            return PASS;  
+        }
+        address++;
+        data++;
+    }
+    return PASS;    
+}
+
+/******************************************************************************/
+/* I2C_RASP_DRV_EEPROMWriteSerialNumbers
+ *
+ * This function writes the board serial numbers and info to the EEPROM on the
+ *  driver install bus.
+/******************************************************************************/
+unsigned char I2C_RASP_DRV_EEPROMWriteSerialNumbers(void)
+{
+    unsigned char status;
+    
+    status = I2C_RASP_DRV_EEPROMWriteString(SERIAL_NUMBER_ADDRESS,(unsigned char*)PIC_Board_Serial_Number);
+    
+    if(!status)
+    {
+        Fault.EEPROM_SerialNumber_Driver_Write_Fail = TRUE;
+    }
+    return status;
+}
+
+/******************************************************************************/
+/* I2C_RASP_DRV_EEPROMReadSerialNumbers
+ *
+ * This function reads the board serial numbers and info from the EEPROM on
+ *  the driver install bus.
+/******************************************************************************/
+unsigned char I2C_RASP_DRV_EEPROMReadSerialNumbers(unsigned char* data)
+{
+    unsigned char i = 0;
+    unsigned char status;
+    unsigned char amount;
+    
+    while(1)
+    {
+        if(PIC_Board_Serial_Number[i] == 0)
+        {
+            amount = i + 1;
+            break;
+        }
+        i++;
+    }
+    
+    status = I2C_RASP_DRV_EEPROMReadArray(SERIAL_NUMBER_ADDRESS,amount, data);
+    
+    if(!status)
+    {
+        Fault.EEPROM_SerialNumber_Driver_Read_Fail = TRUE;
+    }
+    return status;
 }
 
 /*-----------------------------------------------------------------------------/

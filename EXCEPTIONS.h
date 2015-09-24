@@ -25,9 +25,11 @@
 /******************************************************************************/
 /* Structures                                                                 */
 /******************************************************************************/
-typedef struct fault
+typedef struct _fault_
 {
     unsigned char RTCC_Oscillator_Fail;
+    unsigned char EEPROM_SerialNumber_Driver_Read_Fail;
+    unsigned char EEPROM_SerialNumber_Driver_Write_Fail;
 }FAULTTYPE;
 
 /******************************************************************************/

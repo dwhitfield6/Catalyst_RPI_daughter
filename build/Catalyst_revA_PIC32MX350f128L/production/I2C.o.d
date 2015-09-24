@@ -3,4 +3,5 @@ I2C.c  \
 USER.h  \
 I2C.h  \
  SYSTEM.h  \
-MISC.h 
+MISC.h  \
+EXCEPTIONS.h 

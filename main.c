@@ -6,7 +6,7 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 09/14/15     1.0_DW0a    Initial project make.
+ * 09/23/15     1.0_DW0a    Initial project make.
  *                          Added RGB LED functionality.
  *                          Added internal ADC read functionality.
  *                          Added UART functionality.
@@ -20,6 +20,8 @@
  *                          Added RGB LED fade and blink functionality.
  *                          Added RTC alarm capability.
  *                          Added I2C functionality.
+ *                          Improved RGB LED functionality.
+ *                          Added DMA framework.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -81,19 +83,10 @@ short main (void)
     MSC_RedLEDOFF();
     
     MSC_Relay(OFF);
-    
     RTCC_ReadAlarm(&CurrentAlarm);
     while(1)
     {
-        if(RTCTIMEbits.SEC01 % 2)
-        {
-            RTCC_Read(&CurrentTime); // update current time
-            MSC_RedLEDON();  
-        }
-        else
-        {
-            MSC_RedLEDOFF();
-        }
+        
     }
 }
 /*-----------------------------------------------------------------------------/
