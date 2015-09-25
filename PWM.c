@@ -64,9 +64,9 @@ const unsigned char RGB_Functions[3][NUM_ACTIONS][25] =
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-unsigned short Red_Duty = 0;
-unsigned short Green_Duty = 0;
-unsigned short Blue_Duty = 0;
+unsigned long Red_Duty = 0;
+unsigned long Green_Duty = 0;
+unsigned long Blue_Duty = 0;
 unsigned char PWM_Action = FADEUP;
 unsigned char RedAction = FALSE;
 unsigned char GreenAction = FALSE;

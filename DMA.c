@@ -23,7 +23,9 @@
 #include <stdbool.h>       /* For true/false definition */
 
 #include "USER.h"
+#include "TIMERS.h"
 #include "DMA.h"
+#include "PWM.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -33,6 +35,28 @@
 /* Inline Functions
 /******************************************************************************/
 
+/******************************************************************************/
+/* DMA_VirtToPhys
+ *
+ * The function converts a virtual address to a physical address.
+ * 
+ * To translate the kernel address (KSEG0 or KSEG1) to a physical address,
+ *  perform a ?Bitwise "AND" operation of the virtual address with 0x1FFFFFFF:
+ *  Physical Address = Virtual Address and 0x1FFFFFFF For physical address
+ *  to KSEG0 virtual address translation, perform a ?Bitwise OR? operation of 
+ *  the physical address with 0x80000000: KSEG0 Virtual Address = Physical
+ *  Address | 0x80000000 For physical address to KSEG1 virtual address
+ *  translation, perform a ?Bitwise OR? operation of the physical address
+ *  with 0xA0000000: KSEG1 Virtual Address = Physical Address | 0xA0000000 
+ *  To translate from KSEG0 to KSEG1 virtual address, perform a ?Bitwise OR?
+ *  operation of the KSEG0 virtual address with 0x20000000: KSEG1 Virtual
+ *  Address = KSEG0 Virtual Address | 0x20000000
+/******************************************************************************/
+inline unsigned long DMA_VirtToPhys(const void* p) 
+{ 
+    return (int)p<0?((int)p&0x1fffffffL):(unsigned int)((unsigned char*)p+0x40000000L); 
+} 
+ 
 /******************************************************************************/
 /* DMA_Module
  *
@@ -86,6 +110,82 @@ inline unsigned char DMA_Suspend(unsigned char state)
 }
 
 /******************************************************************************/
+/* DMA_Force
+ *
+ * The function forces the start of a transfer.
+/******************************************************************************/
+inline void DMA_Force(unsigned char channel)
+{
+    if(channel == 0)
+    {
+        DCH0ECONbits.CFORCE = 1;
+    }
+    else if(channel == 1)
+    {
+        DCH1ECONbits.CFORCE = 1;
+    }
+    else if(channel == 2)
+    {
+        DCH2ECONbits.CFORCE = 1;
+    }
+    else
+    {
+        DCH3ECONbits.CFORCE = 1;
+    }
+}
+
+/******************************************************************************/
+/* DMA_TransferCompleteWait
+ *
+ * The function forces the start of a transfer.
+/******************************************************************************/
+inline void DMA_TransferCompleteWait(unsigned char channel)
+{
+    while(!DMA_TransferComplete(channel))
+    {
+        MSC_DelayUS(100);
+    }
+}
+
+/******************************************************************************/
+/* DMA_TransferComplete
+ *
+ * The function returns the status of the transfer.
+/******************************************************************************/
+inline unsigned char DMA_TransferComplete(unsigned char channel)
+{
+    if(channel == 0)
+    {
+        if(DCH0INTbits.CHSDIF || DCH0INTbits.CHDDIF)
+        {
+            return TRUE;
+        }
+    }
+    else if(channel == 1)
+    {
+        if(DCH1INTbits.CHSDIF || DCH1INTbits.CHDDIF)
+        {
+            return TRUE;
+        }
+    }
+    else if(channel == 2)
+    {
+        if(DCH2INTbits.CHSDIF || DCH2INTbits.CHDDIF)
+        {
+            return TRUE;
+        }
+    }
+    else
+    {
+        if(DCH3INTbits.CHSDIF || DCH3INTbits.CHDDIF)
+        {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+/******************************************************************************/
 /* DMA_Busy
  *
  * The function controls the DMA controller.
@@ -106,6 +206,7 @@ inline unsigned char DMA_Busy(void)
 /******************************************************************************/
 void InitDMA(void)
 {
+    DMA_Module(ON);
     IPC10bits.DMA0IP = 3; // interrupt priority is 3
     IPC10bits.DMA0IS = 1; // interrupt sub-priority is 1
     IPC10bits.DMA1IP = 3; // interrupt priority is 3
@@ -115,7 +216,6 @@ void InitDMA(void)
     IPC11bits.DMA3IP = 3; // interrupt priority is 3
     IPC11bits.DMA3IS = 1; // interrupt sub-priority is 1
     DMA_RBG_Configure();
-    DMA_Module(ON);
 }
 
 /******************************************************************************/
@@ -396,14 +496,14 @@ unsigned char DMA_ChannelPriority(unsigned char channel, unsigned char priority)
  *
  * The function sets the channel transfer source.
 /******************************************************************************/
-unsigned char DMA_ChannelTransferSource(unsigned char channel, unsigned char source, unsigned char enable)
+unsigned char DMA_ChannelTransferSource(unsigned char channel, unsigned char IRQsource, unsigned char enable)
 {
     unsigned char status;
     
     if(channel == 0)
     {
         status = DCH0ECONbits.SIRQEN;
-        DCH0ECONbits.CHSIRQ = source;
+        DCH0ECONbits.CHSIRQ = IRQsource;
         if(enable)
         {
             DCH0ECONbits.SIRQEN = 1; // Start channel cell transfer if an interrupt matching CHSIRQ occurs
@@ -416,7 +516,7 @@ unsigned char DMA_ChannelTransferSource(unsigned char channel, unsigned char sou
     else if(channel == 1)
     {
         status = DCH1ECONbits.SIRQEN;
-        DCH1ECONbits.CHSIRQ = source;
+        DCH1ECONbits.CHSIRQ = IRQsource;
         if(enable)
         {
             DCH1ECONbits.SIRQEN = 1; // Start channel cell transfer if an interrupt matching CHSIRQ occurs
@@ -429,7 +529,7 @@ unsigned char DMA_ChannelTransferSource(unsigned char channel, unsigned char sou
     else if(channel == 2)
     {
         status = DCH2ECONbits.SIRQEN;
-        DCH2ECONbits.CHSIRQ = source;
+        DCH2ECONbits.CHSIRQ = IRQsource;
         if(enable)
         {
             DCH2ECONbits.SIRQEN = 1; // Start channel cell transfer if an interrupt matching CHSIRQ occurs
@@ -442,7 +542,7 @@ unsigned char DMA_ChannelTransferSource(unsigned char channel, unsigned char sou
     else
     {
         status = DCH3ECONbits.SIRQEN;
-        DCH3ECONbits.CHSIRQ = source;
+        DCH3ECONbits.CHSIRQ = IRQsource;
         if(enable)
         {
             DCH3ECONbits.SIRQEN = 1; // Start channel cell transfer if an interrupt matching CHSIRQ occurs
@@ -628,7 +728,7 @@ unsigned char DMA_ChannelInterrupt(unsigned char channel, unsigned char Interrup
  *
  * The function sets source address and size of the source.
 /******************************************************************************/
-void DMA_ChannelSource(unsigned char channel, unsigned short StartAddress, unsigned short size)
+void DMA_ChannelSource(unsigned char channel, unsigned long StartAddress, unsigned short size)
 {
     if(channel == 0)
     {
@@ -657,7 +757,7 @@ void DMA_ChannelSource(unsigned char channel, unsigned short StartAddress, unsig
  *
  * The function sets destination address and size of the destination.
 /******************************************************************************/
-void DMA_ChannelDestination(unsigned char channel, unsigned short StartAddress, unsigned short size)
+void DMA_ChannelDestination(unsigned char channel, unsigned long StartAddress, unsigned short size)
 {
     if(channel == 0)
     {
@@ -714,10 +814,34 @@ void DMA_ChannelTransferSize(unsigned char channel, unsigned short size)
 void DMA_RBG_Configure(void)
 {
     /* set up DMA channel 0 for the Red LED */
+    DMA_ChannelPriority(0,3);
+    DMA_ChannelDestination(0,DMA_VirtToPhys(&OC3RS),4);
+    DMA_ChannelSource(0,DMA_VirtToPhys(&Red_Duty),4);
+    DMA_ChannelTransferSize(0,4);
+    DMA_ChannelTransferSource(0,_TIMER_2_IRQ,ON);
+    DMA_ChannelAutoEnable(0,ON);
     
     /* set up DMA channel 1 for the Green LED */
+    DMA_ChannelPriority(1,2);
+    DMA_ChannelDestination(1,DMA_VirtToPhys(&OC2RS),4);
+    DMA_ChannelSource(1,DMA_VirtToPhys(&Green_Duty),4);
+    DMA_ChannelTransferSize(1,4);
+    DMA_ChannelTransferSource(1,_TIMER_2_IRQ,ON);
+    DMA_ChannelAutoEnable(1,ON);
     
     /* set up DMA channel 2 for the Blue LED */
+    DMA_ChannelPriority(2,1);
+    DMA_ChannelDestination(2,DMA_VirtToPhys(&OC1RS),4);
+    DMA_ChannelSource(2,DMA_VirtToPhys(&Blue_Duty),4);
+    DMA_ChannelTransferSize(2,4);
+    DMA_ChannelTransferSource(2,_TIMER_2_IRQ,ON);
+    DMA_ChannelAutoEnable(2,ON);
+    
+    TMR_InterruptTimer2(OFF);
+    
+    DMA_ChannelEnable(0,ON);
+    DMA_ChannelEnable(1,ON);
+    DMA_ChannelEnable(2,ON);
 }
 
 /*-----------------------------------------------------------------------------/

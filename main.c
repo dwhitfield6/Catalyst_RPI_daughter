@@ -22,6 +22,9 @@
  *                          Added I2C functionality.
  *                          Improved RGB LED functionality.
  *                          Added DMA framework.
+ *                          Added Red, Green, Blue PWM channels DMA
+ *                            functionality. This eases use of the CPU for
+ *                            important things.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -84,9 +87,12 @@ short main (void)
     
     MSC_Relay(OFF);
     RTCC_ReadAlarm(&CurrentAlarm);
+    
+    PWM_SetColor(RED, FADEUP,PWM_MEDIUM);
     while(1)
     {
-        
+        MSC_RedLEDTOGGLE();
+        MSC_DelayUS(50000);
     }
 }
 /*-----------------------------------------------------------------------------/

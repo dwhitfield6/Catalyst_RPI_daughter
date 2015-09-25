@@ -104,6 +104,8 @@
 /******************************************************************************/
 void __ISR(_TIMER_2_VECTOR , IPL7AUTO) TMR2_IntHandler (void)
 {
+    /* Only used when DMA is disabled */
+    
     OC3RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
     OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
     OC1RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle

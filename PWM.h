@@ -70,9 +70,9 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-extern unsigned short Red_Duty;
-extern unsigned short Green_Duty;
-extern unsigned short Blue_Duty;
+extern unsigned long Red_Duty;
+extern unsigned long Green_Duty;
+extern unsigned long Blue_Duty;
 extern unsigned char PWM_Action;
 extern unsigned char RedAction;
 extern unsigned char GreenAction;

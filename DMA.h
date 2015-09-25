@@ -44,8 +44,12 @@
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
+inline unsigned long DMA_VirtToPhys(const void* p);
 inline unsigned char DMA_Module(unsigned char state);
 inline unsigned char DMA_Suspend(unsigned char state);
+inline void DMA_Force(unsigned char channel);
+inline void DMA_TransferCompleteWait(unsigned char channel);
+inline unsigned char DMA_TransferComplete(unsigned char channel);
 inline unsigned char DMA_Busy(void);
 void InitDMA(void);
 unsigned char DMA_ChannelBusy(unsigned char channel);
@@ -53,11 +57,11 @@ unsigned char DMA_ChannelEnable(unsigned char channel, unsigned char state);
 unsigned char DMA_ChannelAutoEnable(unsigned char channel, unsigned char state);
 unsigned char DMA_ChannelChain(unsigned char channel, unsigned char chained, unsigned char ChainPriority);
 unsigned char DMA_ChannelPriority(unsigned char channel, unsigned char priority);
-unsigned char DMA_ChannelTransferSource(unsigned char channel, unsigned char source, unsigned char enable);
+unsigned char DMA_ChannelTransferSource(unsigned char channel, unsigned char IRQsource, unsigned char enable);
 unsigned char DMA_ChannelAbortSource(unsigned char channel, unsigned char source, unsigned char enable);
 unsigned char DMA_ChannelInterrupt(unsigned char channel, unsigned char Interruptbits, unsigned char Enablebits, unsigned char MasterEnable);
-void DMA_ChannelSource(unsigned char channel, unsigned short StartAddress, unsigned short size);
-void DMA_ChannelDestination(unsigned char channel, unsigned short StartAddress, unsigned short size);
+void DMA_ChannelSource(unsigned char channel, unsigned long StartAddress, unsigned short size);
+void DMA_ChannelDestination(unsigned char channel, unsigned long StartAddress, unsigned short size);
 void DMA_ChannelTransferSize(unsigned char channel, unsigned short size);
 void DMA_RBG_Configure(void);
 
