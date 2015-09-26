@@ -88,6 +88,29 @@ void SYS_Interrupts(unsigned char state)
         __builtin_disable_interrupts();
     }
 }
+
+/******************************************************************************/
+/* SYS_Sleep
+ *
+ * The function puts the system to sleep.
+/******************************************************************************/
+void SYS_Sleep(void)
+{
+    OSCCONbits.SLPEN = 1; // Device will enter Sleep mode when a WAIT instruction is executed
+    _wait();
+}
+
+/******************************************************************************/
+/* SYS_Idle
+ *
+ * The function puts the system in idle.
+/******************************************************************************/
+void SYS_Idle(void)
+{
+    OSCCONbits.SLPEN = 0; // Device will enter Idle mode when a WAIT instruction is executed
+    _wait();
+}
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

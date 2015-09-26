@@ -135,6 +135,7 @@ void Init_App(void)
     ADC_VCAPTris        = INPUT;
     ADC_VREF_posTris    = INPUT;
     ADC_VREF_negTris    = INPUT;
+    ADC_POTTris         = INPUT;
     
     /* select the ADC channels and references as analog */
     ANSELB              |= (ADC_Volt5_0 + ADC_Volt3_3 + ADC_Volt4_1 + ADC_VIN + ADC_VCAP);
@@ -197,6 +198,12 @@ void Init_App(void)
     I2C_RASP_DRV_DataTris   = INPUT;
     I2C_RASP_GEN_ClockTris  = INPUT;
     I2C_RASP_GEN_DataTris   = INPUT;
+    
+    /*~~~~~~~~~~~~~ Comparator ~~~~~~~~~~~~~~~~~*/
+    COMP_VIN_WarnTris   = INPUT;
+    COMP_VCAP_Warn1Tris = INPUT;
+    COMP_VCAP_Warn2Tris = INPUT;
+    COMP_VCAP_Warn3Tris = INPUT;
 }
 
 /******************************************************************************/
@@ -207,7 +214,8 @@ void Init_App(void)
 void Init_System(void)
 {
     INTCONbits.MVEC = TRUE; // Multi-vectored interrupts
-    InitException();
+    InitComparator();
+    EXC_ClearFaults();
     InitADC();
     InitTIMERS();
     InitPWM();
@@ -217,6 +225,7 @@ void Init_System(void)
     InitExtFlash();
     InitRTCC();
     InitI2C();
+    InitException();
     InitDMA();
     SYS_Interrupts(ON);
 }

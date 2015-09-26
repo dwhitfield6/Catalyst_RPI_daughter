@@ -46,5 +46,7 @@ void SYS_ConfigureOscillator(void);
 void SYS_SystemUnlock(void);
 void SYS_SystemLock(void);
 void SYS_Interrupts(unsigned char state);
+void SYS_Sleep(void);
+void SYS_Idle(void);
 
 #endif	/* SYSTEM_H */

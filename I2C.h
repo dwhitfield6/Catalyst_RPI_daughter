@@ -50,9 +50,18 @@
 /******************************************************************************/
 /* SERIAL_NUMBER_ADDRESS
  *
- * This is the address where teh serial number is stored on the EEPROM chip.
+ * This is the address where the serial number is stored on the EEPROM chip on
+ * the drive install bus.
 /******************************************************************************/
 #define SERIAL_NUMBER_ADDRESS 0
+
+/******************************************************************************/
+/* FAULT_LOG_ADDRESS
+ *
+ * This is the address where the fault log is stored on the EEPROM chip on
+ * the general purpose bus.
+/******************************************************************************/
+#define FAULT_LOG_ADDRESS 0
 
 /******************************************************************************/
 /* I2C_ReadLimit
@@ -141,13 +150,15 @@ unsigned char I2C_RASP_DRV_EEPROMReadByteVerify(unsigned short DataAddress, unsi
 unsigned char I2C_RASP_GEN_EEPROMReadByteVerify(unsigned short DataAddress, unsigned char* data);
 unsigned char I2C_RASP_DRV_EEPROMWriteByteVerify(unsigned short DataAddress, unsigned char data);
 unsigned char I2C_RASP_GEN_EEPROMWriteByteVerify(unsigned short DataAddress, unsigned char data);
-unsigned char I2C_RASP_DRV_EEPROMReadArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data);
-unsigned char I2C_RASP_GEN_EEPROMReadArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data);
-unsigned char I2C_RASP_DRV_EEPROMWriteArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data);
-unsigned char I2C_RASP_GEN_EEPROMWriteArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data);
+unsigned char I2C_RASP_DRV_EEPROMReadArray(unsigned short DataAddressStart, unsigned short Amount, void* data);
+unsigned char I2C_RASP_GEN_EEPROMReadArray(unsigned short DataAddressStart, unsigned short Amount, void* data);
+unsigned char I2C_RASP_DRV_EEPROMWriteArray(unsigned short DataAddressStart, unsigned short Amount, void* data);
+unsigned char I2C_RASP_GEN_EEPROMWriteArray(unsigned short DataAddressStart, unsigned short Amount, void* data);
 unsigned char I2C_RASP_DRV_EEPROMWriteString(unsigned short DataAddressStart, unsigned char* data);
 unsigned char I2C_RASP_GEN_EEPROMWriteString(unsigned short DataAddressStart, unsigned char* data);
 unsigned char I2C_RASP_DRV_EEPROMWriteSerialNumbers(void);
 unsigned char I2C_RASP_DRV_EEPROMReadSerialNumbers(unsigned char* data);
+unsigned char I2C_RASP_GEN_EEPROMWriteFaultLog(void);
+unsigned char I2C_RASP_GEN_EEPROMReadFaultLog(void);
 
 #endif	/* I2C_H */

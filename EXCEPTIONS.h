@@ -25,11 +25,18 @@
 /******************************************************************************/
 /* Structures                                                                 */
 /******************************************************************************/
-typedef struct _fault_
+typedef struct __attribute__((packed)) _fault_
 {
+    unsigned char LogCreatedString[10];
+    unsigned char LogCreated;
     unsigned char RTCC_Oscillator_Fail;
-    unsigned char EEPROM_SerialNumber_Driver_Read_Fail;
-    unsigned char EEPROM_SerialNumber_Driver_Write_Fail;
+    unsigned char EEPROM_SerialNumber_Read_Fail;
+    unsigned char EEPROM_SerialNumber_Write_Fail;
+    unsigned char EEPROM_FaultLog_Read_Fail;
+    unsigned char EEPROM_FaultLog_Write_Fail;
+    unsigned char Exception;
+    unsigned short ExceptionCode;
+    unsigned short ExceptionAddress;
 }FAULTTYPE;
 
 /******************************************************************************/
@@ -50,7 +57,7 @@ static enum {
 	EXCEP_IS1 = 16,			// implementation specfic 1
 	EXCEP_CEU,				// CorExtend Unuseable
 	EXCEP_C2E				// coprocessor 2
-} _excep_code;
+} Exception_Code;
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -66,6 +73,6 @@ extern FAULTTYPE Fault;
 /******************************************************************************/
 void InitException(void);
 void EXC_ClearFaults(void);
-void EXC_General_Exception_Handler(void);
+void general_Exception_Handler(void);
 
 #endif	/* EXCEPTIONS_H */

@@ -294,11 +294,11 @@ void InitUART(void)
     U5RXR = RS232_FEMALE_CTS_Pin;       // U5RX
     
     /* Clean receive buffers */
-    MSC_CleanBuffer(RX1_Buffer, UART1_RECEIVE_SIZE);
-    MSC_CleanBuffer(RX2_Buffer, UART2_RECEIVE_SIZE);
-    MSC_CleanBuffer(RX3_Buffer, UART3_RECEIVE_SIZE);
-    MSC_CleanBuffer(RX4_Buffer, UART4_RECEIVE_SIZE);
-    MSC_CleanBuffer(RX5_Buffer, UART5_RECEIVE_SIZE);
+    MSC_CleanBufferChar(RX1_Buffer, UART1_RECEIVE_SIZE);
+    MSC_CleanBufferChar(RX2_Buffer, UART2_RECEIVE_SIZE);
+    MSC_CleanBufferChar(RX3_Buffer, UART3_RECEIVE_SIZE);
+    MSC_CleanBufferChar(RX4_Buffer, UART4_RECEIVE_SIZE);
+    MSC_CleanBufferChar(RX5_Buffer, UART5_RECEIVE_SIZE);
 
     /* Set up the Male RS232 port */
     UART_RS232_MaleParameters(115200, NO, 1);

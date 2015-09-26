@@ -103,6 +103,41 @@ inline unsigned char TMR_EnableTimer4(unsigned char action)
 }
 
 /******************************************************************************/
+/* TMR_EnableTimer5
+ *
+ * Controls the Timer5 module.
+/******************************************************************************/
+inline unsigned char TMR_EnableTimer5(unsigned char action)
+{
+    unsigned char status;
+    
+#ifdef ON
+    #undef ON
+    status = T5CONbits.ON;
+    if (action)
+    {
+        T5CONbits.ON = 1; // Enable Timer
+    }
+    else
+    {
+        T5CONbits.ON = 0; // Disable Timer
+    }
+    #define ON 1
+#else
+    status = T5CONbits.ON;
+    if (action)
+    {
+        T5CONbits.ON = 1; // Enable Timer
+    }
+    else
+    {
+        T5CONbits.ON = 0; // Disable Timer
+    }
+    return status;
+#endif
+}
+
+/******************************************************************************/
 /* TMR_InterruptTimer2
  *
  * Controls the Timer2 interrupt.
@@ -141,6 +176,25 @@ inline unsigned char TMR_InterruptTimer4(unsigned char action)
 }
 
 /******************************************************************************/
+/* TMR_InterruptTimer5
+ *
+ * Controls the Timer5 interrupt.
+/******************************************************************************/
+inline unsigned char TMR_InterruptTimer5(unsigned char action)
+{
+    unsigned char status = IEC0bits.T5IE;
+    if (action)
+    {
+        IEC0bits.T5IE = 1; // Enable Timer 2 interrupt
+    }
+    else
+    {
+        IEC0bits.T5IE = 0; // disenable Timer 2 interrupt
+    }
+    return status;
+}
+
+/******************************************************************************/
 /* TMR_ResetTimer2
  *
  * Restarts Timer 2.
@@ -161,6 +215,16 @@ inline void TMR_ResetTimer4(void)
 }
 
 /******************************************************************************/
+/* TMR_ResetTimer5
+ *
+ * Restarts Timer 5.
+/******************************************************************************/
+inline void TMR_ResetTimer5(void)
+{
+    TMR5 = 0;
+}
+
+/******************************************************************************/
 /* TMR_SetTimer4
  *
  * Sets the PR register for timer 4 to compare.
@@ -168,6 +232,16 @@ inline void TMR_ResetTimer4(void)
 inline void TMR_SetTimer4(unsigned int time)
 {
     PR4 = time;
+}
+
+/******************************************************************************/
+/* TMR_SetTimer5
+ *
+ * Sets the PR register for timer 5 to compare.
+/******************************************************************************/
+inline void TMR_SetTimer5(unsigned int time)
+{
+    PR5 = time;
 }
 
 /******************************************************************************/
@@ -183,6 +257,7 @@ void InitTIMERS(void)
 {
     InitTIMER2();
     InitTIMER4();
+    InitTIMER5();
 }
 
 /******************************************************************************/
@@ -224,6 +299,28 @@ void InitTIMER4(void)
     PR4 = 0xFFFF; // Load the period value
     IFS0bits.T4IF = 0; // Clear Timer 4 Interrupt Flag
     TMR_InterruptTimer4(ON);
+}
+
+/******************************************************************************/
+/* InitTIMER5
+ *
+ * The function initializes timer 5 which is used for the ADC to sample and
+ *  switch channels.
+/******************************************************************************/
+void InitTIMER5(void)
+{
+    TMR_EnableTimer5(OFF);
+    TMR_InterruptTimer5(OFF);
+    IPC5bits.T5IP = 1; // interrupt priority is 1
+    IPC5bits.T5IS = 1; // interrupt sub-priority is 1
+    T5CONbits.TCS = 0; // Select internal instruction cycle clock
+    T5CONbits.TGATE = 0; // Disable Gated Timer mode
+    T5CONbits.TCKPS = 0b111; // Select 1:256 Prescaler
+    TMR5 = 0x00; // Clear timer register
+    PR5 = 0xFFFF; // Load the period value
+    IFS0bits.T5IF = 0; // Clear Timer 5 Interrupt Flag
+    TMR_InterruptTimer5(ON);
+    TMR_EnableTimer5(ON);
 }
 
 /*-----------------------------------------------------------------------------/

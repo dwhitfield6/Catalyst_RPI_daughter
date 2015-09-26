@@ -29,43 +29,64 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+unsigned char CurrentChannel = ADC_VIN_AN;
+volatile unsigned char ADC_ReadRailStatus = FALSE;
 
 /******************************************************************************/
 /* Inline Functions
 /******************************************************************************/
 
 /******************************************************************************/
-/* ADC_ModuleOFF
+/* ADC_Interrupt
  *
- * The function turns off the ADC module.
+ * The function controls the ADC interrupt.
 /******************************************************************************/
-inline void ADC_ModuleOFF(void)
+inline unsigned char ADC_Interrupt(unsigned char state)
 {
-#ifdef ON
-    #undef ON
-    AD1CON1bits.ON = 0;
-    #define ON 1
-#else
-    AD1CON1bits.ON = 0;
-#endif
+    unsigned char status = IEC0bits.AD1IE;
+    if(state)
+    {       
+        IEC0bits.AD1IE = 1; // enable ADC interrupt
+    }
+    else
+    {
+        IEC0bits.AD1IE = 0; // disable ADC interrupt 
+    }
+    return status;
 }
 
 /******************************************************************************/
-/* ADC_ModuleON
+/* ADC_Module
  *
- * The function turns on the ADC module.
+ * The function controls the ADC module.
 /******************************************************************************/
-inline void ADC_ModuleON(void)
+inline unsigned char ADC_Module(unsigned char state)
 {
 #ifdef ON
     #undef ON
-    AD1CON1bits.ON = 1;
+    unsigned char status = AD1CON1bits.ON;
+    if(state)
+    {       
+        AD1CON1bits.ON = 1; // turn on the ADC module
+    }
+    else
+    {
+        AD1CON1bits.ON = 0; // turn off the ADC module 
+    }
     #define ON 1
 #else
-    AD1CON1bits.ON = 1;
+    unsigned char status = AD1CON1bits.ON;
+    if(state)
+    {       
+        AD1CON1bits.ON = 1; // turn on the ADC module
+    }
+    else
+    {
+        AD1CON1bits.ON = 0; // turn off the ADC module 
+    }
 #endif
+    return status;
 }
-
 
 /******************************************************************************/
 /* Functions
@@ -78,82 +99,37 @@ inline void ADC_ModuleON(void)
 /******************************************************************************/
 void InitADC(void)
 {
-    ADC_ModuleOFF();
+    ADC_Module(OFF);
     AD1CON2bits.VCFG = 0x000; // reference voltage is AVDD and AVSS
     AD1CON3bits.ADCS = 0b00111111; // 64 * TCY ~1.6uS
-    ADC_ModuleON();
+    AD1CON2bits.SMPI = 0b0000; // Interrupts at the completion of conversion for each sample/convert sequence
+    IPC5bits.AD1IP = 1; // interrupt priority is 1
+    IPC5bits.AD1IS = 1; // interrupt sub-priority is 1
+    ADC_Interrupt(OFF);
+    ADC_Module(ON);
 }
 
 /******************************************************************************/
-/* ADC_ReadChannel
+/* ADC_SetSample
  *
- * The function reads an ADC channel and returns the voltage.
+ * The function sets the ADC channel and starts the sampling.
 /******************************************************************************/
-double ADC_ReadChannel(unsigned char channel)
+void ADC_SetSample(unsigned char channel)
 {
-    short RawCounts = 0;
-    double Voltage = 0.0;
-
     AD1CHSbits.CH0SB = channel;
     AD1CHSbits.CH0SA = channel;
     AD1CON1bits.SAMP = TRUE; // sample the input
-    MSC_DelayUS(1000);
+}
+
+/******************************************************************************/
+/* ADC_StopSample
+ *
+ * The function stops the ADC sampling and starts a conversion.
+/******************************************************************************/
+void ADC_StopSample(void)
+{
     AD1CON1bits.SAMP = FALSE; // sample the input
     AD1CON1bits.DONE = 0;
-    while(!AD1CON1bits.DONE);
-    RawCounts = ADC1BUF0;
-    Voltage = ((double) RawCounts * VREF) / (1<<ADC_BITS);
-    
-    return Voltage;
-}
-/******************************************************************************/
-/* ADC_ReadVIN
- *
- * The function reads the input voltage.
-/******************************************************************************/
-void ADC_ReadVIN(void)
-{
-    RailStatus.VIN = (ADC_ReadChannel(ADC_VIN_AN) * (R28 + R29)) / R29;
-}
-
-/******************************************************************************/
-/* ADC_ReadVolt5_0
- *
- * The function reads the 5.0 volt rail.
-/******************************************************************************/
-void ADC_ReadVolt5_0(void)
-{
-    RailStatus.Volt5_0 = (ADC_ReadChannel(ADC_Volt5_0_AN) * (R26 + R27)) / R27;
-}
-
-/******************************************************************************/
-/* ADC_ReadVolt3_3
- *
- * The function reads the 3.3 volt rail.
-/******************************************************************************/
-void ADC_ReadVolt3_3(void)
-{
-    RailStatus.Volt3_3 = (ADC_ReadChannel(ADC_Volt3_3_AN) * (R30 + R31)) / R31;
-}
-
-/******************************************************************************/
-/* ADC_ReadVolt4_1
- *
- * The function reads the 4.1 volt rail.
-/******************************************************************************/
-void ADC_ReadVolt4_1(void)
-{
-    RailStatus.Volt4_1 = (ADC_ReadChannel(ADC_Volt4_1_AN) * (R32 + R33)) / R33;
-}
-
-/******************************************************************************/
-/* ADC_ReadVCAP
- *
- * The function reads the VCAP volt rail which is the voltage of the capacitor.
-/******************************************************************************/
-void ADC_ReadVCAP(void)
-{
-    RailStatus.VCAP = (ADC_ReadChannel(ADC_VCAP_AN) * (R34 + R35)) / R35;
 }
 
 /******************************************************************************/
@@ -163,12 +139,22 @@ void ADC_ReadVCAP(void)
 /******************************************************************************/
 void ADC_ReadRails(void)
 {
-    ADC_ReadVIN();
-    ADC_ReadVCAP();
-    ADC_ReadVolt3_3();
-    ADC_ReadVolt4_1();
-    ADC_ReadVolt5_0();
+    unsigned long timer =0;
+    TMR_EnableTimer5(OFF);
+    TMR_ResetTimer5();
+    CurrentChannel = ADC_VIN_AN;
+    ADC_ReadRailStatus = FALSE;
+    TMR_EnableTimer5(ON);
+    while(!ADC_ReadRailStatus)
+    {
+        timer++;
+        if(timer > 100000)
+        {
+            /* Rail reading timeout occurred */
+        }
+    }
 }
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

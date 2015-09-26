@@ -31,13 +31,18 @@
 /******************************************************************************/
 inline unsigned char TMR_EnableTimer2(unsigned char action);
 inline unsigned char TMR_EnableTimer4(unsigned char action);
+inline unsigned char TMR_EnableTimer5(unsigned char action);
 inline unsigned char TMR_InterruptTimer2(unsigned char action);
 inline unsigned char TMR_InterruptTimer4(unsigned char action);
+inline unsigned char TMR_InterruptTimer5(unsigned char action);
 inline void TMR_ResetTimer2(void);
 inline void TMR_ResetTimer4(void);
+inline void TMR_ResetTimer5(void);
 inline void TMR_SetTimer4(unsigned int time);
+inline void TMR_SetTimer5(unsigned int time);
 void InitTIMERS(void);
 void InitTIMER2(void);
 void InitTIMER4(void);
+void InitTIMER5(void);
 
 #endif	/* TIMERS_H */

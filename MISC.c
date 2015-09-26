@@ -171,7 +171,22 @@ unsigned char MSC_IsAlphaNumericString(unsigned char* data)
  *
  * This function sets an amount of data in the array as 0.
 /******************************************************************************/
-void MSC_CleanBuffer(unsigned char* data, unsigned short count)
+void MSC_CleanBuffer(void* data, unsigned short bytes)
+{
+    unsigned short i=0;
+    for(i=0; i<bytes;i++)
+    {
+        *(unsigned char*)data= 0;
+        (unsigned char*) data++;
+    }
+}
+
+/******************************************************************************/
+/* MSC_CleanBufferChar
+ *
+ * This function sets an amount of data in the char array as 0.
+/******************************************************************************/
+void MSC_CleanBufferChar(unsigned char* data, unsigned short count)
 {
     unsigned short i=0;
     for(i=0; i<count;i++)
@@ -207,6 +222,22 @@ double MSC_Round(double input)
 }
 
 /******************************************************************************/
+/* MSC_StringCopy
+ *
+ * This function copies a string from over to.
+/******************************************************************************/
+void MSC_StringCopy(unsigned char* from,unsigned char* to)
+{
+    while(*from != 0)
+    {
+        *to = *from;
+        from++;
+        to++;
+    }
+    *to = *from;
+}
+
+/******************************************************************************/
 /* MSC_BufferCopy
  *
  * This function copies the 'from' array to the 'to' array.
@@ -214,7 +245,7 @@ double MSC_Round(double input)
 void MSC_BufferCopy(unsigned char* from,unsigned char* to, unsigned short count, unsigned short shift)
 {
     unsigned short i=0;
-    MSC_CleanBuffer(to,count);
+    MSC_CleanBufferChar(to,count);
     for(i = shift; i>0; i--)
     {
         *to = ' ';
@@ -234,18 +265,18 @@ void MSC_BufferCopy(unsigned char* from,unsigned char* to, unsigned short count,
  *
  * This function returns TRUE if the array 'This' matches the array 'That'.
 /******************************************************************************/
-unsigned char MSC_StringMatch(const unsigned char* This, const unsigned char* That)
+unsigned char MSC_StringMatch(void* This, void* That)
 {
-    while(*This != 0)
+    while(*(unsigned char*)This != 0)
     {
-       if(*This != *That || *That == 0)
+       if(*(unsigned char*)This != *(unsigned char*)That || *(unsigned char*)That == 0)
        {
            return FALSE;
        }
-       This++;
-       That++;
+       (unsigned char*)This++;
+       (unsigned char*)That++;
     }
-    if(*That == 0)
+    if(*(unsigned char*)That == 0)
     {
         return TRUE;
     }
@@ -803,7 +834,7 @@ unsigned char MSC_StringAddEqual(unsigned char* Input)
         Input++;
     }
     Input-=NullPosition;
-    MSC_CleanBuffer(temp,NullPosition +1);
+    MSC_CleanBufferChar(temp,NullPosition +1);
     i = 0;
     while(Input[i] != 0)
     {

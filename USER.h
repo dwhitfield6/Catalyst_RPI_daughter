@@ -189,6 +189,11 @@
 #define ADC_VREF_negTris	TRISAbits.TRISA9
 #define ADC_VREF_neg 0x00000200    //RA9 used as VREF-
 
+/* Connected to the voltage divider to read the potentiometer voltage */
+#define ADC_POTTris	TRISBbits.TRISB13
+#define ADC_POT 0x00000020    //RB13 used as AN13
+#define ADC_POT_AN 13          //AN13
+
 /************* RS-232 UART channels *************/
 /* Connected to the rs232 driver shutdown for the male DB9 */
 #define RS232_MALE_SHUTDOWNTris	TRISAbits.TRISA7
@@ -355,6 +360,30 @@
 /* Connected to I2C module 2 data */
 #define I2C_RASP_GEN_DataTris	TRISAbits.TRISA3
 #define I2C_RASP_GEN_Data 0x00000008  // RA3
+
+/******* Comparator IC for monitoring voltage extremes on the rails *******/
+/* Connected to comparator VIN_WARN warn */
+#define COMP_VIN_WarnTris	TRISBbits.TRISB8
+#define COMP_VIN_Warn 0x00000100  // RB8 used as INT2
+#define COMP_VIN_Warn_INT 2
+#define COMP_VIN_Warn_Pin 0b0010        // INT2 is pin RPB8
+
+/* Connected to comparator VCAP_WARN1 warn */
+#define COMP_VCAP_Warn1Tris	TRISFbits.TRISF6
+#define COMP_VCAP_Warn1 0x00000040  // RF6 used as INT0
+#define COMP_VCAP_Warn1_INT 0
+
+/* Connected to comparator VCAP_WARN2 warn */
+#define COMP_VCAP_Warn2Tris	TRISDbits.TRISD10
+#define COMP_VCAP_Warn2 0x00000400  // RD10 used as INT3
+#define COMP_VCAP_Warn2_INT 3
+#define COMP_VCAP_Warn2_Pin 0b0110        // INT3 is pin RPD10
+
+/* Connected to comparator VCAP_WARN3 warn */
+#define COMP_VCAP_Warn3Tris	TRISFbits.TRISF3
+#define COMP_VCAP_Warn3 0x00000008  // RF3 used as INT1
+#define COMP_VCAP_Warn3_INT 1
+#define COMP_VCAP_Warn3_Pin 0b1000        // INT1 is pin RPF3
 
 /******************************************************************************/
 /* Version variables                                                          */

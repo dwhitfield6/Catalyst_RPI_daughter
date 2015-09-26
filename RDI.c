@@ -105,7 +105,7 @@ void RDI_ClearProduct(void)
     RDI_product = 0;
         
     /* Clean receive buffers */
-    MSC_CleanBuffer(Banner_Buffer, Banner_RECEIVE_SIZE);
+    MSC_CleanBufferChar(Banner_Buffer, Banner_RECEIVE_SIZE);
     Banner_Buffer_Place = 0;
     Banner_Correct_place = 0;
 }

@@ -131,11 +131,13 @@
 inline void MSC_Relay(unsigned char state);
 void MSC_DelayUS(long US);
 unsigned char MSC_IsCharacter(unsigned char data);
-void MSC_CleanBuffer(unsigned char* data, unsigned short count);
+void MSC_CleanBuffer(void* data, unsigned short bytes);
+void MSC_CleanBufferChar(unsigned char* data, unsigned short count);
 void MSC_CleanBufferInt(unsigned int* data, unsigned short count);
 double MSC_Round(double input);
+void MSC_StringCopy(unsigned char* from,unsigned char* to);
 void MSC_BufferCopy(unsigned char* from,unsigned char* to, unsigned short count, unsigned short shift);
-unsigned char MSC_StringMatch(const unsigned char* This, const unsigned char* That);
+unsigned char MSC_StringMatch(void* This, void* That);
 unsigned char MSC_StringMatchCaseInsensitive(const unsigned char* This, const unsigned char* That);
 unsigned char MSC_StringContains(const unsigned char* This, const unsigned char* That);
 unsigned char MSC_StringContainsCaseInsensitive(const unsigned char* This, const unsigned char* That);

@@ -25,6 +25,10 @@
  *                          Added Red, Green, Blue PWM channels DMA
  *                            functionality. This eases use of the CPU for
  *                            important things.
+ *                          Burn the fault log to external EEPROM so that it
+ *                            is harder to lose.
+ *                          Added timer to automatically take ADC readings of
+ *                            the voltage rails.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -36,7 +40,7 @@
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
-#include <xc.h>         /* XC8 General Include File */
+#include <xc.h>         /* XC32 General Include File */
 
 #include <stdint.h>        
 #include <stdbool.h>       
@@ -66,15 +70,13 @@
 short main (void)
 {
     unsigned long i;
-    
+       
     /* Initialize */
     SYS_ConfigureOscillator();
     Init_App();
     Init_System();
     PWR_StatusUpdate();        
     RDI_GetProduct();
-
-    MSC_Relay(ON);
     
     /* Flash LEDs */
     for (i=0;i<24;i++)
@@ -85,14 +87,15 @@ short main (void)
     }
     MSC_RedLEDOFF();
     
-    MSC_Relay(OFF);
+    /* Read the current alarm */
     RTCC_ReadAlarm(&CurrentAlarm);
     
+    /* set the Red LED to fade up */
     PWM_SetColor(RED, FADEUP,PWM_MEDIUM);
+    
     while(1)
     {
-        MSC_RedLEDTOGGLE();
-        MSC_DelayUS(50000);
+
     }
 }
 /*-----------------------------------------------------------------------------/

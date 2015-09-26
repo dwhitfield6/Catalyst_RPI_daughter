@@ -214,8 +214,6 @@ void InitI2C(void)
     I2C_RASP_GEN_Interrupt(OFF,OFF,ON);
     I2C_RASP_DRV_EEPROMWriteSerialNumbers();
     I2C_RASP_GEN_EEPROMWriteString(0,"David Whitfield");
-    I2C_RASP_DRV_Module(OFF);
-    I2C_RASP_GEN_Module(OFF);
 }
 
 /******************************************************************************/
@@ -835,7 +833,7 @@ unsigned char I2C_RASP_GEN_EEPROMWriteByteVerify(unsigned short DataAddress, uns
  *
  * This function reads an array from the EEPROM on the driver install bus.
 /******************************************************************************/
-unsigned char I2C_RASP_DRV_EEPROMReadArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data)
+unsigned char I2C_RASP_DRV_EEPROMReadArray(unsigned short DataAddressStart, unsigned short Amount, void* data)
 {
     unsigned short address;
     unsigned short i; 
@@ -843,12 +841,12 @@ unsigned char I2C_RASP_DRV_EEPROMReadArray(unsigned short DataAddressStart, unsi
     address = DataAddressStart;
     for(i=0;i<Amount;i++)
     {
-        if(!I2C_RASP_DRV_EEPROMReadByteVerify(address,data))
+        if(!I2C_RASP_DRV_EEPROMReadByteVerify(address,(unsigned char*)data))
         {
             return FAIL;
         }
         address++;
-        data++;
+        (unsigned char*) data++;
     }
     return PASS;    
 }
@@ -858,7 +856,7 @@ unsigned char I2C_RASP_DRV_EEPROMReadArray(unsigned short DataAddressStart, unsi
  *
  * This function reads an array from the EEPROM on the general purpose bus.
 /******************************************************************************/
-unsigned char I2C_RASP_GEN_EEPROMReadArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data)
+unsigned char I2C_RASP_GEN_EEPROMReadArray(unsigned short DataAddressStart, unsigned short Amount, void* data)
 {
     unsigned short address;
     unsigned short i; 
@@ -866,12 +864,12 @@ unsigned char I2C_RASP_GEN_EEPROMReadArray(unsigned short DataAddressStart, unsi
     address = DataAddressStart;
     for(i=0;i<Amount;i++)
     {
-        if(!I2C_RASP_GEN_EEPROMReadByteVerify(address,data))
+        if(!I2C_RASP_GEN_EEPROMReadByteVerify(address,(unsigned char*)data))
         {
             return FAIL;
         }
         address++;
-        data++;
+        (unsigned char*) data++;
     }
     return PASS;    
 }
@@ -881,7 +879,7 @@ unsigned char I2C_RASP_GEN_EEPROMReadArray(unsigned short DataAddressStart, unsi
  *
  * This function writes an array to the EEPROM on the driver install bus.
 /******************************************************************************/
-unsigned char I2C_RASP_DRV_EEPROMWriteArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data)
+unsigned char I2C_RASP_DRV_EEPROMWriteArray(unsigned short DataAddressStart, unsigned short Amount, void* data)
 {
     unsigned short address;
     unsigned short i; 
@@ -889,12 +887,12 @@ unsigned char I2C_RASP_DRV_EEPROMWriteArray(unsigned short DataAddressStart, uns
     address = DataAddressStart;
     for(i=0;i<Amount;i++)
     {
-        if(!I2C_RASP_DRV_EEPROMWriteByteVerify(address,*data))
+        if(!I2C_RASP_DRV_EEPROMWriteByteVerify(address, *(unsigned char*)data))
         {
             return FAIL;
         }
         address++;
-        data++;
+        (unsigned char*) data++;
     }
     return PASS;    
 }
@@ -904,7 +902,7 @@ unsigned char I2C_RASP_DRV_EEPROMWriteArray(unsigned short DataAddressStart, uns
  *
  * This function writes an array to the EEPROM on the general purpose bus.
 /******************************************************************************/
-unsigned char I2C_RASP_GEN_EEPROMWriteArray(unsigned short DataAddressStart, unsigned short Amount, unsigned char* data)
+unsigned char I2C_RASP_GEN_EEPROMWriteArray(unsigned short DataAddressStart, unsigned short Amount, void* data)
 {
     unsigned short address;
     unsigned short i; 
@@ -912,12 +910,12 @@ unsigned char I2C_RASP_GEN_EEPROMWriteArray(unsigned short DataAddressStart, uns
     address = DataAddressStart;
     for(i=0;i<Amount;i++)
     {
-        if(!I2C_RASP_GEN_EEPROMWriteByteVerify(address,*data))
+        if(!I2C_RASP_GEN_EEPROMWriteByteVerify(address, *(unsigned char*)data))
         {
             return FAIL;
         }
         address++;
-        data++;
+        (unsigned char*) data++;
     }
     return PASS;    
 }
@@ -988,7 +986,7 @@ unsigned char I2C_RASP_DRV_EEPROMWriteSerialNumbers(void)
     
     if(!status)
     {
-        Fault.EEPROM_SerialNumber_Driver_Write_Fail = TRUE;
+        Fault.EEPROM_SerialNumber_Write_Fail = TRUE;
     }
     return status;
 }
@@ -1019,7 +1017,48 @@ unsigned char I2C_RASP_DRV_EEPROMReadSerialNumbers(unsigned char* data)
     
     if(!status)
     {
-        Fault.EEPROM_SerialNumber_Driver_Read_Fail = TRUE;
+        Fault.EEPROM_SerialNumber_Read_Fail = TRUE;
+    }
+    return status;
+}
+
+/******************************************************************************/
+/* I2C_RASP_GEN_EEPROMWriteFaultLog
+ *
+ * This function writes the fault log to the EEPROM on the general purpose bus.
+/******************************************************************************/
+unsigned char I2C_RASP_GEN_EEPROMWriteFaultLog(void)
+{
+    unsigned char status;
+    unsigned short size;
+    
+    size = sizeof(Fault);
+    status = I2C_RASP_GEN_EEPROMWriteArray(FAULT_LOG_ADDRESS,size,&Fault);
+    
+    if(!status)
+    {
+        Fault.EEPROM_FaultLog_Write_Fail = TRUE;
+    }
+    return status;
+}
+
+/******************************************************************************/
+/* I2C_RASP_GEN_EEPROMReadFaultLog
+ *
+ * This function reads the fault log to the EEPROM on the general purpose bus.
+/******************************************************************************/
+unsigned char I2C_RASP_GEN_EEPROMReadFaultLog(void)
+{
+    unsigned char status;
+    unsigned short size;
+    
+    size = sizeof(Fault);
+    
+    status = I2C_RASP_GEN_EEPROMReadArray(FAULT_LOG_ADDRESS,size, &Fault);
+    
+    if(!status)
+    {
+        Fault.EEPROM_FaultLog_Read_Fail = TRUE;
     }
     return status;
 }

@@ -80,12 +80,14 @@
 #include <stdbool.h>       /* For true/false definition */
 #include <sys/attribs.h>     /* For __ISR definition */
 
+#include "POWER.h"
 #include "PWM.h"
 #include "UART.h"
 #include "RDI.h"
 #include "RTCC.h"
 #include "TIMERS.h"
 #include "I2C.h"
+#include "ADC.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -100,7 +102,47 @@
 /******************************************************************************/
 
 /******************************************************************************/
-/* PWM LED interrupt
+/* External interrupt 0 (Comparator VCAP_Warn1 warning that cap is under 4.1V)
+/******************************************************************************/
+void __ISR(_EXTERNAL_0_VECTOR , IPL7AUTO) INT0_IntHandler (void)
+{
+    PWR_ReadComparator();
+    IFS0bits.INT0IF = 0;
+}
+
+/******************************************************************************/
+/* External interrupt 1 (Comparator VCAP_Warn3 warning that cap is over the
+ *  voltage of the Potentiometer)
+/******************************************************************************/
+void __ISR(_EXTERNAL_1_VECTOR , IPL7AUTO) INT1_IntHandler (void)
+{
+    PWR_ReadComparator();
+    IFS0bits.INT1IF = 0;
+}
+
+/******************************************************************************/
+/* External interrupt 2 (Comparator VIN_Warn warning that VIN power is below
+ *  9 volts)
+/******************************************************************************/
+void __ISR(_EXTERNAL_2_VECTOR , IPL7AUTO) INT2_IntHandler (void)
+{
+    PWR_Volts5(OFF);
+    PWR_Charge(FALSE);
+    PWR_ReadComparator();
+    IFS0bits.INT2IF = 0;
+}
+
+/******************************************************************************/
+/* External interrupt 3 (Comparator VCAP_Warn2 warning that cap is under 4.4V)
+/******************************************************************************/
+void __ISR(_EXTERNAL_3_VECTOR , IPL7AUTO) INT3_IntHandler (void)
+{
+    PWR_ReadComparator();
+    IFS0bits.INT3IF = 0;
+}
+
+/******************************************************************************/
+/* Timer 2 interrupt (PWM RGB LED)
 /******************************************************************************/
 void __ISR(_TIMER_2_VECTOR , IPL7AUTO) TMR2_IntHandler (void)
 {
@@ -113,7 +155,7 @@ void __ISR(_TIMER_2_VECTOR , IPL7AUTO) TMR2_IntHandler (void)
 }
 
 /******************************************************************************/
-/* RGB LED Function interrupt
+/* Timer 4 interrupt (RGB LED function change)
 /******************************************************************************/
 void __ISR(_TIMER_4_VECTOR , IPL7AUTO) TMR4_IntHandler (void)
 {        
@@ -148,7 +190,82 @@ void __ISR(_TIMER_4_VECTOR , IPL7AUTO) TMR4_IntHandler (void)
 }
 
 /******************************************************************************/
-/* SPI bus to raspberry pi interrupt
+/* Timer 5 interrupt (ADC channel switching and raspberry pi status monitoring)
+/******************************************************************************/
+void __ISR(_TIMER_5_VECTOR , IPL7AUTO) TMR5_IntHandler (void)
+{  
+    static unsigned char sample = 0;
+
+    if(sample == 0)
+    {
+        /* set channel and start sampling */
+        ADC_SetSample(CurrentChannel);
+        PWR_StatusUpdate();
+        sample++;
+    }
+    else
+    {
+        /* stop sampling and start conversion */
+        IFS0bits.AD1IF = 0;
+        ADC_Interrupt(ON);
+        ADC_StopSample();
+        sample = 0;
+        TMR_EnableTimer5(OFF);
+    }   
+    IFS0bits.T5IF = 0; // Clear Timer 5 interrupt flag
+}
+
+/******************************************************************************/
+/* ADC interrupt (ADC conversion is complete)
+/******************************************************************************/
+void __ISR(_ADC_VECTOR , IPL7AUTO) ADC_IntHandler (void)
+{  
+    unsigned short RawCounts;
+    double Voltage;
+    
+    /* conversion is complete */
+    
+    RawCounts = ADC1BUF0;
+    Voltage = ((double) RawCounts * VREF) / (1<<ADC_BITS);
+    
+    if(CurrentChannel == ADC_VIN_AN)
+    {
+        RailStatus.VIN = (Voltage * (R28 + R29)) / R29;
+        CurrentChannel = ADC_Volt5_0_AN;
+    }
+    else if(CurrentChannel == ADC_Volt5_0_AN)
+    {
+        RailStatus.Volt5_0 = (Voltage * (R26 + R27)) / R27;
+        CurrentChannel = ADC_Volt3_3_AN;
+    }
+    else if(CurrentChannel == ADC_Volt3_3_AN)
+    {
+        RailStatus.Volt3_3 = (Voltage * (R30 + R31)) / R31;
+        CurrentChannel = ADC_Volt4_1_AN;
+    }
+    else if(CurrentChannel == ADC_Volt4_1_AN)
+    {
+        RailStatus.Volt4_1 = (Voltage * (R32 + R33)) / R33;
+        CurrentChannel = ADC_POT_AN;
+    }
+    else if(CurrentChannel == ADC_POT_AN)
+    {
+        RailStatus.POT = Voltage;
+        CurrentChannel = ADC_VCAP_AN;
+    }
+    else
+    {
+        RailStatus.VCAP = (Voltage * (R34 + R35)) / R35;
+        CurrentChannel = ADC_VIN_AN;
+        ADC_ReadRailStatus = TRUE;
+    }       
+    TMR_EnableTimer5(ON);
+    ADC_Interrupt(OFF);
+    IFS0bits.AD1IF = 0;
+}
+
+/******************************************************************************/
+/* SPI interrupt (bus to raspberry pi)
 /******************************************************************************/
 void __ISR(_SPI_2_VECTOR , IPL7AUTO) SPI2_IntHandler (void)
 {

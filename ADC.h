@@ -119,6 +119,8 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+extern unsigned char CurrentChannel;
+extern volatile unsigned char ADC_ReadRailStatus;
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -131,13 +133,11 @@
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
+inline unsigned char ADC_Interrupt(unsigned char state);
+inline unsigned char ADC_Module(unsigned char state);
 void InitADC(void);
-void ADC_ReadVIN(void);
-void ADC_ReadVCAP(void);
+void ADC_SetSample(unsigned char channel);
+void ADC_StopSample(void);
 void ADC_ReadRails(void);
-void ADC_ReadVolt3_3(void);
-void ADC_ReadVolt4_1(void);
-void ADC_ReadVolt5_0(void);
-double ADC_ReadChannel(unsigned char channel);
 
 #endif	/* ADC_H */
