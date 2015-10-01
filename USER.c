@@ -214,6 +214,11 @@ void Init_App(void)
 void Init_System(void)
 {
     INTCONbits.MVEC = TRUE; // Multi-vectored interrupts
+    if(PMD6bits.REFOMD != ON)
+    {
+        /* put in low power mode if not already */
+        InitLowPower();
+    }
     InitComparator();
     EXC_ClearFaults();
     InitADC();
@@ -222,8 +227,8 @@ void Init_System(void)
     InitUART();
     InitSPI();
     InitRDI();
-    InitExtFlash();
     InitRTCC();
+    InitExtFlash();
     InitI2C();
     InitException();
     InitDMA();

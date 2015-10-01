@@ -37,6 +37,8 @@ typedef struct __attribute__((packed)) _fault_
     unsigned char Exception;
     unsigned short ExceptionCode;
     unsigned short ExceptionAddress;
+    unsigned char Flash_ID_FAIL;
+    unsigned char Flash_BadBlocksLimit_FAIL;
 }FAULTTYPE;
 
 /******************************************************************************/

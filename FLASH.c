@@ -22,14 +22,19 @@
 #include <stdint.h>        /* For uint8_t definition */
 #include <stdbool.h>       /* For true/false definition */
 
+#include "RTCC.h"
+#include "MISC.h"
 #include "USER.h"
 #include "FLASH.h"
+#include "EXCEPTIONS.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+unsigned char FlashBuffer[FLASH_BUFFER_PAGES][FLASH_BUFFER_SIZE];
 IDTYPE FlashID;
 ONFITYPE FlashONFI;
+unsigned short BadBlocks[NUMBER_BAD_BLOCKS];
 
 /******************************************************************************/
 /* Functions
@@ -41,15 +46,76 @@ ONFITYPE FlashONFI;
  * The function initializes the external flash IC S34ML01G100TFI004.
 /******************************************************************************/
 void InitExtFlash(void)
-{
+{   
     FLH_EXT_ChipSelect(OFF);
     FLH_EXT_WriteProtect(ON);    
     FLH_EXT_CommandLatchEnable(OFF);
     FLH_EXT_AddressLatchEnable(OFF);
     FLH_EXT_WriteEnable();
     FLH_EXT_ReadEnable();
-    FLH_EXT_ReadID();
+    if(!FLH_EXT_ReadID())
+    {
+        Fault.Flash_ID_FAIL = TRUE;
+    }
     FLH_EXT_ReadONFI();
+    FLH_ClearBuffer(0);
+}
+
+/******************************************************************************/
+/* FLH_ClearBadBlocksTable
+ *
+ * The function clears the bad blocks table.
+/******************************************************************************/
+void FLH_ClearBadBlocksTable(void)
+{
+    MSC_CleanBuffer(BadBlocks,sizeof(BadBlocks));
+}
+
+/******************************************************************************/
+/* FLH_CheckForBadBlocks
+ *
+ * The function writes and reads to every page of data to check for bad blocks.
+/******************************************************************************/
+void FLH_CheckForBadBlocks(void)
+{
+    long i;
+    unsigned char status;
+    unsigned char BadBlocksPlace = 0;
+    
+    FLH_ClearBadBlocksTable();
+    
+    for(i=0;i<=0xFFFF;i++)
+    {
+        /* fill the flash IC with garbage*/
+        MSC_BufferFill(&FlashBuffer[0][0], i, 16, FLASH_BUFFER_SIZE);
+        status = FLH_EXT_WritePageVerify(i,&FlashBuffer[0][0]);
+        if(!status)
+        {
+            BadBlocks[BadBlocksPlace] = i;
+            BadBlocksPlace++;
+            if(BadBlocksPlace >= NUMBER_BAD_BLOCKS)
+            {
+                /* bad blocks table is more than full */
+                Fault.Flash_BadBlocksLimit_FAIL = TRUE;
+            }
+        }
+        MSC_RedLEDTOGGLE();
+    }  
+}
+
+/******************************************************************************/
+/* FLH_ClearBuffer
+ *
+ * The function clears the flash buffer page.
+/******************************************************************************/
+void FLH_ClearBuffer(unsigned char page)
+{
+    unsigned short i;
+    
+    for(i=0;i<FLASH_BUFFER_SIZE;i++)
+    {
+        FlashBuffer[page][i] = 0;
+    }
 }
 
 /******************************************************************************/
@@ -94,7 +160,8 @@ void FLH_EXT_WriteProtect(unsigned char state)
 void FLH_EXT_WriteEnable(void)
 {
     LATD &= ~ExtFlash_WE; 
-    MSC_DelayUS(WRITE_DELAY);
+    Nop();
+    Nop();
     LATD |= ExtFlash_WE;         
 }
 
@@ -106,7 +173,8 @@ void FLH_EXT_WriteEnable(void)
 void FLH_EXT_ReadEnable(void)
 {
         LATD &= ~ExtFlash_RE;
-        MSC_DelayUS(READ_DELAY);
+        Nop();
+        Nop();
         LATD |= ExtFlash_RE;
 }
 
@@ -163,27 +231,21 @@ unsigned char FLH_EXT_ChipBusy(void)
  *
  * The function controls the Flash IC state.
 /******************************************************************************/
-void FLH_EXT_ChipState(unsigned char operation, unsigned char direction)
+void FLH_EXT_ChipState(unsigned char operation)
 {
     if(operation == COMMAND)
     {
-        if(direction == INPUT)
-        {
-            FLH_EXT_CommandLatchEnable(ON);
-            FLH_EXT_AddressLatchEnable(OFF);
-            FLH_EXT_WriteProtect(OFF);     // don't allow the flash IC to be written to
-            FLH_EXT_ChipSelect(ON);        // select the device
-        }
+        FLH_EXT_CommandLatchEnable(ON);
+        FLH_EXT_AddressLatchEnable(OFF);
+        FLH_EXT_WriteProtect(OFF);     // don't allow the flash IC to be written to
+        FLH_EXT_ChipSelect(ON);        // select the device
     }
     else if(operation == ADDRESS)
     {
-        if(direction == INPUT)
-        {
-            FLH_EXT_CommandLatchEnable(OFF);
-            FLH_EXT_AddressLatchEnable(ON);
-            FLH_EXT_WriteProtect(OFF);     // don't allow the flash IC to be written to
-            FLH_EXT_ChipSelect(ON);        // select the device
-        }
+        FLH_EXT_CommandLatchEnable(OFF);
+        FLH_EXT_AddressLatchEnable(ON);
+        FLH_EXT_WriteProtect(OFF);     // don't allow the flash IC to be written to
+        FLH_EXT_ChipSelect(ON);        // select the device     
     }
     else if(operation == DATA)
     {
@@ -245,7 +307,8 @@ unsigned char FLH_EXT_Read(void)
         TRISE |= 0x00FF; // turn all Flash IO pins to INPUT
     }
 
-    MSC_DelayUS(READ_DELAY);
+    Nop();
+    Nop();
     while(FLH_EXT_ChipBusy());
     FLH_EXT_ReadEnable();
     temp = PORTE & 0x00FF;
@@ -275,7 +338,7 @@ void FLH_EXT_ReadBuffer(unsigned long bytes, void* buffer)
  *
  * The function reads the Flash IC's ID.
 /******************************************************************************/
-void FLH_EXT_ReadID(void)
+unsigned char FLH_EXT_ReadID(void)
 {
     unsigned char temp;
     unsigned char Byte3;
@@ -283,17 +346,18 @@ void FLH_EXT_ReadID(void)
     
     FlashID.Valid = FALSE;
     
-    FLH_EXT_ChipState(COMMAND,INPUT);
+    FLH_EXT_ChipState(COMMAND);
     FLH_EXT_Write(0x90);
     
-    FLH_EXT_ChipState(ADDRESS,INPUT);
+    FLH_EXT_ChipState(ADDRESS);
     FLH_EXT_Write(0x00);
     
     /* first byte of ID */
+    FLH_EXT_ChipState(DATA);
     FlashID.ManuCode = FLH_EXT_Read(); 
     if(FlashID.ManuCode == 0)
     {
-        return;
+        return FAIL;
     }
     
     /* second byte of ID */
@@ -312,10 +376,10 @@ void FLH_EXT_ReadID(void)
         FlashID.Density = 4;
     }
     else
-    {
+    {        
         FlashID.ManuCode = 0;
         FlashID.Density = 0;
-        return;
+        return FAIL;
     }
     
     /* third byte of ID */
@@ -396,7 +460,7 @@ void FLH_EXT_ReadID(void)
     
     /* forth byte of ID */
     Byte4 = FLH_EXT_Read();
-    temp = Byte3 & 0x03; // bits 0 and 1
+    temp = Byte4 & 0x03; // bits 0 and 1
     if(temp == 0b00)
     {
         FlashID.PageSize = 1;       
@@ -488,7 +552,8 @@ void FLH_EXT_ReadID(void)
     }
 
     FlashID.Valid = TRUE;
-    FLH_EXT_ChipState(STANDBY,INPUT);
+    FLH_EXT_ChipState(STANDBY);
+    return PASS;
 }
 
 /******************************************************************************/
@@ -496,40 +561,113 @@ void FLH_EXT_ReadID(void)
  *
  * The function reads the Flash IC's ONFI Read Parameter Page.
 /******************************************************************************/
-void FLH_EXT_ReadONFI(void)
+unsigned char FLH_EXT_ReadONFI(void)
 {
     if(!FlashID.Valid)
     {
-        return;
+        return FAIL;
     }
     
-    FLH_EXT_ChipState(COMMAND,INPUT);
+    FLH_EXT_ChipState(COMMAND);
     FLH_EXT_Write(0xEC);
     
-    FLH_EXT_ChipState(ADDRESS,INPUT);
+    FLH_EXT_ChipState(ADDRESS);
     FLH_EXT_Write(0x00);
     
+    FLH_EXT_ChipState(DATA);
     FLH_EXT_ReadBuffer(sizeof(FlashONFI),&FlashONFI);
-    FLH_EXT_ChipState(STANDBY,INPUT);
+    FLH_EXT_ChipState(STANDBY);
+    
+    /* fix endianess*/
+    FlashONFI.BytesPerPage = MSC_Endian(FlashONFI.BytesPerPage, 32, BIG);
+    FlashONFI.SpareBytesPerPage = (unsigned short) MSC_Endian((unsigned long)FlashONFI.SpareBytesPerPage, 16, BIG);
+    FlashONFI.DataBytesPerPartialPage = MSC_Endian(FlashONFI.DataBytesPerPartialPage, 32, BIG);
+    FlashONFI.SpareBytesPerPartialPage = (unsigned short) MSC_Endian((unsigned long)FlashONFI.SpareBytesPerPartialPage, 16, BIG);
+    FlashONFI.PagesPerBlock = MSC_Endian(FlashONFI.PagesPerBlock, 32, MIDDLE);
+    FlashONFI.BlocksPerLUN = MSC_Endian(FlashONFI.BlocksPerLUN, 32, BIG);
+    return PASS;
 }
 
 /******************************************************************************/
-/* FLH_EXT_ReadPage
+/* FLH_EXT_BlockErase
  *
- * The function sends the sequence to Read a page.
+ * The function erases a block form the flash IC.
 /******************************************************************************/
-void FLH_EXT_ReadPage(unsigned short ColumnAddress, unsigned short PageAddress, unsigned short BlockAddress)
+unsigned char FLH_EXT_BlockErase(unsigned long RowAddress)
+{
+    unsigned char status;
+    unsigned char Row1 = RowAddress & 0x000000FF;
+    unsigned char Row2 = (RowAddress & 0x0000FF00) >> 8;
+    unsigned char Row3 = (RowAddress & 0x00FF0000) >> 16;
+    unsigned long timer;
+    
+    FLH_EXT_ChipState(COMMAND);
+    FLH_EXT_Write(0x60); // block erase
+    
+    FLH_EXT_ChipState(ADDRESS);
+    FLH_EXT_Write(Row1);
+    FLH_EXT_Write(Row2);
+    FLH_EXT_Write(Row3);
+    
+    FLH_EXT_ChipState(COMMAND);
+    FLH_EXT_Write(0xD0); // block erase
+    
+    timer = 0;
+    while(!FLH_EXT_ChipBusy())
+    {
+        timer++;
+        if(timer>ERASE_TIMEOUT)
+        {
+            FLH_EXT_ChipState(STANDBY);
+            return FAIL;
+        }
+    }
+    timer = 0;
+    while(FLH_EXT_ChipBusy())
+    {
+        timer++;
+        if(timer>ERASE_TIMEOUT)
+        {
+            FLH_EXT_ChipState(STANDBY);
+            return FAIL;
+        }
+    }
+    
+    Nop();
+    Nop();
+    
+    FLH_EXT_ChipState(COMMAND);
+    FLH_EXT_Write(0x70); // read status
+    
+    FLH_EXT_ChipState(DATA);
+    status = FLH_EXT_Read();
+    FLH_EXT_ChipState(STANDBY);
+    if(status & 0x01 != 0)
+    {
+        return FAIL;
+    }
+    return PASS;
+}
+
+/******************************************************************************/
+/* FLH_EXT_WriteAtAddress
+ *
+ * The function writes a page to the Flash IC at page and block address.
+/******************************************************************************/
+unsigned char FLH_EXT_WriteAtAddress(unsigned short PageAddress, unsigned short BlockAddress, unsigned char* buffer)
 {
     unsigned char first;
     unsigned char second;
     unsigned char third;
     unsigned char forth;
+    unsigned short pagesize = (FlashID.PageSize*1024);
+    unsigned short i;
+    unsigned char status;
+    unsigned long timer;
+    unsigned short ColumnAddress = 0;
     
-    FLH_EXT_ChipState(COMMAND,INPUT);
-    FLH_EXT_Write(0x00);
-    
-    FLH_EXT_ChipState(COMMAND,INPUT);
-    FLH_EXT_Write(0x30);
+    FLH_EXT_ChipState(COMMAND);
+    FLH_EXT_Write(0x80);    
     
     if(FlashID.Density == 1 && FlashID.Organization == 8)
     {
@@ -539,12 +677,203 @@ void FLH_EXT_ReadPage(unsigned short ColumnAddress, unsigned short PageAddress, 
         third |= (BlockAddress & 0x0003) << 6;
         forth = (BlockAddress & 0x03FC) >> 2;
         
-        FLH_EXT_ChipState(ADDRESS,INPUT);
+        FLH_EXT_ChipState(ADDRESS);
         FLH_EXT_Write(first);
         FLH_EXT_Write(second);
         FLH_EXT_Write(third);
         FLH_EXT_Write(forth);
     }
+     
+    FLH_EXT_ChipState(DATA);
+    for(i=0;i<pagesize;i++)
+    {
+        FLH_EXT_Write(*buffer);
+        buffer++;
+    }
+    
+    FLH_EXT_ChipState(COMMAND);
+    FLH_EXT_Write(0x10);
+    
+    timer=0;
+    while(!FLH_EXT_ChipBusy())
+    {
+        timer++;
+        if(timer>WRITE_TIMEOUT)
+        {
+            FLH_EXT_ChipState(STANDBY);
+            return FAIL;
+        }
+    }
+    timer=0;
+    while(FLH_EXT_ChipBusy())
+    {
+        timer++;
+        if(timer>WRITE_TIMEOUT)
+        {
+            FLH_EXT_ChipState(STANDBY);
+            return FAIL;
+        }
+    }
+    
+    Nop();
+    Nop();
+    
+    FLH_EXT_ChipState(COMMAND);
+    FLH_EXT_Write(0x70);
+    
+    FLH_EXT_ChipState(DATA);
+    status = FLH_EXT_Read();
+    FLH_EXT_ChipState(STANDBY);
+    if(status & 0x01 != 0)
+    {
+        return FAIL;
+    }
+    return PASS;
+}
+
+/******************************************************************************/
+/* FLH_EXT_WritePage
+ *
+ * The function writes a page to the Flash IC at the page number.
+/******************************************************************************/
+unsigned char FLH_EXT_WritePage(unsigned short page, unsigned char* buffer)
+{
+    unsigned char status;
+    
+    FLH_CheckEraseBlock(page);
+    if(FlashID.Density == 1 && FlashID.Organization == 8)
+    {       
+        status = FLH_EXT_WriteAtAddress(page & 0x003F, ((page & 0xFFC0)>>6),buffer);
+    }
+    return status;
+}
+
+/******************************************************************************/
+/* FLH_EXT_WritePageVerify
+ *
+ * The function writes a page to the Flash IC at the page number and verifies
+ *  the contents of the write.
+/******************************************************************************/
+unsigned char FLH_EXT_WritePageVerify(unsigned short page, unsigned char* buffer)
+{
+    unsigned char status;
+    unsigned short pagesize = (FlashID.PageSize*1024);
+    
+    FLH_CheckEraseBlock(page);
+    if(FlashID.Density == 1 && FlashID.Organization == 8)
+    {       
+        status = FLH_EXT_WriteAtAddress(page & 0x003F, ((page & 0xFFC0)>>6),buffer);
+        if(status)
+        {
+            FLH_EXT_ReadPage(page,&FlashBuffer[2][0]);
+            if(!MSC_BufferMatch(&FlashBuffer[2][0], buffer, pagesize))
+            {
+                status = FAIL;
+            }
+        }
+    }   
+    return status;
+}
+
+/******************************************************************************/
+/* FLH_EXT_ReadAtAddress
+ *
+ * The function reads a page from the Flash IC at page and block address..
+/******************************************************************************/
+unsigned char FLH_EXT_ReadAtAddress(unsigned short PageAddress, unsigned short BlockAddress, unsigned char* buffer)
+{
+    unsigned char first;
+    unsigned char second;
+    unsigned char third;
+    unsigned char forth;
+    unsigned short pagesize = (FlashID.PageSize*1024);
+    unsigned long timer;
+    unsigned short ColumnAddress = 0;
+    
+    FLH_EXT_ChipState(COMMAND);
+    FLH_EXT_Write(0x00);    
+    
+    if(FlashID.Density == 1 && FlashID.Organization == 8)
+    {
+        first = ColumnAddress & 0x00FF;
+        second = (ColumnAddress & 0x0F00) >> 8;
+        third = (PageAddress & 0x003F);
+        third |= (BlockAddress & 0x0003) << 6;
+        forth = (BlockAddress & 0x03FC) >> 2;
+        
+        FLH_EXT_ChipState(ADDRESS);
+        FLH_EXT_Write(first);
+        FLH_EXT_Write(second);
+        FLH_EXT_Write(third);
+        FLH_EXT_Write(forth);
+    }
+    FLH_EXT_ChipState(COMMAND);
+    FLH_EXT_Write(0x30);
+    
+    FLH_EXT_ChipState(DATA);
+    
+    timer=0;
+    while(!FLH_EXT_ChipBusy())
+    {
+        timer++;
+        if(timer>READ_TIMEOUT)
+        {
+            FLH_EXT_ChipState(STANDBY);
+            return FAIL;
+        }
+    }
+    timer=0;
+    while(FLH_EXT_ChipBusy())
+    {
+        timer++;
+        if(timer>READ_TIMEOUT)
+        {
+            FLH_EXT_ChipState(STANDBY);
+            return FAIL;
+        }
+    }
+    
+    Nop();
+    Nop();
+
+    FLH_EXT_ReadBuffer(pagesize,buffer);
+    FLH_EXT_ChipState(STANDBY);
+    return PASS;
+}
+
+/******************************************************************************/
+/* FLH_EXT_ReadPage
+ *
+ * The function reads a page from the Flash IC at the page number.
+/******************************************************************************/
+unsigned char FLH_EXT_ReadPage(unsigned short page, unsigned char* buffer)
+{
+    unsigned char status;
+    
+    if(FlashID.Density == 1 && FlashID.Organization == 8)
+    {
+        status = FLH_EXT_ReadAtAddress(page & 0x003F, ((page & 0xFFC0)>>6),buffer);
+    }
+    return status;
+}
+
+/******************************************************************************/
+/* FLH_CheckEraseBlock
+ *
+ * The function checks to see if the block being written to needs to first do
+ *  an erase. This occurs at the page/block boundary.
+/******************************************************************************/
+unsigned char FLH_CheckEraseBlock(unsigned short page)
+{
+    unsigned char status = PASS;
+    if(FlashID.Density == 1 && FlashID.Organization == 8)
+    {       
+        if(page % 64 == 0)
+        {
+            status =  FLH_EXT_BlockErase(((page & 0xFFC0)>>6));
+        }
+    }
+    return status;
 }
 
 /*-----------------------------------------------------------------------------/

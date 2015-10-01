@@ -182,34 +182,6 @@ void MSC_CleanBuffer(void* data, unsigned short bytes)
 }
 
 /******************************************************************************/
-/* MSC_CleanBufferChar
- *
- * This function sets an amount of data in the char array as 0.
-/******************************************************************************/
-void MSC_CleanBufferChar(unsigned char* data, unsigned short count)
-{
-    unsigned short i=0;
-    for(i=0; i<count;i++)
-    {
-        data[i]= 0;
-    }
-}
-
-/******************************************************************************/
-/* MSC_CleanBufferInt
- *
- * This function sets an amount of data in the array as 0.
-/******************************************************************************/
-void MSC_CleanBufferInt(unsigned int* data, unsigned short count)
-{
-    unsigned short i=0;
-    for(i=0; i<count;i++)
-    {
-        data[i]= 0;
-    }
-}
-
-/******************************************************************************/
 /* MSC_Round
  *
  * This function rounds to the nearest whole number.
@@ -218,7 +190,51 @@ double MSC_Round(double input)
 {
     long temp = (long)(input + 0.5);
 
-    return temp;
+    return (double) temp;
+}
+
+/******************************************************************************/
+/* MSC_BufferFill
+ *
+ * This function fills a buffer with dummy data.
+/******************************************************************************/
+void MSC_BufferFill(void* buffer, unsigned long data, unsigned char bits, unsigned short bytes)
+{
+    unsigned short i;
+    
+    if(bits == 8)
+    {
+        for(i=0;i<bytes;i++)
+        {
+            *(unsigned char*)buffer = (unsigned char) data;
+            (unsigned char*)buffer++;
+        }
+    }
+    else if(bits == 16)
+    {
+        for(i=0;i<bytes;i+=2)
+        {
+            *(unsigned char*)buffer = (unsigned char) (data >> 8);
+            (unsigned char*)buffer++;
+            *(unsigned char*)buffer = (unsigned char) data;
+            (unsigned char*)buffer++;
+        }
+    }
+    else
+    {
+        for(i=0;i<bytes;i+=4)
+        {
+            *(unsigned char*)buffer = (unsigned char) (data >> 24);
+            (unsigned char*)buffer++;
+            *(unsigned char*)buffer = (unsigned char) (data >> 16);
+            (unsigned char*)buffer++;
+            *(unsigned char*)buffer = (unsigned char) (data >> 8);
+            (unsigned char*)buffer++;
+            *(unsigned char*)buffer = (unsigned char) data;
+            (unsigned char*)buffer++;
+        }
+    }
+
 }
 
 /******************************************************************************/
@@ -235,29 +251,6 @@ void MSC_StringCopy(unsigned char* from,unsigned char* to)
         to++;
     }
     *to = *from;
-}
-
-/******************************************************************************/
-/* MSC_BufferCopy
- *
- * This function copies the 'from' array to the 'to' array.
-/******************************************************************************/
-void MSC_BufferCopy(unsigned char* from,unsigned char* to, unsigned short count, unsigned short shift)
-{
-    unsigned short i=0;
-    MSC_CleanBufferChar(to,count);
-    for(i = shift; i>0; i--)
-    {
-        *to = ' ';
-        to++;
-    }
-    while(*from != 0 && count >0)
-    {
-        *to = *from;
-        from++;
-        to++;
-        count--;
-    }
 }
 
 /******************************************************************************/
@@ -287,143 +280,41 @@ unsigned char MSC_StringMatch(void* This, void* That)
 }
 
 /******************************************************************************/
-/* MSC_StringMatchCaseInsensitive
+/* MSC_BufferMatch
  *
- * This function returns TRUE if the array 'This' matches the array 'That' and
- *  it is not case sensitive.
+ * This function checks to see if two buffers are equal.
 /******************************************************************************/
-unsigned char MSC_StringMatchCaseInsensitive(const unsigned char* This, const unsigned char* That)
+unsigned char MSC_BufferMatch(void* buffer1, void* buffer2, unsigned short bytes)
 {
-    unsigned char   tempThis,
-                    tempThat;
-
-    while(*This != 0)
+    unsigned short i;
+    
+    for(i=0;i<bytes;i++)
     {
-        tempThis = *This;
-        tempThat = *That;
-        MSC_LowercaseChar(&tempThis);
-        MSC_LowercaseChar(&tempThat);
-
-       if((tempThis != tempThat) || (tempThat == 0))
-       {
-           return FALSE;
-       }
-       This++;
-       That++;
+        if(*(unsigned char*)buffer1 != *(unsigned char*)buffer2)
+        {
+            return FAIL;
+        }
+        (unsigned char*)buffer1++;
+        (unsigned char*)buffer2++;
     }
-    if(*That == 0)
-    {
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
+    return PASS;
 }
 
 /******************************************************************************/
-/* MSC_StringContains
+/* MSC_BufferCopy
  *
- * This function returns TRUE if the array 'That' is contained in the array
- *   'This'.
+ * This function copies 'from' buffer to 'To' buffer.
 /******************************************************************************/
-unsigned char MSC_StringContains(const unsigned char* This, const unsigned char* That)
+void MSC_BufferCopy(void* From, void* To, unsigned short bytes)
 {
-    unsigned char   MatchCount = 0;
-    unsigned char   MatchAmount = 0;
-    unsigned char i = 0;
-
-    for(i=0;i<254;i++)
+    unsigned short i;
+    
+    for(i=0;i<bytes;i++)
     {
-        if(That[i] == 0)
-        {
-            MatchAmount = i;
-            break;
-        }
+        *(unsigned char*)To = *(unsigned char*)From;
+        (unsigned char*)To++;
+        (unsigned char*)From++;
     }
-    while(*This != 0)
-    {
-        if(*This == *That)
-        {
-           MatchCount++;
-           That++;
-           if(*That == 0)
-           {
-                if(MatchAmount == MatchCount)
-                {
-                    return TRUE;
-                }
-                return FALSE;
-           }
-           if(*This == 0)
-           {
-               return FALSE;
-           }
-        }
-        else
-        {
-            That -= MatchCount;
-            MatchCount = 0;
-        }
-        This++;
-    }
-    return FALSE;
-}
-
-/******************************************************************************/
-/* MSC_StringContainsCaseInsensitive
- *
- * This function returns TRUE if the array 'That' is contained in the array
- *   'This' and it is not case sensitive.
-/******************************************************************************/
-unsigned char MSC_StringContainsCaseInsensitive(const unsigned char* This,const unsigned char* That)
-{
-    unsigned char   tempThis,
-                    tempThat;
-    unsigned char   MatchCount = 0;
-    unsigned char   MatchAmount = 0;
-    unsigned char i = 0;
-
-    for(i=0;i<254;i++)
-    {
-        if(That[i] == 0)
-        {
-            MatchAmount = i;
-            break;
-        }
-    }
-    while(*This != 0)
-    {
-        tempThis = *This;
-        tempThat = *That;
-        MSC_LowercaseChar(&tempThis);
-        MSC_LowercaseChar(&tempThat);
-
-        if(tempThis == tempThat)
-        {
-           MatchCount++;
-           That++;
-           if(*That == 0)
-           {
-                if(MatchAmount == MatchCount)
-                {
-                    return TRUE;
-                }
-                return FALSE;
-           }
-           if(*This == 0)
-           {
-               return FALSE;
-           }
-        }
-        else
-        {
-            That -= MatchCount;
-            MatchCount = 0;
-        }
-        This++;
-    }
-    return FALSE;
 }
 
 /******************************************************************************/
@@ -454,559 +345,6 @@ void MSC_LowercaseChar(unsigned char* Input)
     {
         *Input += 32;
     }
-}
-
-/******************************************************************************/
-/* MSC_ReverseByte
- *
- * The function reads the value of 'This' and returns the reverse of the data.
-/******************************************************************************/
-unsigned char MSC_ReverseByte(unsigned char This)
-{
-    unsigned char temp=0;
-
-    temp += (This & 0x01) << 7;
-    temp += (This & 0x02) << 5;
-    temp += (This & 0x04) << 3;
-    temp += (This & 0x08) << 1;
-    temp += (This & 0x10) >> 1;
-    temp += (This & 0x20) >> 3;
-    temp += (This & 0x40) >> 5;
-    temp += (This & 0x80) >> 7;
-
-    return temp;
-}
-
-/******************************************************************************/
-/* MSC_ReverseInt
- *
- * The function reads the value of 'This' and returns the reverse of the data.
-/******************************************************************************/
-unsigned short MSC_ReverseInt(unsigned short This)
-{
-    unsigned short temp=0;
-
-    temp += (This & 0x0001) << 15;
-    temp += (This & 0x0002) << 13;
-    temp += (This & 0x0004) << 11;
-    temp += (This & 0x0008) << 9;
-    temp += (This & 0x0010) << 7;
-    temp += (This & 0x0020) << 5;
-    temp += (This & 0x0040) << 3;
-    temp += (This & 0x0080) << 1;
-    temp += (This & 0x0100) >> 1;
-    temp += (This & 0x0200) >> 3;
-    temp += (This & 0x0400) >> 5;
-    temp += (This & 0x0800) >> 7;
-    temp += (This & 0x1000) >> 9;
-    temp += (This & 0x2000) >> 11;
-    temp += (This & 0x4000) >> 13;
-    temp += (This & 0x8000) >> 15;
-
-    return temp;
-}
-
-/******************************************************************************/
-/* MSC_ReverseLong
- *
- * The function reads the value of 'This' and returns the reverse of the data.
-/******************************************************************************/
-unsigned long MSC_ReverseLong(unsigned long This)
-{
-    unsigned long temp=0;
-
-    temp += (This & 0x00000001) << 31;
-    temp += (This & 0x00000002) << 29;
-    temp += (This & 0x00000004) << 27;
-    temp += (This & 0x00000008) << 25;
-    temp += (This & 0x00000010) << 23;
-    temp += (This & 0x00000020) << 21;
-    temp += (This & 0x00000040) << 19;
-    temp += (This & 0x00000080) << 17;
-    temp += (This & 0x00000100) << 15;
-    temp += (This & 0x00000200) << 13;
-    temp += (This & 0x00000400) << 11;
-    temp += (This & 0x00000800) << 9;
-    temp += (This & 0x00001000) << 7;
-    temp += (This & 0x00002000) << 5;
-    temp += (This & 0x00004000) << 3;
-    temp += (This & 0x00008000) << 1;
-    temp += (This & 0x00010000) >> 1;
-    temp += (This & 0x00020000) >> 3;
-    temp += (This & 0x00040000) >> 5;
-    temp += (This & 0x00080000) >> 7;
-    temp += (This & 0x00100000) >> 9;
-    temp += (This & 0x00200000) >> 11;
-    temp += (This & 0x00400000) >> 13;
-    temp += (This & 0x00800000) >> 15;
-    temp += (This & 0x01000000) >> 17;
-    temp += (This & 0x02000000) >> 19;
-    temp += (This & 0x04000000) >> 21;
-    temp += (This & 0x08000000) >> 23;
-    temp += (This & 0x10000000) >> 25;
-    temp += (This & 0x20000000) >> 27;
-    temp += (This & 0x40000000) >> 29;
-    temp += (This & 0x80000000) >> 31;
-
-    return temp;
-}
-
-/******************************************************************************/
-/* MSC_GetNumber
- *
- * This function resembles scanf. Use 0x...for hex number.
-/******************************************************************************/
-unsigned char MSC_GetNumber(unsigned char* This, unsigned char CommaNumber, long* result)
-{
-    unsigned char i =0;
-    long temp =0;
-    unsigned char negative =0;
-    unsigned char tempCommaNumber = 1;
-    unsigned char count =0;
-    unsigned char Hex = FALSE;
-    unsigned char tempThis;
-
-    while(*This != 0)
-    {
-        if(*This == '0')
-        {
-            count++;
-            This++;
-            if(*This == 'x' || *This == 'X')
-            {
-                This++;
-                if(*This >='0' && *This <='9')
-                {
-                    Hex = TRUE;
-                }
-            }
-        }
-        count++;
-        This++;
-    }
-    This-=count;
-
-    SCAN:while(*This != '=' && *This != ',' && *This != 0)
-    {
-        /* go all the way to the first comma */
-        This++;
-    }
-    if(*This == 0)
-    {
-        return NOCOMMA; // there is no equal
-    }
-    else if(*This != '=' || *This != ',')
-    {
-        if(tempCommaNumber < CommaNumber)
-        {
-            tempCommaNumber++;
-            This++;
-            goto SCAN;
-        }
-    }
-    if(*This == 0)
-    {
-        return NOCOMMA; // there is no equal
-    }
-    This++;
-    if(*This == ' ')
-    {
-      This++;
-      //move past the space
-    }
-    else if (*This == '=' || *This == ',')
-    {
-         return DOUBLECOMMA; //double equal
-    }
-    else if(*This == '-')
-    {
-      negative = 1;
-      This++;
-      //move past the space
-    }
-    else if(*This == 0)
-    {
-        return NOVALUE; // there is no value after the equal
-    }
-    if(Hex)
-    {
-        negative = FALSE;
-        while(*This != 'x' && *This != 'X')
-        {
-            /* go to first number after the x */
-            This++;
-        }
-        This++;
-    }
-    while(*This != 0 && *This != ' ' && *This != ',' && *This != '=')
-    {
-        if(!Hex)
-        {
-            if(*This >=48 && *This <= 57)
-            {
-                temp = temp * 10;
-                temp += *This - 48;
-                i++;
-                if(i>32)
-                {
-                    return TOOBIG;//number too big
-                }
-            }
-        }
-        else
-        {
-            if((*This >=48 && *This <= 57) || (*This >=65 && *This <= 70) || (*This >= 97 && *This <= 102))
-            {
-                temp <<= 4;
-                tempThis = *This;
-                if(IsLetter(tempThis))
-                {
-                    MSC_LowercaseChar(&tempThis);
-                    temp += (tempThis - 87);
-                }
-                else
-                {
-                    temp += (*This - 48);
-                }
-                i++;
-                if(i>32)
-                {
-                    return TOOBIG;//number too big
-                }
-            }
-        }
-        This++;
-    }
-    if(negative)
-    {
-        temp = (temp * -1);
-    }
-    *result = temp;
-    return NoError;
-}
-
-/******************************************************************************/
-/* MSC_GetNumberUnsigned
- *
- * This function resembles scanf. Use 0x...for hex number.
-/******************************************************************************/
-unsigned char MSC_GetNumberUnsigned(unsigned char* This, unsigned char CommaNumber, unsigned long* result)
-{
-    unsigned char i =0;
-    long temp =0;
-    unsigned char tempCommaNumber = 1;
-    unsigned char count =0;
-    unsigned char Hex = FALSE;
-    unsigned char tempThis;
-
-    while(*This != 0)
-    {
-        if(*This == '0')
-        {
-            count++;
-            This++;
-            if(*This == 'x' || *This == 'X')
-            {
-                This++;
-                if(*This >='0' && *This <='9')
-                {
-                    Hex = TRUE;
-                }
-            }
-        }
-        count++;
-        This++;
-    }
-    This-=count;
-
-    SCAN:while(*This != '=' && *This != ',' && *This != 0)
-    {
-        /* go all the way to the first comma */
-        This++;
-    }
-    if(*This == 0)
-    {
-        return NOCOMMA; // there is no equal
-    }
-    else if(*This != '=' || *This != ',')
-    {
-        if(tempCommaNumber < CommaNumber)
-        {
-            tempCommaNumber++;
-            This++;
-            goto SCAN;
-        }
-    }
-    if(*This == 0)
-    {
-        return NOCOMMA; // there is no equal
-    }
-    This++;
-    if(*This == ' ')
-    {
-      This++;
-      //move past the space
-    }
-    else if (*This == '=' || *This == ',')
-    {
-         return DOUBLECOMMA; //double equal
-    }
-    else if(*This == '-')
-    {
-        return NEGATIVE; // this is negative
-      //move past the space
-    }
-    else if(*This == 0)
-    {
-        return NOVALUE; // there is no value after the equal
-    }
-    if(Hex)
-    {
-        while(*This != 'x' && *This != 'X')
-        {
-            /* go to first number after the x */
-            This++;
-        }
-        This++;
-    }
-    while(*This != 0 && *This != ' ' && *This != ',' && *This != '=')
-    {
-        if(!Hex)
-        {
-            if(*This >=48 && *This <= 57)
-            {
-                temp = temp * 10;
-                temp += *This - 48;
-                i++;
-                if(i>32)
-                {
-                    return TOOBIG;//number too big
-                }
-            }
-        }
-        else
-        {
-            if((*This >=48 && *This <= 57) || (*This >=65 && *This <= 70) || (*This >= 97 && *This <= 102))
-            {
-                temp <<= 4;
-                tempThis = *This;
-                if(IsLetter(tempThis))
-                {
-                    MSC_LowercaseChar(&tempThis);
-                    temp += (tempThis - 87);
-                }
-                else
-                {
-                    temp += (*This - 48);
-                }
-                i++;
-                if(i>32)
-                {
-                    return TOOBIG;//number too big
-                }
-            }
-        }
-        This++;
-    }
-    *result = temp;
-    return NoError;
-}
-
-/******************************************************************************/
-/* MSC_StringAddEqual
- *
- * This function puts an equal sign between letters and a number value.
-/******************************************************************************/
-unsigned char MSC_StringAddEqual(unsigned char* Input)
-{
-    unsigned char i;
-    unsigned char j =0;
-    unsigned char firstnumber = 255;
-    unsigned char temp[255];
-    unsigned char NullPosition;
-    for(i = 0; i<255; i++)
-    {
-        if(*Input == 0)
-        {
-            NullPosition = i;
-            break;
-        }
-        Input++;
-    }
-    Input-=NullPosition;
-    MSC_CleanBufferChar(temp,NullPosition +1);
-    i = 0;
-    while(Input[i] != 0)
-    {
-            if(((Input[i] >= 48) && (Input[i] <= 57)) || (Input[i] == '-'))
-            {
-                firstnumber = i;
-                break;
-            }
-            i++;
-    }
-    if(firstnumber == 255)
-    {
-        /* there is no number*/
-        return FALSE;
-    }
-    for(j=0;j<firstnumber;j++)
-    {
-           temp[j] = Input[j];
-    }
-    temp[firstnumber] = '=';
-    for(j = (firstnumber);j<255;j++)
-    {
-        temp[j+1] = Input[j];
-        if(Input[j] == 0)
-        {
-            break;
-        }
-    }
-    MSC_BufferCopy(temp,Input,NullPosition +1,0);
-    return TRUE;
-}
-
-/******************************************************************************/
-/* MSC_GetStringAfterComma
- *
- * This function resembles scanf. Use 0x...for hex number.
-/******************************************************************************/
-unsigned char MSC_GetStringAfterComma(unsigned char* This, unsigned char CommaNumber, unsigned char* result)
-{
-    unsigned char tempCommaNumber = 1;
-    unsigned char count = 0;
-
-    SCAN:while(*This != ',' && *This != 0)
-    {
-        /* go all the way to the first comma */
-        This++;
-    }
-    if(*This == 0)
-    {
-        return NOCOMMA; // there is no equal
-    }
-    else if(*This != ',')
-    {
-        if(tempCommaNumber < CommaNumber)
-        {
-            tempCommaNumber++;
-            This++;
-            goto SCAN;
-        }
-    }
-    if(*This == 0)
-    {
-        return NOCOMMA; // there is no equal
-    }
-    This++;
-    if(*This == ' ')
-    {
-      This++;
-      //move past the space
-    }
-    else if (*This == ',')
-    {
-         return DOUBLECOMMA; //double equal
-    }
-    else if(*This == 0)
-    {
-        return NOVALUE; // there is no value after the equal
-    }
-    while(*This != 0 && *This != ' ' && count < 10)
-    {
-        *result = *This;
-        result++;
-        This++;
-        count++;
-    }
-    return NoError;
-}
-
-/******************************************************************************/
-/* MSC_DB_Round
- *
- * This function rounds a double to the nearest whole number.
-/******************************************************************************/
-double MSC_DB_Round(double Input)
-{
-    double temp1;
-    long temp;
-    
-    temp = (long) (Input + 0.5);
-    temp1 = (double) temp;
-    return temp1;
-}
-
-/******************************************************************************/
-/* MSC_Round
- *
- * This function rounds a long to the specified number of places.
- * MSC_Round(11111,0) = 11111
- * MSC_Round(11111,1) = 11110
- * MSC_Round(11111,2) = 11100
-/******************************************************************************/
-long MSC_LG_Round(long Input,unsigned char places)
-{
-    long temp1,temp2,temp3,temp4, temp5, temp6, temp7;
-    unsigned char negative = FALSE;
-    long temp_Input;
-
-    if(Input < 0)
-    {
-        negative = TRUE;
-        temp_Input = Input * -1;
-    }
-    else
-    {
-        temp_Input = Input;
-    }
-
-    redo:
-    if(!places)
-    {
-        return Input;
-    }
-    temp1   = pow(10,places);
-    temp2   = temp_Input / temp1;
-    temp3   = temp2 * temp1;
-    temp4   = temp_Input - temp3;
-    temp5   = temp1 >> 1;
-    temp6   = temp1 - temp4;
-    if(temp1 > temp_Input)
-    {
-        places--;
-        goto redo;
-    }
-    if(temp5 >= temp6)
-    {
-        temp7 = temp_Input + temp6;
-    }
-    else
-    {
-        temp7 = temp3;
-    }
-    if(negative)
-    {
-        temp7 *= -1;
-    }
-    return temp7;
-}
-
-/******************************************************************************/
-/* MSC_Scale
- *
- * This function scales a number from a,b to c,d.
-/******************************************************************************/
-long MSC_Scale(long Input, long InputRangeLow, long InputRangeHigh, long OutputRangeLow, long OutputRangeHigh)
-{
-    long DiffInput;
-    long DiffOutput;
-    double tempScale;
-    DiffInput = InputRangeHigh - InputRangeLow + 1;
-    DiffOutput = (OutputRangeHigh - OutputRangeLow + 1);
-    tempScale = (double)(DiffOutput) / (double)(DiffInput);
-    return (long)((((double)Input - (double)InputRangeLow) * tempScale) + (double)OutputRangeLow);     
 }
 
 /******************************************************************************/
@@ -1058,103 +396,40 @@ unsigned short MSC_BCDtoHEX(unsigned short input)
 }
 
 /******************************************************************************/
-/* MSC_BufferMatch
+/* MSC_Endian
  *
- * This function checks to see if wach array match.
+ * This function converts a number from big endian to little endian or
+ * vice versa.
 /******************************************************************************/
-unsigned char MSC_BufferMatch(unsigned char* This, unsigned char* That, unsigned short size)
+unsigned long MSC_Endian(unsigned long number, unsigned char bits, unsigned char style)
 {
-    unsigned short i;
-    for (i=0; i < size; i++)
+    unsigned char temp1, temp2,temp3,temp4;
+
+    if(bits == 16)
     {
-        if(This[i] != That[i])
+        temp1 = (unsigned char) (number & 0x000000FF);
+        temp2 = (unsigned char) ((number & 0x0000FF00) >> 8);    
+        return (temp2 | (temp1 << 8));
+    }
+    else
+    {
+        temp1 = (unsigned char) (number & 0x000000FF);
+        temp2 = (unsigned char) ((number & 0x0000FF00) >> 8);   
+        temp3 = (unsigned char) ((number & 0x00FF0000) >> 16); 
+        temp4 = (unsigned char) ((number & 0xFF000000) >> 24); 
+        if(style == LITTLE || style == BIG)
         {
-            return FALSE;
+
+            return (temp4 | (temp3 << 8) | (temp2 << 16) | (temp1 << 24));
+        }
+        else
+        {
+            /* Middle endian */
+            return (temp2 | (temp1 << 8) | (temp4 << 16) | (temp3 << 24));
         }
     }
-    return TRUE;
-}
 
-/******************************************************************************/
-/* MSC_TestFunctionPointer
- *
- * This function checks to see if a function pointer it is called correctly.
-/******************************************************************************/
-void MSC_TestFunctionPointer(void)
-{
-    Nop();
-}
 
-/******************************************************************************/
-/* MSC_EndianInt
- *
- * This function converts a 2 byte number from big endian to little endian or
- * vice versa.
-/******************************************************************************/
-unsigned short MSC_EndianInt(unsigned short number)
-{
-    unsigned char temp1, temp2;
-
-    temp1 = (unsigned char) (number & 0x00FF);
-    temp2 = (unsigned char) (number & 0xFF00) >> 8;
-
-    return (temp2 | (temp1 << 8));
-}
-
-/******************************************************************************/
-/* MSC_EndianIntArray
- *
- * This function converts an array from big endian to little endian or
- * vice versa.
-/******************************************************************************/
-unsigned short MSC_EndianIntArray(unsigned char* buffer)
-{
-    unsigned char temp1, temp2;
-
-    temp1 = *buffer;
-    buffer++;
-    temp2 = *buffer;
-
-    return (temp1 | ((unsigned int) temp2 << 8));
-}
-
-/******************************************************************************/
-/* MSC_EndianLong
- *
- * This function converts a 4 byte number from big endian to little endian or
- * vice versa.
-/******************************************************************************/
-unsigned long MSC_EndianLong(unsigned long number)
-{
-    unsigned char temp1, temp2, temp3, temp4;
-
-    temp1 = (unsigned char) (number & 0x000000FF);
-    temp2 = (unsigned char) (number & 0x0000FF00) >> 8;
-    temp3 = (unsigned char) (number & 0x00FF0000) >> 16;
-    temp4 = (unsigned char) (number & 0xFF000000) >> 24;
-
-    return ((temp4 << 24) | (temp3 << 16) | (temp2 << 8) | temp1);
-}
-
-/******************************************************************************/
-/* MSC_EndianLongArray
- *
- * This function converts an array from big endian to little endian or
- * vice versa.
-/******************************************************************************/
-unsigned long MSC_EndianLongArray(unsigned char* buffer)
-{
-    unsigned char temp1, temp2, temp3, temp4;
-
-    temp1 = *buffer;
-    buffer++;
-    temp2 = *buffer;
-    buffer++;
-    temp3 = *buffer;
-    buffer++;
-    temp4 = *buffer;
-
-    return ((unsigned long)temp1 | ((unsigned long) temp2 << 8) | ((unsigned long) temp3 << 16) | ((unsigned long) temp4 << 24));
 }
 
 /*-----------------------------------------------------------------------------/

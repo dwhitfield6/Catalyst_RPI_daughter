@@ -198,6 +198,8 @@ void InitI2C(void)
 {
     I2C_RASP_DRV_Module(OFF);
     I2C_RASP_GEN_Module(OFF);
+    I2C1CONbits.SIDL = 0; // Continue module operation in Idle mode
+    I2C2CONbits.SIDL = 0; // Continue module operation in Idle mode
     I2C1CONbits.A10M = 0; // I2CxADD register is a 7-bit slave address
     I2C2CONbits.A10M = 0; // I2CxADD register is a 7-bit slave address
     IPC8bits.I2C1IP = 3; // interrupt priority is 3
@@ -418,7 +420,7 @@ void I2C_RASP_DRV_SetParameters(unsigned long Clock)
     }
     
     /* Set clock */
-    temp = (unsigned long) MSC_DB_Round((( 1.0 /(2*(double)Clock) - TPGD)* (double) PBCLK) - 2);
+    temp = (unsigned long) MSC_Round((( 1.0 /(2*(double)Clock) - TPGD)* (double) PBCLK) - 2);
     if(temp < 2)
     {
         temp = 2;
@@ -446,7 +448,7 @@ void I2C_RASP_GEN_SetParameters(unsigned long Clock)
     }
     
     /* Set clock */
-    temp = (unsigned long) MSC_DB_Round((( 1.0 /(2*(double)Clock) - TPGD)* (double) PBCLK) - 2);
+    temp = (unsigned long) MSC_Round((( 1.0 /(2*(double)Clock) - TPGD)* (double) PBCLK) - 2);
     if(temp < 2)
     {
         temp = 2;

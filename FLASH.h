@@ -91,12 +91,38 @@ typedef struct __attribute__((packed)) onfi
 }ONFITYPE;
 
 /******************************************************************************/
-/* Delays
+/* FLASH_BUFFER_SIZE
  *
- * This defines the delays in microseconds to delay for each state.
+ * This defines the size of the flash buffer which has to be greater than the
+ *  page size.
 /******************************************************************************/
-#define WRITE_DELAY     10
-#define READ_DELAY      10
+#define FLASH_BUFFER_SIZE   2048
+
+/******************************************************************************/
+/* FLASH_BUFFER_PAGES
+ *
+ * This defines the number of Flash buffer pages. One page is for reading from
+ * the UART, one is for writing to the Flash IC, and one is for the write
+ *  verify.
+/******************************************************************************/
+#define FLASH_BUFFER_PAGES   3
+
+/******************************************************************************/
+/* NUMBER_BAD_BLOCKS
+ *
+ * This defines the maximum number of bad blocks before we call the flash IC
+ *  dead.
+/******************************************************************************/
+#define NUMBER_BAD_BLOCKS   50
+
+/******************************************************************************/
+/* Timeouts
+ *
+ * This defines number of ticks to wait before the device times out.
+/******************************************************************************/
+#define ERASE_TIMEOUT   10000
+#define WRITE_TIMEOUT   10000
+#define READ_TIMEOUT    10000
         
 /******************************************************************************/
 /* Chip states
@@ -113,13 +139,18 @@ typedef struct __attribute__((packed)) onfi
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+extern unsigned char FlashBuffer[FLASH_BUFFER_PAGES][FLASH_BUFFER_SIZE];
 extern IDTYPE FlashID;
 extern ONFITYPE FlashONFI;
+extern unsigned short BadBlocks[NUMBER_BAD_BLOCKS];
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
 void InitExtFlash(void);
+void FLH_ClearBadBlocksTable(void);
+void FLH_CheckForBadBlocks(void);
+void FLH_ClearBuffer(unsigned char page);
 void FLH_EXT_ChipSelect(unsigned char state);
 void FLH_EXT_WriteProtect(unsigned char state);
 void FLH_EXT_WriteEnable(void);
@@ -127,12 +158,19 @@ void FLH_EXT_ReadEnable(void);
 void FLH_EXT_AddressLatchEnable(unsigned char state);
 void FLH_EXT_CommandLatchEnable(unsigned char state);
 unsigned char FLH_EXT_ChipBusy(void);
-void FLH_EXT_ChipState(unsigned char operation, unsigned char direction);
+void FLH_EXT_ChipState(unsigned char operation);
 void FLH_EXT_Write(unsigned char command);
 void FLH_EXT_WriteBuffer(unsigned long bytes, unsigned char* buffer);
 unsigned char FLH_EXT_Read(void);
 void FLH_EXT_ReadBuffer(unsigned long bytes, void* buffer);
-void FLH_EXT_ReadID(void);
-void FLH_EXT_ReadONFI(void);
-void FLH_EXT_ReadPage(unsigned short ColumnAddress, unsigned short PageAddress, unsigned short BlockAddress);
+unsigned char FLH_EXT_ReadID(void);
+unsigned char FLH_EXT_ReadONFI(void);
+unsigned char FLH_EXT_BlockErase(unsigned long RowAddress);
+unsigned char FLH_EXT_WriteAtAddress(unsigned short PageAddress, unsigned short BlockAddress, unsigned char* buffer);
+unsigned char FLH_EXT_WritePage(unsigned short page, unsigned char* buffer);
+unsigned char FLH_EXT_WritePageVerify(unsigned short page, unsigned char* buffer);
+unsigned char FLH_EXT_ReadAtAddress(unsigned short PageAddress, unsigned short BlockAddress, unsigned char* buffer);
+unsigned char FLH_EXT_ReadPage(unsigned short page, unsigned char* buffer);
+unsigned char FLH_CheckEraseBlock(unsigned short page);
+
 #endif	/* FLASH_H */

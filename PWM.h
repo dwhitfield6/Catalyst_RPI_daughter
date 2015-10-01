@@ -96,7 +96,7 @@ inline void PWM_SetRed(unsigned short Value);
 inline void PWM_SetGreen(unsigned short Value);
 inline void PWM_SetBlue(unsigned short Value);
 inline void PWM_SetRGB(unsigned short Red, unsigned short Green, unsigned short Blue);
-void PWM_SetColor(unsigned short Color, unsigned char type, unsigned int speed);
-void PWM_SetAction(unsigned char type, unsigned int speed);
+void PWM_SetColor(unsigned short Color, unsigned char type, unsigned short speed);
+void PWM_SetAction(unsigned char type, unsigned short speed);
 
 #endif	/* PWM_H */

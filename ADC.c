@@ -100,6 +100,7 @@ inline unsigned char ADC_Module(unsigned char state)
 void InitADC(void)
 {
     ADC_Module(OFF);
+    AD1CON1bits.ADSIDL = 0; // Continue module operation in Idle mode
     AD1CON2bits.VCFG = 0x000; // reference voltage is AVDD and AVSS
     AD1CON3bits.ADCS = 0b00111111; // 64 * TCY ~1.6uS
     AD1CON2bits.SMPI = 0b0000; // Interrupts at the completion of conversion for each sample/convert sequence

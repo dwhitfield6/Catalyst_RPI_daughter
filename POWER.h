@@ -69,5 +69,6 @@ inline unsigned char PWR_RASP_Connected(void);
 void InitComparator(void);
 void PWR_ReadComparator(void);
 void PWR_StatusUpdate(void);
+void InitLowPower(void);
 
 #endif	/* POWER_H */

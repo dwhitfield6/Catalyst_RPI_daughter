@@ -151,6 +151,9 @@ void InitPWM(void)
     OC2CONbits.ON = TRUE;    // Turn off output compare peripheral
     OC3CONbits.ON = TRUE;    // Turn off output compare peripheral
 #endif
+    OC1CONbits.SIDL = 0; // Continue operation in Idle mode
+    OC2CONbits.SIDL = 0; // Continue operation in Idle mode
+    OC3CONbits.SIDL = 0; // Continue operation in Idle mode
     
     OC1CONbits.OCM = 0b110; // PWM mode on OC1; Fault pin disabled
     OC2CONbits.OCM = 0b110; // PWM mode on OC2; Fault pin disabled
@@ -176,7 +179,7 @@ void InitPWM(void)
  *
  * Sets the LED action like fade or blink and sets the speed.
 /******************************************************************************/
-void PWM_SetAction(unsigned char type, unsigned int speed)
+void PWM_SetAction(unsigned char type, unsigned short speed)
 {
     TMR_EnableTimer4(OFF);
     PWM_Place = 0;
@@ -209,7 +212,7 @@ void PWM_SetAction(unsigned char type, unsigned int speed)
  *
  * Sets the LED Color by name.
 /******************************************************************************/
-void PWM_SetColor(unsigned short Color, unsigned char type, unsigned int speed)
+void PWM_SetColor(unsigned short Color, unsigned char type, unsigned short speed)
 {
     TMR_EnableTimer4(OFF);
     switch (Color)

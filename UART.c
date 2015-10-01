@@ -293,12 +293,19 @@ void InitUART(void)
     U4RXR = RS232_FEMALE_RX_Pin;        // U4RX
     U5RXR = RS232_FEMALE_CTS_Pin;       // U5RX
     
+    /* Operation during Idle mode */
+    U1MODEbits.SIDL = 0; // Continue operation in Idle mode
+    U2MODEbits.SIDL = 0; // Continue operation in Idle mode
+    U3MODEbits.SIDL = 0; // Continue operation in Idle mode
+    U4MODEbits.SIDL = 0; // Continue operation in Idle mode
+    U5MODEbits.SIDL = 0; // Continue operation in Idle mode
+    
     /* Clean receive buffers */
-    MSC_CleanBufferChar(RX1_Buffer, UART1_RECEIVE_SIZE);
-    MSC_CleanBufferChar(RX2_Buffer, UART2_RECEIVE_SIZE);
-    MSC_CleanBufferChar(RX3_Buffer, UART3_RECEIVE_SIZE);
-    MSC_CleanBufferChar(RX4_Buffer, UART4_RECEIVE_SIZE);
-    MSC_CleanBufferChar(RX5_Buffer, UART5_RECEIVE_SIZE);
+    MSC_CleanBuffer(RX1_Buffer, UART1_RECEIVE_SIZE);
+    MSC_CleanBuffer(RX2_Buffer, UART2_RECEIVE_SIZE);
+    MSC_CleanBuffer(RX3_Buffer, UART3_RECEIVE_SIZE);
+    MSC_CleanBuffer(RX4_Buffer, UART4_RECEIVE_SIZE);
+    MSC_CleanBuffer(RX5_Buffer, UART5_RECEIVE_SIZE);
 
     /* Set up the Male RS232 port */
     UART_RS232_MaleParameters(115200, NO, 1);
@@ -573,7 +580,7 @@ void UART_SetParameters1(unsigned long Baud,unsigned char Parity, unsigned char 
     
     /* Set Baud clock */
     U1MODEbits.BRGH = 1; // High speed mode
-    U1BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(4.0* (double)Baud)) - 1.0);
+    U1BRG = (unsigned long) MSC_Round(((double)PBCLK/(4.0* (double)Baud)) - 1.0);
 }
 
 /******************************************************************************/
@@ -614,7 +621,7 @@ void UART_SetParameters2(unsigned long Baud,unsigned char Parity, unsigned char 
     
     /* Set Baud clock */
     U2MODEbits.BRGH = 1; // High speed mode
-    U2BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
+    U2BRG = (unsigned long) MSC_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
 }
 
 /******************************************************************************/
@@ -655,7 +662,7 @@ void UART_SetParameters3(unsigned long Baud,unsigned char Parity, unsigned char 
     
     /* Set Baud clock */
     U3MODEbits.BRGH = 1; // High speed mode
-    U3BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
+    U3BRG = (unsigned long) MSC_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
 }
 
 /******************************************************************************/
@@ -696,7 +703,7 @@ void UART_SetParameters4(unsigned long Baud,unsigned char Parity, unsigned char 
     
     /* Set Baud clock */
     U4MODEbits.BRGH = 1; // High speed mode
-    U4BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
+    U4BRG = (unsigned long) MSC_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
 }
 
 /******************************************************************************/
@@ -737,7 +744,7 @@ void UART_SetParameters5(unsigned long Baud,unsigned char Parity, unsigned char 
     
     /* Set Baud clock */
     U5MODEbits.BRGH = 1; // High speed mode
-    U5BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
+    U5BRG = (unsigned long) MSC_Round(((double)PBCLK/(4.0 * (double) Baud)) - 1.0);
 }
 
 /******************************************************************************/

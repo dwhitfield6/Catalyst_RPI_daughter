@@ -229,7 +229,7 @@ inline void TMR_ResetTimer5(void)
  *
  * Sets the PR register for timer 4 to compare.
 /******************************************************************************/
-inline void TMR_SetTimer4(unsigned int time)
+inline void TMR_SetTimer4(unsigned short time)
 {
     PR4 = time;
 }
@@ -239,7 +239,7 @@ inline void TMR_SetTimer4(unsigned int time)
  *
  * Sets the PR register for timer 5 to compare.
 /******************************************************************************/
-inline void TMR_SetTimer5(unsigned int time)
+inline void TMR_SetTimer5(unsigned short time)
 {
     PR5 = time;
 }
@@ -255,6 +255,9 @@ inline void TMR_SetTimer5(unsigned int time)
 /******************************************************************************/
 void InitTIMERS(void)
 {
+    T2CONbits.SIDL = 0; // Continue operation even in Idle mode
+    T4CONbits.SIDL = 0; // Continue operation even in Idle mode
+    T5CONbits.SIDL = 0; // Continue operation even in Idle mode
     InitTIMER2();
     InitTIMER4();
     InitTIMER5();

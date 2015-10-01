@@ -29,6 +29,11 @@
  *                            is harder to lose.
  *                          Added timer to automatically take ADC readings of
  *                            the voltage rails.
+ *                          Added flash IC read/write functions.
+ *                          Wrote function to check for bad blocks on the
+ *                            flash IC.
+ *                          Added functions to calculate time differences from
+ *                            the RTCC.                          
 /******************************************************************************/
 
 /******************************************************************************/
@@ -95,7 +100,10 @@ short main (void)
     
     while(1)
     {
-
+        MSC_RedLEDON();
+        UART_RS232_MaleDriver(OFF);
+        UART_RS232_FemaleDriver(OFF);
+        SYS_Idle();
     }
 }
 /*-----------------------------------------------------------------------------/

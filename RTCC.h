@@ -25,18 +25,33 @@
 /******************************************************************************/
 /* Structures                                                                 */
 /******************************************************************************/
-typedef struct time
+typedef struct _time
 {
-    unsigned char Second;
-    unsigned char Minute;
-    unsigned char Hour_24;
-    unsigned char Hour_12;
-    unsigned char PM_nAM;
-    unsigned char Weekday;
-    unsigned char Date;
-    unsigned char Month;
-    unsigned int Year;
+    char Second;
+    char Minute;
+    char Hour_24;
+    char Hour_12;
+    char PM_nAM;
+    char Weekday;
+    char Date;
+    char Month;
+    short Year;
 }TIMETYPE;
+
+typedef struct _difftime
+{
+    char Seconds;
+    char Minutes;
+    char Hours;
+    long Days;
+    double TotalSeconds;
+    double TotalMinutes;
+    double TotalHours;
+    double TotalDays;
+    double TotalWeeks;
+    double TotalMonths;
+    double TotalYears;
+}DIFFTIMETYPE;
 
 /******************************************************************************/
 /* Secondary oscillator startup timeout counts                                */
@@ -89,8 +104,27 @@ typedef struct time
 #define Saturday 6
 
 /******************************************************************************/
+/* Month days                                                                 */
+/******************************************************************************/
+#define DAYS_January        31
+#define DAYS_February       28
+#define DAYS_March          31
+#define DAYS_April          30
+#define DAYS_May            31
+#define DAYS_June           30
+#define DAYS_July           31
+#define DAYS_August         31
+#define DAYS_September      30
+#define DAYS_October        31
+#define DAYS_November       30
+#define DAYS_December       31
+
+/******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+extern TIMETYPE StartTime;
+extern TIMETYPE EndTime;
+extern DIFFTIMETYPE DiffTime;
 extern TIMETYPE CurrentTime;
 extern TIMETYPE SetTime;
 extern TIMETYPE CurrentAlarm;
@@ -104,18 +138,26 @@ extern TIMETYPE SetAlarm;
 /* Function prototypes                                                        */
 /******************************************************************************/
 void InitRTCC(void);
-unsigned char RTCC_Module(unsigned char state);
+unsigned char RTCC_ConfigOscillator(void);
 void RTCC_ClearTime(TIMETYPE* Time);
+void RTCC_CalculateHours(TIMETYPE* Time, unsigned char type);
+void RTCC_SetDefaultTime(void);
+void RTCC_SetDefaultAlarm(void);
+unsigned char RTCC_Module(unsigned char state);
+unsigned char RTCC_Status(void);
 unsigned char RTCC_Access(unsigned char Yes_No);
 void RTCC_Read(TIMETYPE* Time);
 void RTCC_Write(TIMETYPE* Time);
-void RTCC_SetDefaultTime(void);
-void RTCC_SetDefaultAlarm(void);
-unsigned char RTCC_ConfigOscillator(void);
-void RTCC_CalculateHours(TIMETYPE* Time, unsigned char type);
+void RTCC_SetAlarmFuture(short days, char hours, char minutes, char seconds);
 void RTCC_SetAlarm(TIMETYPE* Time);
+unsigned char RTCC_CheckAlarmYear(void);
 unsigned char RTCC_ReadAlarm(TIMETYPE* Time);
 unsigned char RTCC_Alarm(unsigned char state, unsigned char type, unsigned char resolution);
 unsigned char RTCC_AlarmInterrupts(unsigned char state);
+void RTCC_StartTiming(void);
+void RTCC_StopTiming(void);
+unsigned char RTCC_LeapYear(short year);
+void RTCC_TimingDiff(void);
+
 
 #endif	/* RTCC_H */

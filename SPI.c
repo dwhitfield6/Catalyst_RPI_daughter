@@ -80,6 +80,7 @@ void InitSPI(void)
     SPI_TransmitterInterrupt(OFF);
     SPI_ReceiverInterrupt(OFF);
     SPI_Module(OFF);
+    SPI2CONbits.SIDL = 0; // Continue operation in Idle mode
     SPI2CONbits.ENHBUF = 1; // Enhanced Buffer mode is enabled
     SPI2CONbits.MSSEN = 1;  // Slave select SPI support enabled (master mode)
     SPI2CONbits.SSEN = 1;   // Slave select pin used for Slave mode
@@ -191,7 +192,7 @@ void SPI_Mode(unsigned char master_slave, unsigned char bits, unsigned char mode
     SPI2CONbits.SRXISEL = 0b00; 
     
     SPI2CONbits.MCLKSEL = 0; // PBCLK is used by the Baud Rate Generator
-    SPI2BRG = (unsigned long) MSC_DB_Round(((double)PBCLK/(2.0 * (double) speedKhzDB)) - 1.0);   
+    SPI2BRG = (unsigned long) MSC_Round(((double)PBCLK/(2.0 * (double) speedKhzDB)) - 1.0);   
 }
 
 /******************************************************************************/

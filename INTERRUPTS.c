@@ -470,6 +470,14 @@ void __ISR(_UART_4_VECTOR , IPL7AUTO) UART4_IntHandler (void)
 void __ISR(_RTCC_VECTOR , IPL7AUTO) RTCC_IntHandler (void)
 {
     /* Alarm went off */
+    if(RTCC_CheckAlarmYear())
+    {
+        /* Alarm is valid */
+    }
+    else
+    {
+        /* Year is wrong */
+    }
     IFS0bits.RTCCIF = 0;
 }
 

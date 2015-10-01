@@ -235,7 +235,29 @@ inline unsigned char PWR_RASP_Connected(void)
 /******************************************************************************/
 /* Functions
 /******************************************************************************/
-   
+
+/******************************************************************************/
+/* InitLowPower
+ *
+ * The function turn off any unused modules to save power.
+/******************************************************************************/
+void InitLowPower(void)
+{
+    SYS_SystemUnlock();
+    CFGCONbits.PMDLOCK = 0; // allow PMD module to be configured
+    Nop();
+    Nop();
+    PMD1bits.CTMUMD = ON;   // disable the CTMU module
+    PMD1bits.CVRMD = ON;    // disable the Comparator Voltage Reference
+    PMD2bits.CMP1MD = ON;   // disable the Comparator 1
+    PMD2bits.CMP2MD = ON;   // disable the Comparator 2
+    PMD5bits.SPI1MD = ON;   // disable SPI module 1
+    PMD6bits.PMPMD = ON;    // disable PMP module
+    PMD6bits.REFOMD = ON;   // disable Reference Clock Output
+    CFGCONbits.PMDLOCK = 1; // do not allow PMD module to be configured
+    SYS_SystemLock();
+}
+
 /******************************************************************************/
 /* InitI2C
  *
