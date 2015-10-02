@@ -10,7 +10,9 @@
 /******************************************************************************/
 
 /******************************************************************************/
-/* Contains all of the Teledyne RD Instruments specific functions.
+/* Contains all of the Teledyne RD Instruments specific functions. This
+ *  includes the wrapper functions for sending data to the raspberry pi and
+ *  to the user.
  *
 /******************************************************************************/
 
@@ -22,6 +24,8 @@
 #include <stdint.h>        /* For uint8_t definition */
 #include <stdbool.h>       /* For true/false definition */
 
+#include "DMA.h"
+#include "SPI.h"
 #include "USER.h"
 #include "RDI.h"
 #include "MISC.h"
@@ -182,6 +186,71 @@ void RDI_PrintBannerExtention(void)
         UART_RS232_FemaleSendConstString(Catalyst_PIC_only_String);
     }
 }
+
+/******************************************************************************/
+/* RDI_RequestRaspberryPiSPI
+ *
+ * The function controls a GPIO that tells the Raspberry pi to clock the SPI
+ *  bus because we have data to send.
+/******************************************************************************/
+unsigned char RDI_RequestRaspberryPiSPI(unsigned char state)
+{  
+    unsigned char status = FALSE;
+    
+    if(PORTG & RASP_Slave_Need_Clocking)
+    {
+        status = TRUE;
+    }
+            
+    if(state)
+    {
+        LATG |= RASP_Slave_Need_Clocking;
+    }
+    else
+    {
+        LATG &= ~RASP_Slave_Need_Clocking;
+    }
+    return status;
+}
+
+/******************************************************************************/
+/* RDI_SendToRaspberry
+ *
+ * The function uses DMA to copy a buffer to the SPI transmit buffer and then
+ *  once the copy is complete the transfer starts.
+/******************************************************************************/
+unsigned char RDI_SendToRaspberry(unsigned long address, unsigned short amount)
+{  
+    if(PWR_RASP_SPIReady())
+    {
+        if(DMA_BufferCopierComplete)
+        {
+            /* the raspberry pi is connected */
+            DMA_TransferAmount = amount;
+            DMA_BufferCopy(address, &SPI_TransmitBuffer, DMA_TransferAmount, DMA_SPI_TRANSMIT);
+        }
+    }
+    return DMA_BufferCopierComplete;
+}
+
+/******************************************************************************/
+/* RDI_SPI_TransferToRaspberry
+ *
+ * The function sends the already copied/full buffer to the raspberry pi over
+ *  SPI.
+/******************************************************************************/
+void RDI_SPI_TransferToRaspberry(unsigned short amount)
+{  
+    if(PWR_RASP_SPIReady())
+    {
+        SPI_Transfering = TRUE;
+        SPI_TransmitPlace = 0;
+        SPI_TransmitBufferAmount = amount;
+        RDI_RequestRaspberryPiSPI(TRUE);
+        SPI_TransmitterInterrupt(ON);    
+    }
+}
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

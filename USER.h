@@ -155,6 +155,14 @@
 #define RASP_SPI_CS3Tris	TRISEbits.TRISE9
 #define RASP_SPI_CS3 0x00000200        // RE9
 
+/* Connected Raspberry pi GPIO 12 used to get the Raspberry pi to clock the SPI bus */
+#define RASP_Slave_Need_ClockingTris	TRISGbits.TRISG8
+#define RASP_Slave_Need_Clocking 0x00000100     // RG8
+
+/* Connected Raspberry pi GPIO 18 used to indicate that the SPI bus is configured */
+#define RASP_SPI_ConfiguredTris	TRISBbits.TRISB11
+#define RASP_SPI_Configured 0x00000800     // RB11
+
 /************* Voltage rails for ADC read *************/
 /* Connected to the voltage divider to read the 5 volt rail */
 #define ADC_Volt5_0Tris	TRISBbits.TRISB5

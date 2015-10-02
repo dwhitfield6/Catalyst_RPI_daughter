@@ -34,6 +34,14 @@
 #define BITS32  32
 
 /******************************************************************************/
+/* SPI buffer sizes
+ *
+ * This is the size of the SPI buffers.
+/******************************************************************************/
+#define TRANSMIT_BUFFER_SIZE  2048
+#define RECEIVE_BUFFER_SIZE  2048
+
+/******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
 #define ENABLE  1
@@ -42,6 +50,13 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+extern unsigned short SPI_TransmitBufferAmount;
+extern volatile unsigned char SPI_ReceiveFull;
+extern unsigned short SPI_TransmitPlace;
+extern unsigned short SPI_ReceivePlace;
+extern unsigned char SPI_Transfering;
+extern unsigned char SPI_TransmitBuffer[TRANSMIT_BUFFER_SIZE];
+extern unsigned char SPI_ReceiveBuffer[RECEIVE_BUFFER_SIZE];
 
 /******************************************************************************/
 /* Function prototypes                                                        */

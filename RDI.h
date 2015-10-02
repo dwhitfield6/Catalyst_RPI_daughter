@@ -72,5 +72,8 @@ void RDI_GetProduct(void);
 void RDI_ClearProduct(void);
 void RDI_PrintBanner(void);
 void RDI_PrintBannerExtention(void);
+unsigned char RDI_RequestRaspberryPiSPI(unsigned char state);
+unsigned char RDI_SendToRaspberry(unsigned long address, unsigned short amount);
+void RDI_SPI_TransferToRaspberry(unsigned short amount);
 
 #endif	/* RDI_H */

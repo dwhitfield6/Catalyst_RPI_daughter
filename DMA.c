@@ -30,6 +30,9 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+unsigned char DMA_TransferType = DMA_MISC;
+unsigned short DMA_TransferAmount = 0;
+unsigned char DMA_BufferCopierComplete = TRUE;
 
 /******************************************************************************/
 /* Inline Functions
@@ -216,6 +219,7 @@ void InitDMA(void)
     IPC11bits.DMA3IP = 3; // interrupt priority is 3
     IPC11bits.DMA3IS = 1; // interrupt sub-priority is 1
     DMA_RBG_Configure();
+    DMA_BufferCopier_Configure();
 }
 
 /******************************************************************************/
@@ -624,7 +628,7 @@ unsigned char DMA_ChannelAbortSource(unsigned char channel, unsigned char source
  *
  * The function sets up the DMA interrupt.
 /******************************************************************************/
-unsigned char DMA_ChannelInterrupt(unsigned char channel, unsigned char Interruptbits, unsigned char Enablebits, unsigned char MasterEnable)
+unsigned char DMA_ChannelInterrupt(unsigned char channel, unsigned long Interruptbits, unsigned char Enablebits, unsigned char MasterEnable)
 {
     unsigned char status;
     
@@ -814,7 +818,7 @@ void DMA_ChannelTransferSize(unsigned char channel, unsigned short size)
 void DMA_RBG_Configure(void)
 {
     /* set up DMA channel 0 for the Red LED */
-    DMA_ChannelPriority(0,3);
+    DMA_ChannelPriority(0,2);
     DMA_ChannelDestination(0,DMA_VirtToPhys(&OC3RS),4);
     DMA_ChannelSource(0,DMA_VirtToPhys(&Red_Duty),4);
     DMA_ChannelTransferSize(0,4);
@@ -822,7 +826,7 @@ void DMA_RBG_Configure(void)
     DMA_ChannelAutoEnable(0,ON);
     
     /* set up DMA channel 1 for the Green LED */
-    DMA_ChannelPriority(1,2);
+    DMA_ChannelPriority(1,1);
     DMA_ChannelDestination(1,DMA_VirtToPhys(&OC2RS),4);
     DMA_ChannelSource(1,DMA_VirtToPhys(&Green_Duty),4);
     DMA_ChannelTransferSize(1,4);
@@ -830,7 +834,7 @@ void DMA_RBG_Configure(void)
     DMA_ChannelAutoEnable(1,ON);
     
     /* set up DMA channel 2 for the Blue LED */
-    DMA_ChannelPriority(2,1);
+    DMA_ChannelPriority(2,0);
     DMA_ChannelDestination(2,DMA_VirtToPhys(&OC1RS),4);
     DMA_ChannelSource(2,DMA_VirtToPhys(&Blue_Duty),4);
     DMA_ChannelTransferSize(2,4);
@@ -842,6 +846,35 @@ void DMA_RBG_Configure(void)
     DMA_ChannelEnable(0,ON);
     DMA_ChannelEnable(1,ON);
     DMA_ChannelEnable(2,ON);
+}
+
+/******************************************************************************/
+/* DMA_BufferCopier_Configure
+ *
+ * The function sets up DMA channel 3 as an all-purpose DMA buffer copier.
+/******************************************************************************/
+void DMA_BufferCopier_Configure(void)
+{
+    DMA_ChannelPriority(3,3);
+    DMA_ChannelTransferSource(3,0,OFF); // do not start on an interrupt
+    DMA_ChannelAutoEnable(3,OFF);       // do not auto enable
+    DMA_ChannelInterrupt(3, DMA_INT_SourceDone, TRUE, TRUE);
+}
+
+/******************************************************************************/
+/* DMA_BufferCopy
+ *
+ * The function sets up DMA channel 3 as an all-purpose DMA buffer copier.
+/******************************************************************************/
+void DMA_BufferCopy(unsigned long FromAddress, unsigned long ToAddress, unsigned long amount, unsigned char type)
+{
+    DMA_ChannelDestination(3,DMA_VirtToPhys(ToAddress),amount);
+    DMA_ChannelSource(3,DMA_VirtToPhys(FromAddress),amount);
+    DMA_ChannelTransferSize(3,amount);
+    DMA_TransferType = type;
+    DMA_ChannelEnable(3,ON);
+    DMA_BufferCopierComplete = FALSE;
+    DMA_Force(3); // start the transfer
 }
 
 /*-----------------------------------------------------------------------------/

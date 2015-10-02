@@ -8,4 +8,8 @@ RDI.h  \
 RTCC.h  \
 TIMERS.h  \
 I2C.h  \
-ADC.h 
+ADC.h  \
+DMA.h  \
+ SPI.h  \
+MISC.h  \
+SYSTEM.h 

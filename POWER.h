@@ -64,6 +64,7 @@ inline unsigned char PWR_ExternalInterrupt(unsigned char channel, unsigned char 
 inline unsigned char PWR_ExternalInterruptEdge(unsigned char channel, unsigned char edge);
 inline void PWR_Volts5(unsigned char action);
 inline void PWR_RASP(unsigned char action);
+inline unsigned char PWR_RASP_SPIReady(void);
 inline unsigned char PWR_RASP_PowerStatus(void);
 inline unsigned char PWR_RASP_Connected(void);
 void InitComparator(void);

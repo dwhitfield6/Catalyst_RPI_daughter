@@ -88,6 +88,9 @@
 #include "TIMERS.h"
 #include "I2C.h"
 #include "ADC.h"
+#include "DMA.h"
+#include "SPI.h"
+#include "MISC.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -196,6 +199,14 @@ void __ISR(_TIMER_5_VECTOR , IPL7AUTO) TMR5_IntHandler (void)
 {  
     static unsigned char sample = 0;
 
+    if(PWR_RASP_SPIReady())
+    {
+        SPI_ReceiverInterrupt(ON);
+    }
+    else
+    {
+        SPI_ReceiverInterrupt(OFF);
+    }
     if(sample == 0)
     {
         /* set channel and start sampling */
@@ -272,13 +283,101 @@ void __ISR(_SPI_2_VECTOR , IPL7AUTO) SPI2_IntHandler (void)
     if(IFS1bits.SPI2RXIF)
     {
         /* there are no more word in the receive buffer */
+        if(SPI_ReceivePlace < RECEIVE_BUFFER_SIZE)
+        {
+            SPI_ReceiveBuffer[SPI_ReceivePlace] = SPI2BUF;
+            SPI_ReceivePlace++;
+            SPI_ReceiveFull = FALSE;
+        }
+        else
+        {
+            SPI_ReceiveFull = TRUE;
+        }
     }
     if(IFS1bits.SPI2TXIF)
     {
-        /* there are no more word in the transmit buffer */
+        /* there are no more characters in the transmit buffer */
+        if(SPI_TransmitBufferAmount > 0)
+        {
+            MSC_RedLEDTOGGLE();
+            SPI2BUF = SPI_TransmitBuffer[SPI_TransmitPlace];
+            SPI_TransmitPlace++;
+            SPI_TransmitBufferAmount--;
+        }
+        else
+        {
+            RDI_RequestRaspberryPiSPI(FALSE);
+            SPI_TransmitterInterrupt(OFF);
+            SPI_Transfering = FALSE;
+        }
     }
     IFS1bits.SPI2RXIF = 0;            // clear interrupt
     IFS1bits.SPI2TXIF = 0;            // clear interrupt
+}
+
+/******************************************************************************/
+/* UART 1 Interrupt (Raspberry pi debug)
+/******************************************************************************/
+void __ISR(_UART_1_VECTOR , IPL7AUTO) UART1_IntHandler (void)
+{
+    unsigned char data;
+    
+    if(IFS1bits.U1RXIF)
+    {
+        /* receive interrupt */        
+        if(U1STAbits.FERR)
+        {
+            /* 
+             * Receive error. This could be from a break or incorrect
+             *  baud rate 
+             */
+            while(U1STAbits.URXDA)
+            {
+                data = U1RXREG;
+                if(!data)
+                {
+                    /* There was a break */
+                    Nop();
+                }
+            }
+        }
+        else
+        {
+            while(U1STAbits.URXDA)
+            {
+                /* receive buffer has data */
+                data = U1RXREG;
+                if(RX1_Buffer_Place < UART1_RECEIVE_SIZE)
+                {
+                    RX1_Buffer[RX1_Buffer_Place] = data;
+                    RX1_Buffer_Place++;
+                }
+                else
+                {
+                    /* Overflow */
+                    UART_CleanReceive1();
+                }
+            }
+        }
+    }
+    if(IFS1bits.U1TXIF)
+    {
+        if(TX1_Buffer_REMOVE_Place != TX1_Buffer_ADD_Place)
+        {
+            U1TXREG = TX1_Buffer[TX1_Buffer_REMOVE_Place];
+            TX1_Buffer_REMOVE_Place++;
+            if(TX1_Buffer_REMOVE_Place >= UART1_TRANSMIT_SIZE)
+            {
+                TX1_Buffer_REMOVE_Place = 0;
+            }
+        }
+        else
+        {
+            UART_TransmitterInterrupt1(OFF);
+        }
+    }
+    IFS1bits.U1RXIF = 0;
+    IFS1bits.U1TXIF = 0;
 }
 
 /******************************************************************************/
@@ -398,8 +497,7 @@ void __ISR(_UART_2_VECTOR , IPL7AUTO) UART2_IntHandler (void)
 void __ISR(_UART_4_VECTOR , IPL7AUTO) UART4_IntHandler (void)
 {
     unsigned char data;
-
-    
+ 
     if(IFS2bits.U4RXIF)
     {
         /* receive interrupt */        
@@ -522,7 +620,7 @@ void __ISR(_I2C_2_VECTOR , IPL7AUTO) I2C_2_IntHandler (void)
 }
 
 /******************************************************************************/
-/* DMA0 Interrupt
+/* DMA0 Interrupt (RGB Red LED PWM)
 /******************************************************************************/
 void __ISR(_DMA_0_VECTOR , IPL7AUTO) DMA_0_IntHandler (void)
 {   
@@ -583,7 +681,7 @@ void __ISR(_DMA_0_VECTOR , IPL7AUTO) DMA_0_IntHandler (void)
 }
 
 /******************************************************************************/
-/* DMA1 Interrupt
+/* DMA1 Interrupt (RGB Green LED PWM)
 /******************************************************************************/
 void __ISR(_DMA_1_VECTOR , IPL7AUTO) DMA_1_IntHandler (void)
 {   
@@ -644,7 +742,7 @@ void __ISR(_DMA_1_VECTOR , IPL7AUTO) DMA_1_IntHandler (void)
 }
 
 /******************************************************************************/
-/* DMA2 Interrupt
+/* DMA2 Interrupt (RGB Blue LED PWM)
 /******************************************************************************/
 void __ISR(_DMA_2_VECTOR , IPL7AUTO) DMA_2_IntHandler (void)
 {   
@@ -705,13 +803,22 @@ void __ISR(_DMA_2_VECTOR , IPL7AUTO) DMA_2_IntHandler (void)
 }
 
 /******************************************************************************/
-/* DMA3 Interrupt
+/* DMA3 Interrupt (Buffer copier)
 /******************************************************************************/
 void __ISR(_DMA_3_VECTOR , IPL7AUTO) DMA_3_IntHandler (void)
 {   
     if(DCH3INTbits.CHSDIF)
     {
         /* Channel Source Pointer has reached end of source (CHSPTR = CHSSIZ) */
+        if(DMA_TransferType)
+        {
+            if(DMA_TransferType == DMA_SPI_TRANSMIT)
+            {
+                /* transmit buffer has been copied so start transmitting */
+                RDI_SPI_TransferToRaspberry(DMA_TransferAmount);
+            }
+        }
+        DMA_BufferCopierComplete = TRUE;
         DCH3INTbits.CHSDIF = 0;
     }
     if(DCH3INTbits.CHSHIF)

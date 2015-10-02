@@ -6,7 +6,7 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 09/23/15     1.0_DW0a    Initial project make.
+ * 10/02/15     1.0_DW0a    Initial project make.
  *                          Added RGB LED functionality.
  *                          Added internal ADC read functionality.
  *                          Added UART functionality.
@@ -33,7 +33,11 @@
  *                          Wrote function to check for bad blocks on the
  *                            flash IC.
  *                          Added functions to calculate time differences from
- *                            the RTCC.                          
+ *                            the RTCC.      
+ *                          Added Raspberry pi UART pass-through mode to allow
+ *                            the user to debug the raspberry pi. 
+ *                          Added DMA buffer copier function which gets used by
+ *                            the hardware modules to send data.              
 /******************************************************************************/
 
 /******************************************************************************/
@@ -67,7 +71,8 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-
+unsigned char data[] = "David is sending this over SPI and is an SPI slave";  
+    
 /******************************************************************************/
 /* Main Program                                                               */
 /******************************************************************************/
@@ -75,7 +80,7 @@
 short main (void)
 {
     unsigned long i;
-       
+ 
     /* Initialize */
     SYS_ConfigureOscillator();
     Init_App();
@@ -86,11 +91,9 @@ short main (void)
     /* Flash LEDs */
     for (i=0;i<24;i++)
     {
-        MSC_RedLEDTOGGLE();
-        MSC_DelayUS(100000);
         PWM_SetColor(i/3, NOTHING,NOTHING);
+        MSC_DelayUS(100000);      
     }
-    MSC_RedLEDOFF();
     
     /* Read the current alarm */
     RTCC_ReadAlarm(&CurrentAlarm);
@@ -98,12 +101,13 @@ short main (void)
     /* set the Red LED to fade up */
     PWM_SetColor(RED, FADEUP,PWM_MEDIUM);
     
+    /* enable the watchdog */
+    SYS_Watchdog(ON);
+        
     while(1)
     {
-        MSC_RedLEDON();
-        UART_RS232_MaleDriver(OFF);
-        UART_RS232_FemaleDriver(OFF);
-        SYS_Idle();
+        SYS_PetFluffyPuppy(); // pet the watchdog
+        RDI_SendToRaspberry(data,MSC_SizeOfString(data)); // send data over SPI if ready
     }
 }
 /*-----------------------------------------------------------------------------/

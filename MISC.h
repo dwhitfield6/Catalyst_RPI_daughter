@@ -134,6 +134,7 @@ unsigned char MSC_IsAlphaNumericString(unsigned char* data);
 void MSC_CleanBuffer(void* data, unsigned short bytes);
 double MSC_Round(double input);
 void MSC_BufferFill(void* buffer, unsigned long data, unsigned char bits, unsigned short bytes);
+unsigned short MSC_SizeOfString(unsigned char* string);
 void MSC_StringCopy(unsigned char* from,unsigned char* to);
 unsigned char MSC_StringMatch(void* This, void* That);
 unsigned char MSC_BufferMatch(void* buffer1, void* buffer2, unsigned short bytes);

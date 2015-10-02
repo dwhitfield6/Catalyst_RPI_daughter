@@ -30,6 +30,13 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+unsigned short SPI_TransmitBufferAmount = 0;
+unsigned volatile char SPI_ReceiveFull = FALSE;
+unsigned short SPI_TransmitPlace = 0;
+unsigned short SPI_ReceivePlace = 0;
+unsigned char SPI_Transfering = FALSE;
+unsigned char SPI_TransmitBuffer[TRANSMIT_BUFFER_SIZE];
+unsigned char SPI_ReceiveBuffer[RECEIVE_BUFFER_SIZE];
 
 /******************************************************************************/
 /* Inline Functions
@@ -90,9 +97,15 @@ void InitSPI(void)
     IPC8bits.SPI2IS = 3; // interrupt sub-priority is 3
     IFS1bits.SPI2RXIF = 0;            // clear interrupt
     IFS1bits.SPI2TXIF = 0;            // clear interrupt
-    SPI_Mode(MASTER, BITS8, 0, 3000);    
+    SPI2CONbits.STXISEL = 0b11; // Interrupt is generated when the buffer is not full (has one or more empty elements)
+    SPI2CONbits.SRXISEL = 0b01; // Interrupt is generated when the buffer is not empty
+    SPI_Mode(SLAVE, BITS8, 0, 3000);    
     SPI2STATbits.SPIROV = 0; // no overflow has occurred
     SPI_Module(ON);
+    if(PWR_RASP_SPIReady())
+    {
+        SPI_ReceiverInterrupt(ON);
+    }
 }
 
 /******************************************************************************/

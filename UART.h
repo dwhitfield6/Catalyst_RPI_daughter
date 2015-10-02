@@ -28,14 +28,15 @@
  * This is the number of characters that fit in the UART 1 receive buffer.
 /******************************************************************************/
 #define UART1_RECEIVE_SIZE 512
+#define UART1_TRANSMIT_SIZE 512
 
 /******************************************************************************/
 /* UART2_RECEIVE_SIZE
  *
  * This is the number of characters that fit in the UART 2 receive buffer.
 /******************************************************************************/
-#define UART2_RECEIVE_SIZE 512
-#define UART2_TRANSMIT_SIZE 512
+#define UART2_RECEIVE_SIZE 2048
+#define UART2_TRANSMIT_SIZE 2048
 
 /******************************************************************************/
 /* UART3_RECEIVE_SIZE
@@ -48,8 +49,8 @@
  *
  * This is the number of characters that fit in the UART 4 receive buffer.
 /******************************************************************************/
-#define UART4_RECEIVE_SIZE 512
-#define UART4_TRANSMIT_SIZE 512
+#define UART4_RECEIVE_SIZE 2048
+#define UART4_TRANSMIT_SIZE 2048
 
 /******************************************************************************/
 /* UART5_RECEIVE_SIZE
@@ -87,10 +88,13 @@ extern unsigned char RX2_Buffer[UART2_RECEIVE_SIZE];
 extern unsigned char RX3_Buffer[UART3_RECEIVE_SIZE];
 extern unsigned char RX4_Buffer[UART4_RECEIVE_SIZE];
 extern unsigned char RX5_Buffer[UART5_RECEIVE_SIZE];
+extern unsigned char TX1_Buffer[UART1_TRANSMIT_SIZE];
 extern unsigned char TX2_Buffer[UART2_TRANSMIT_SIZE];
 extern unsigned char TX4_Buffer[UART4_TRANSMIT_SIZE];
+extern volatile unsigned short TX1_Buffer_ADD_Place;
 extern volatile unsigned short TX2_Buffer_ADD_Place;
 extern volatile unsigned short TX4_Buffer_ADD_Place;
+extern unsigned short TX1_Buffer_REMOVE_Place;
 extern unsigned short TX2_Buffer_REMOVE_Place;
 extern unsigned short TX4_Buffer_REMOVE_Place;
 extern unsigned char UserSentBreak;
@@ -108,6 +112,7 @@ inline void UART_SendCharacter3(unsigned char data);
 inline void UART_SendCharacter4(unsigned char data);
 inline void UART_SendCharacter5(unsigned char data);
 void InitUART(void);
+void UART_DebugPassthrough(unsigned char state);
 void UART_RS232_FemaleSendChar(unsigned char data);
 void UART_RS232_MaleSendChar(unsigned char data);
 void UART_RS232_FemaleSendConstChar(const unsigned char data);

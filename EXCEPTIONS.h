@@ -39,6 +39,12 @@ typedef struct __attribute__((packed)) _fault_
     unsigned short ExceptionAddress;
     unsigned char Flash_ID_FAIL;
     unsigned char Flash_BadBlocksLimit_FAIL;
+    unsigned char WatchDog_Reset;
+    unsigned char Software_Reset;
+    unsigned char Brownout_Reset;
+    unsigned char Poweron_Reset;
+    unsigned char HighVoltage_Reset;
+    unsigned char ConfigMissMatch_Reset;
 }FAULTTYPE;
 
 /******************************************************************************/

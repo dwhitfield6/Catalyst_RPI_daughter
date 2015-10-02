@@ -40,10 +40,13 @@ unsigned char RX2_Buffer[UART2_RECEIVE_SIZE];
 unsigned char RX3_Buffer[UART3_RECEIVE_SIZE];
 unsigned char RX4_Buffer[UART4_RECEIVE_SIZE];
 unsigned char RX5_Buffer[UART5_RECEIVE_SIZE];
+unsigned char TX1_Buffer[UART1_TRANSMIT_SIZE];
 unsigned char TX2_Buffer[UART2_TRANSMIT_SIZE];
 unsigned char TX4_Buffer[UART4_TRANSMIT_SIZE];
+volatile unsigned short TX1_Buffer_ADD_Place = 0;
 volatile unsigned short TX2_Buffer_ADD_Place = 0;
 volatile unsigned short TX4_Buffer_ADD_Place = 0;
+unsigned short TX1_Buffer_REMOVE_Place = 0;
 unsigned short TX2_Buffer_REMOVE_Place = 0;
 unsigned short TX4_Buffer_REMOVE_Place = 0;
 unsigned char UserSentBreak = FALSE;
@@ -280,7 +283,7 @@ void InitUART(void)
     U5STA  = 0;
     
     /* Set remappable outputs */
-    RPC4R = RASP_UART_TX_Module;        // U1TX
+    RPC4R = RASP_UART_TX_Module;        // U1TX    
     RPF5R = RS232_MALE_TX_Module;       // U2TX
     RPF5R = RS232_MALE_RTS_Module;      // U3TX
     RPF12R = RS232_FEMALE_TX_Module;    // U4TX
@@ -307,7 +310,19 @@ void InitUART(void)
     MSC_CleanBuffer(RX4_Buffer, UART4_RECEIVE_SIZE);
     MSC_CleanBuffer(RX5_Buffer, UART5_RECEIVE_SIZE);
 
-    /* Set up the Male RS232 port */
+    /* Set up the debug port (module 1) */
+    UART_SetParameters1(115200, NO, 1);
+    UART_Module1(ON);
+    UART_Receiver1(ON);
+    UART_Transmitter1(ON);
+    IPC7bits.U1IP = 4; // interrupt priority is 4
+    IPC7bits.U1IS = 3; // interrupt sub-priority is 3
+    IFS1bits.U1RXIF = 0;            // clear interrupt
+    IFS1bits.U1TXIF = 0;            // clear interrupt
+    UART_ReceiverInterrupt1(ON);
+    UART_TransmitterInterrupt1(OFF);
+    
+    /* Set up the Male RS232 port (module 2) */
     UART_RS232_MaleParameters(115200, NO, 1);
     UART_RS232_Male(ON, ON, ON);
     IPC9bits.U2IP = 4; // interrupt priority is 4
@@ -317,7 +332,7 @@ void InitUART(void)
     UART_ReceiverInterrupt2(ON);
     UART_TransmitterInterrupt2(OFF);
     
-    /* Set up the Female RS232 port */
+    /* Set up the Female RS232 port (module 4) */
     UART_RS232_FemaleParameters(115200, NO, 1);
     UART_RS232_Female(ON, ON, ON);
     IPC9bits.U4IP = 4; // interrupt priority is 4
@@ -326,6 +341,36 @@ void InitUART(void)
     IFS2bits.U4TXIF = 0;            // clear interrupt
     UART_ReceiverInterrupt4(ON);
     UART_TransmitterInterrupt4(OFF);
+    
+    /* set passthrough mode so that we can debug the raspberry pi */
+    UART_DebugPassthrough(ON);
+}
+
+/******************************************************************************/
+/* UART_DebugPassthrough
+ *
+ * The function sets the UART port connected to the raspberry pi debug as
+ *  inputs and turns off the module so that the port is passed through to the\
+ *  external header.
+/******************************************************************************/
+void UART_DebugPassthrough(unsigned char state)
+{
+    if(state)
+    {
+        /* Set remappable outputs */
+        RPC4R = 0;        // No connect   
+        RASP_UART_TXTris    = INPUT;
+        UART_ReceiverInterrupt1(OFF);
+        UART_TransmitterInterrupt1(OFF);
+    }
+    else
+    {
+        /* Set remappable outputs */
+        RPC4R = RASP_UART_TX_Module;        // U1TX 
+        RASP_UART_TXTris    = OUTPUT;
+        UART_ReceiverInterrupt1(ON);
+        UART_TransmitterInterrupt1(OFF);
+    }
 }
 
 /******************************************************************************/

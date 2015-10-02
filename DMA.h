@@ -23,6 +23,15 @@
 #include "USER.h"
 
 /******************************************************************************/
+/* DMA move buffer options
+ *
+ * This is the options for what ahppens after DMA channel 3 (BufferCopier)
+ *  completes.
+/******************************************************************************/
+#define DMA_MISC            0
+#define DMA_SPI_TRANSMIT    1
+
+/******************************************************************************/
 /* DMA interrupt options
  *
  * This is the options for creating a DMA interrupt.
@@ -40,6 +49,9 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
+extern unsigned char DMA_TransferType;
+extern unsigned short DMA_TransferAmount;
+extern unsigned char DMA_BufferCopierComplete;
 
 /******************************************************************************/
 /* Function prototypes                                                        */
@@ -59,10 +71,12 @@ unsigned char DMA_ChannelChain(unsigned char channel, unsigned char chained, uns
 unsigned char DMA_ChannelPriority(unsigned char channel, unsigned char priority);
 unsigned char DMA_ChannelTransferSource(unsigned char channel, unsigned char IRQsource, unsigned char enable);
 unsigned char DMA_ChannelAbortSource(unsigned char channel, unsigned char source, unsigned char enable);
-unsigned char DMA_ChannelInterrupt(unsigned char channel, unsigned char Interruptbits, unsigned char Enablebits, unsigned char MasterEnable);
+unsigned char DMA_ChannelInterrupt(unsigned char channel, unsigned long Interruptbits, unsigned char Enablebits, unsigned char MasterEnable);
 void DMA_ChannelSource(unsigned char channel, unsigned long StartAddress, unsigned short size);
 void DMA_ChannelDestination(unsigned char channel, unsigned long StartAddress, unsigned short size);
 void DMA_ChannelTransferSize(unsigned char channel, unsigned short size);
 void DMA_RBG_Configure(void);
+void DMA_BufferCopier_Configure(void);
+void DMA_BufferCopy(unsigned long FromAddress, unsigned long ToAddress, unsigned long amount, unsigned char type);
 
 #endif	/* DMA_H */

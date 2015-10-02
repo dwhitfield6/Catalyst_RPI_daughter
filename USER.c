@@ -39,6 +39,7 @@
 #include "UART.h"
 #include "USER.h"
 
+
 /******************************************************************************/
 /* Version variables                                                          */
 /******************************************************************************/
@@ -85,6 +86,7 @@ void Init_App(void)
     ANSELG = 0;
     
     /*~~~~~~~~~~~~~ Red LED ~~~~~~~~~~~~~~~~~*/
+    MSC_RedLEDOFF();
     RedLEDTris          = OUTPUT;
     
     /*~~~~~~~~~~~~~ RGB LED ~~~~~~~~~~~~~~~~~*/
@@ -105,7 +107,7 @@ void Init_App(void)
     
     /*~~~~~~~~~~~~~ Raspberry pi ~~~~~~~~~~~~~~~~~*/
     /* Raspberry pi rail */
-    PWR_RASP(OFF);
+    PWR_RASP(ON);
     RASP_ONTris         = OUTPUT;
     RASP_ON2Tris        = INPUT;
     
@@ -126,6 +128,10 @@ void Init_App(void)
     RASP_SPI_CSTris     = INPUT;
     RASP_SPI_CS2Tris    = INPUT;
     RASP_SPI_CS3Tris    = INPUT;
+    RASP_SPI_ConfiguredTris = INPUT;
+    RDI_RequestRaspberryPiSPI(OFF);
+    RASP_Slave_Need_ClockingTris = OUTPUT;
+            
             
     /*~~~~~~~~~~~~~ Voltages rails for ADC ~~~~~~~~~~~~~~~~~*/
     ADC_Volt5_0Tris     = INPUT;
@@ -214,6 +220,16 @@ void Init_App(void)
 void Init_System(void)
 {
     INTCONbits.MVEC = TRUE; // Multi-vectored interrupts
+    Init_Watchdog();
+    if(SYS_CheckWatchdogReset())
+    {
+        Nop();
+    }
+    else
+    {
+        MSC_RedLEDOFF();
+        SYS_CheckReset();
+    }
     if(PMD6bits.REFOMD != ON)
     {
         /* put in low power mode if not already */

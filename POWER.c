@@ -233,6 +233,23 @@ inline unsigned char PWR_RASP_Connected(void)
 }
 
 /******************************************************************************/
+/* PWR_RASP_SPIReady
+ *
+ * Detects if a raspberry pi is present and if the SPI module is ready.
+/******************************************************************************/
+inline unsigned char PWR_RASP_SPIReady(void)
+{
+    if(PWR_RASP_Connected())
+    {
+        if (PORTB & RASP_SPI_Configured)
+        {       
+            return PASS;
+        }
+    }
+    return FAIL;
+}
+
+/******************************************************************************/
 /* Functions
 /******************************************************************************/
 
@@ -319,7 +336,6 @@ void PWR_ReadComparator(void)
     {
         /* Supercap is less than 4.1 volts */
         RailStatus.Warn4_1 = 1;
-        MSC_RedLEDON();
     }
     else
     {
@@ -347,7 +363,6 @@ void PWR_ReadComparator(void)
     {
         /* Supercap is greater than the potentiometer voltage */
         RailStatus.WarnPOT = 0;
-        MSC_RedLEDOFF();
     }
 }
 

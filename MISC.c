@@ -234,7 +234,24 @@ void MSC_BufferFill(void* buffer, unsigned long data, unsigned char bits, unsign
             (unsigned char*)buffer++;
         }
     }
+}
 
+/******************************************************************************/
+/* MSC_SizeOfString
+ *
+ * This function returns the size of the string including the ending null
+ *  character.
+/******************************************************************************/
+unsigned short MSC_SizeOfString(unsigned char* string)
+{
+    unsigned short i = 1;
+    
+    while(*string != 0)
+    {
+        i++;
+        string++;
+    }
+    return i;
 }
 
 /******************************************************************************/
