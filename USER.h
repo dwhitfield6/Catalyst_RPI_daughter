@@ -26,7 +26,7 @@
 #define CPU_VERSION    "9"
 #define CPU_REVISION   "0"
 #define CPU_ALPHA      ""                 /* use "" for no alpha.  */ 
-#define CPU_BRANCH     "DW0a"             /* use "" for no branch. */
+#define CPU_BRANCH     "DW0b"             /* use "" for no branch. */
 
 /******************************************************************************/
 /* PCB board

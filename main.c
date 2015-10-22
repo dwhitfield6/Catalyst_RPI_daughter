@@ -6,6 +6,7 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
+ * 10/22/15     9.0_DW0b    Fixed bug that always made the system a SPI Master.
  * 10/22/15     9.0_DW0a    Changed version to follow new versioning scheme.
  * 10/02/15     1.0_DW0a    Initial project make.
  *                          Added RGB LED functionality.
