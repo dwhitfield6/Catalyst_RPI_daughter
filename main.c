@@ -6,6 +6,7 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
+ * 10/22/15     9.0_DW0a    Changed version to follow new versioning scheme.
  * 10/02/15     1.0_DW0a    Initial project make.
  *                          Added RGB LED functionality.
  *                          Added internal ADC read functionality.
