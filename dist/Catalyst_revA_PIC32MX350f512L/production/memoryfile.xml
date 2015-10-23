@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/Catalyst_revA_PIC32MX350f128L/production/Catalyst_RPI_daughter.production.elf">                 
+  <executable name="dist/Catalyst_revA_PIC32MX350f512L/production/Catalyst_RPI_daughter.production.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
-      <length>138752</length>                 
+      <length>531968</length>                 
       <used>70944</used>                     
-      <free>67808</free>                     
+      <free>461024</free>                     
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
-      <length>32768</length>                 
+      <length>131072</length>                 
       <used>21436</used>                     
-      <free>11332</free>                     
+      <free>109636</free>                     
     </memory>                              
   </executable>                            
 </project>                                 

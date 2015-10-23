@@ -7,6 +7,8 @@
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
  * 10/22/15     9.0_DW0b    Fixed bug that always made the system a SPI Master.
+ *                          Added disable for PWM function so it turns off the
+ *                            RGB during sleep.
  * 10/22/15     9.0_DW0a    Changed version to follow new versioning scheme.
  * 10/02/15     1.0_DW0a    Initial project make.
  *                          Added RGB LED functionality.
@@ -84,6 +86,7 @@ short main (void)
     unsigned long i;
  
     /* Initialize */
+    SYS_Watchdog(OFF);
     SYS_ConfigureOscillator();
     Init_App();
     Init_System();
@@ -91,7 +94,7 @@ short main (void)
     RDI_GetProduct();
     
     /* Flash LEDs */
-    for (i=0;i<24;i++)
+    for (i=3;i<24;i++)
     {
         PWM_SetColor(i/3, NOTHING,NOTHING);
         MSC_DelayUS(100000);      
@@ -100,16 +103,13 @@ short main (void)
     /* Read the current alarm */
     RTCC_ReadAlarm(&CurrentAlarm);
     
-    /* set the Red LED to fade up */
-    PWM_SetColor(RED, FADEUP,PWM_MEDIUM);
+    /* set the RGB LED off */
+    PWM_SetColor(NONE, NONE, NONE);
+    MSC_RedLEDON();
     
-    /* enable the watchdog */
-    SYS_Watchdog(ON);
-        
     while(1)
     {
-        SYS_PetFluffyPuppy(); // pet the watchdog
-        RDI_SendToRaspberry(data,MSC_SizeOfString(data)); // send data over SPI if ready
+        SYS_Sleep();
     }
 }
 /*-----------------------------------------------------------------------------/
